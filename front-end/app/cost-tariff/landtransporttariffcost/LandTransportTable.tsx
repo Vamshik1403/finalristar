@@ -14,8 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const StatusBadge = ({ status }: { status: string }) => {
-  const isActive = status.toLowerCase() === "active";
+const StatusBadge = ({ approvalStatus }: { approvalStatus: string }) => {
+  const isActive = approvalStatus === 'Approved';
   return (
     <span
       className={`inline-block px-4 py-1 rounded-full text-sm font-semibold shadow transition-all duration-300
@@ -23,14 +23,29 @@ const StatusBadge = ({ status }: { status: string }) => {
         hover:scale-105`}
       style={{ minWidth: 70, textAlign: "center", letterSpacing: 1 }}
     >
-      {status}
+      {isActive ? 'Active' : 'Inactive'}
     </span>
   );
 };
 
+type Tariff = {
+  id: number;
+  landTransportTariffCode: string;
+  addressBookId: string;
+  transportType: string;
+  from: string;
+  to: string;
+  distance: string;
+  currencyId: string;
+  amount: string;
+  approvalStatus: string;
+  addressBook?: { companyName?: string };
+  currency?: { currencyName?: string };
+};
+
 const LandTransportTariff = () => {
   const [showModal, setShowModal] = useState(false);
-  const [tariffs, setTariffs] = useState([]);
+  const [tariffs, setTariffs] = useState<Tariff[]>([]);
   const [form, setForm] = useState({
     id: undefined,
     landTransportTariffCode: "",
@@ -67,10 +82,34 @@ const LandTransportTariff = () => {
     fetchTariffs();
   }, []);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  // Filtered tariffs based on searchTerm
+  const filteredTariffs = tariffs.filter((row) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      row.landTransportTariffCode?.toLowerCase().includes(term) ||
+      row.transportType?.toLowerCase().includes(term) ||
+      row.from?.toLowerCase().includes(term) ||
+      row.to?.toLowerCase().includes(term) ||
+      row.currency?.currencyName?.toLowerCase().includes(term) ||
+      row.approvalStatus?.toLowerCase().includes(term)
+    );
+  });
   return (
-    <div className="px-4 py-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-white">Land Transport Tariff</h2>
+    <div className="px-4 pt-4 pb-4 dark:bg-black">
+      <div className="flex items-center justify-between mt-0 mb-4">
+        <div className="relative w-full mr-4">
+          <input
+            type="text"
+            placeholder="Search tariffs..."
+            className="p-2 pl-10 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white placeholder-neutral-400 border border-neutral-800 focus:outline-none focus:border-blue-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </span>
+        </div>
         <Button
           onClick={() => {
             setForm({
@@ -87,7 +126,7 @@ const LandTransportTariff = () => {
             });
             setShowModal(true);
           }}
-          className="bg-blue-700 hover:bg-blue-800 text-white"
+          className="bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium py-2 px-6 shadow rounded-md whitespace-nowrap"
         >
           <Plus className="mr-2" size={16} /> Add Tariff
         </Button>
@@ -103,23 +142,26 @@ const LandTransportTariff = () => {
         />
       )}
 
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto mt-4">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-white dark:bg-neutral-900">
             <TableRow>
-              {["Tariff Code", "Company", "From", "To", "Distance", "Transport Type", "Amount", "Currency", "Status", "Actions"].map(
-                (title) => (
-                  <TableHead key={title} className="text-white">
-                    {title}
-                  </TableHead>
-                )
-              )}
+              <TableHead className="text-black dark:text-neutral-200">Tariff Code</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Company</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">From</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">To</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Distance</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Transport Type</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Amount</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Currency</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Status</TableHead>
+              <TableHead className="text-center text-black dark:text-neutral-200">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tariffs.length > 0 ? (
-              tariffs.map((row: any) => (
-                <TableRow key={row.id} className="hover:bg-neutral-800 text-white">
+            {filteredTariffs.length > 0 ? (
+              filteredTariffs.map((row: any, idx) => (
+                <TableRow key={row.id} className={`border-b border-neutral-800 text-black dark:text-white ${idx % 2 === 1 ? "bg-gray-50 dark:bg-neutral-800" : "bg-white dark:bg-neutral-900"}`}>
                   <TableCell>{row.landTransportTariffCode}</TableCell>
                   <TableCell>{row.addressBook?.companyName || "N/A"}</TableCell>
                   <TableCell>{row.from}</TableCell>
@@ -129,7 +171,7 @@ const LandTransportTariff = () => {
                   <TableCell>{row.amount}</TableCell>
                   <TableCell>{row.currency?.currencyName || "N/A"}</TableCell>
                   <TableCell>
-                    <StatusBadge status={row.status || "Inactive"} />
+                    <StatusBadge approvalStatus={row.approvalStatus || "Pending"} />
                   </TableCell>
                   <TableCell className="space-x-2">
                     <Button
@@ -150,7 +192,7 @@ const LandTransportTariff = () => {
                         });
                         setShowModal(true);
                       }}
-                      className="text-blue-400 hover:text-blue-500"
+                      className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                     >
                       <Pencil size={16} />
                     </Button>
@@ -158,7 +200,7 @@ const LandTransportTariff = () => {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleDelete(row.id)}
-                      className="text-red-500 hover:text-red-600"
+                      className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                     >
                       <Trash2 size={16} />
                     </Button>
@@ -167,7 +209,7 @@ const LandTransportTariff = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={10} className="text-center py-6 text-gray-400">
+                <TableCell colSpan={10} className="text-center py-6 text-gray-400 bg-white dark:bg-neutral-900">
                   No records found.
                 </TableCell>
               </TableRow>

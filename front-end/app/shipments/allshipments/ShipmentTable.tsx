@@ -248,7 +248,7 @@ const AllShipmentsPage = () => {
 
 
   return (
-    <div className="px-4 pt-0 pb-4">
+    <div className="px-4 pt-4 pb-4 bg-white dark:bg-black min-h-screen">
       <div className="flex items-center justify-between mt-0 mb-4">
         <div className="relative mr-4 w-full max-w-sm">
           <div className="relative">
@@ -260,7 +260,7 @@ const AllShipmentsPage = () => {
               placeholder="Search by container..."
               value={containerSearch}
               onChange={(e) => setContainerSearch(e.target.value)}
-              className="pl-10 h-10 bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-400 focus-visible:ring-neutral-700"
+              className="pl-10 h-10 bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 text-black dark:text-white placeholder:text-neutral-400 focus-visible:ring-neutral-300 dark:focus-visible:ring-neutral-700"
             />
           </div>
         </div>
@@ -344,7 +344,7 @@ const AllShipmentsPage = () => {
             setSelectedContainers([]);
             setShowModal(true);
           }}
-          className="bg-blue-600 hover:bg-blue-500 text-white"
+          className="bg-blue-700 hover:bg-blue-800 text-white"
         >
           <Plus className="mr-2 h-4 w-4" />
           New Shipment
@@ -366,24 +366,24 @@ const AllShipmentsPage = () => {
         )}
       </div>
 
-      <div className="rounded-lg border border-neutral-800 bg-neutral-900 overflow-hidden shadow-sm">
+      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black overflow-hidden shadow-sm">
         <Table>
-          <TableHeader className="bg-neutral-800">
-            <TableRow className="hover:bg-neutral-800/60 border-neutral-700">
-              <TableHead className="text-neutral-300 font-medium">Shipment No.</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Date</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Customer</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Shipper</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Product</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Ports</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Containers</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Actions</TableHead>
+          <TableHeader className="bg-neutral-100 dark:bg-neutral-900">
+            <TableRow className="hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 border-neutral-200 dark:border-neutral-800">
+              <TableHead className="text-black dark:text-neutral-200 font-medium">Shipment No.</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 font-medium">Date</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 font-medium">Customer</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 font-medium">Shipper</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 font-medium">Product</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 font-medium">Ports</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 font-medium">Containers</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 font-medium">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {shipments.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center text-neutral-400 py-6">
+                <TableCell colSpan={8} className="text-center text-neutral-400 py-6 bg-white dark:bg-black">
                   No shipments found.
                 </TableCell>
               </TableRow>
@@ -404,7 +404,7 @@ const AllShipmentsPage = () => {
                 .map((shipment: any) => (
                   <TableRow
                     key={shipment.id}
-                    className="text-white border-b border-neutral-800 hover:bg-neutral-800/50"
+                    className="text-black dark:text-white border-b border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900"
                   >
                     <TableCell className="font-medium">{shipment.jobNumber}</TableCell>
                     <TableCell>{new Date(shipment.date).toLocaleDateString()}</TableCell>
@@ -423,7 +423,7 @@ const AllShipmentsPage = () => {
                         title="Edit"
                         variant="ghost"
                         size="icon"
-                        className="text-blue-400 hover:text-blue-300 hover:bg-neutral-800"
+                        className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                       >
                         <Pencil size={16} />
                       </Button>
@@ -432,20 +432,20 @@ const AllShipmentsPage = () => {
                         title="Delete"
                         variant="ghost"
                         size="icon"
-                        className="text-red-400 hover:text-red-300 hover:bg-neutral-800"
+                        className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                       >
                         <Trash2 size={16} />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-green-400  hover:text-green-500"
+                        className="h-8 w-8 text-green-400 hover:text-green-300 hover:bg-green-900/40 cursor-pointer"
                         title="Download PDF"
                         onClick={() => handleDownloadPDF(shipment.id, shipment.containers ?? [])}
                       >
                         <Download size={16} />
                       </Button>
-                    </TableCell>	
+                    </TableCell>
                   </TableRow>
                 ))
             )}

@@ -22,26 +22,26 @@ const UsersTable = () => {
         </button>
       </div>
 
-      <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden mt-4">
+      <div className="rounded-lg shadow-md overflow-hidden mt-4 border border-border bg-background">
         <table className="min-w-full leading-normal">
           <thead>
             <tr>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-border bg-background text-left text-xs font-semibold text-foreground uppercase tracking-wider">
                 Name
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-border bg-background text-left text-xs font-semibold text-foreground uppercase tracking-wider">
                 Email
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-border bg-background text-left text-xs font-semibold text-foreground uppercase tracking-wider">
                 Role
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-border bg-background text-left text-xs font-semibold text-foreground uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+              <th className="px-5 py-3 border-b-2 border-border bg-background text-left text-xs font-semibold text-foreground uppercase tracking-wider">
                 Actions
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"></th>
+              <th className="px-5 py-3 border-b-2 border-border bg-background text-left text-xs font-semibold text-foreground uppercase tracking-wider"></th>
             </tr>
           </thead>
           <tbody>

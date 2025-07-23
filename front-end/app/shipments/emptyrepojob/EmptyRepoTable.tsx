@@ -172,7 +172,7 @@ const EmptyRepo = () => {
   });
 
   return (
-    <div className="px-4 pt-0 pb-4">
+    <div className="px-4 pt-4 pb-4 bg-white dark:bg-black min-h-screen">
       <div className="flex items-center justify-between mt-0 mb-4">
         <div className="relative mr-4 w-full max-w-sm">
           <div className="relative">
@@ -184,7 +184,7 @@ const EmptyRepo = () => {
               placeholder="Search by job number, house BL, or ports..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              className="pl-10 h-10 bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-400 focus-visible:ring-neutral-700"
+              className="pl-10 h-10 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-black dark:text-white placeholder:text-neutral-400 focus-visible:ring-neutral-700"
             />
           </div>
         </div>
@@ -245,18 +245,18 @@ const EmptyRepo = () => {
         )}
       </div>
 
-      <div className="rounded-lg border border-neutral-800 bg-neutral-900 overflow-hidden shadow-sm">
+      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden shadow-sm">
         <Table>
-          <TableHeader className="bg-neutral-800">
-            <TableRow className="hover:bg-neutral-800/60 border-neutral-700">
-              <TableHead className="text-neutral-300 font-medium">Job Number</TableHead>
-              <TableHead className="text-neutral-300 font-medium">House BL</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Port of Loading</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Port of Discharge</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Vessel</TableHead>
-              <TableHead className="text-neutral-300 font-medium">ETD</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Containers</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Actions</TableHead>
+          <TableHeader className="bg-white dark:bg-neutral-900">
+            <TableRow>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 font-medium">Job Number</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 font-medium">House BL</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 font-medium">Port of Loading</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 font-medium">Port of Discharge</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 font-medium">Vessel</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 font-medium">ETD</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 font-medium">Containers</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 font-medium">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -270,7 +270,7 @@ const EmptyRepo = () => {
               filteredJobs.map((job: any) => (
                 <TableRow
                   key={job.id}
-                  className="text-white border-b border-neutral-800 hover:bg-neutral-800/50"
+                  className="text-black dark:text-white border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                 >
                   <TableCell className="font-medium">{job.jobNumber}</TableCell>
                   <TableCell>{job.houseBL || '-'}</TableCell>
@@ -289,7 +289,7 @@ const EmptyRepo = () => {
                       title="Edit"
                       variant="ghost"
                       size="icon"
-                      className="text-blue-400 hover:text-blue-300 hover:bg-neutral-800"
+                      className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                     >
                       <Pencil size={16} />
                     </Button>
@@ -298,7 +298,7 @@ const EmptyRepo = () => {
                       title="Delete"
                       variant="ghost"
                       size="icon"
-                      className="text-red-400 hover:text-red-300 hover:bg-neutral-800"
+                      className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                     >
                       <Trash2 size={16} />
                     </Button>

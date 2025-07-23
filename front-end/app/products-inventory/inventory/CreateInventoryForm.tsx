@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-// ...other imports...
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 interface InventoryFormProps {
   onClose: () => void;
@@ -1010,8 +1010,13 @@ const AddInventoryForm: React.FC<InventoryFormProps> = ({
       alert("Container saved successfully!");
       onClose();
     } catch (error: any) {
-      console.error("Error saving container:", error.response?.data || error.message);
-      alert("Failed to save container. Please check console for details.");
+      if (error.response?.status === 409 || (error.response?.data?.message && error.response.data.message.includes('already exists'))) {
+        alert('Container with this number already exists!');
+        onClose(); // Close the form/modal after alert
+      } else {
+        console.error("Error saving container:", error.response?.data || error.message);
+        alert("Failed to save container. Please check console for details.");
+      }
     }
   };
 
@@ -1049,784 +1054,771 @@ const AddInventoryForm: React.FC<InventoryFormProps> = ({
   const tableStyle: React.CSSProperties = {
     tableLayout: "fixed" as const,
     width: "100%",
-    maxWidth: "930px"
   };
 
   return (
-    <div className="p-4 text-sm w-full"> {/* Reduced from p-6 to p-4 */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-white">
-          {isEditMode ? "Edit Container" : "Add Container"}
-        </h2>
-        <Button
-          variant="ghost"
-          onClick={onClose}
-          className="text-neutral-400 hover:text-white h-8 w-8 p-0 cursor-pointer"
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent
+  onInteractOutside={(e: any) => e.preventDefault()}
+  className="!max-w-[1100px] !w-[80vw] !p-0"
+>
+  <DialogTitle className="sr-only">
+    {isEditMode ? "Edit Container" : "Add Container"}
+  </DialogTitle>
+  <div
+    className="p-4 text-sm w-full bg-white dark:bg-neutral-900 rounded-lg border border-white dark:border-neutral-800 shadow-none outline-none max-h-[90vh] overflow-y-auto"
+  >
+    <div className="flex justify-between items-center mb-6">
+      <h2 className="text-xl font-semibold text-black dark:text-white">
+        {isEditMode ? "Edit Container" : "Add Container"}
+      </h2>
+    </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Status - using shadcn Select */}
+      <div className="mb-4">
+        <Label className="text-sm text-gray-700 dark:text-white mb-1">Status</Label>
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
         >
-          &times;
-        </Button>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Status - using shadcn Select */}
-        <div className="mb-4">
-          <Label className="text-sm text-white mb-1">Status</Label>
-          <select
-            name="status"
-            value={formData.status}
+      {/* Two columns layout - keep structure, update styling */}
+      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+        {/* Container Number */}
+        <div>
+          <Label className="text-sm text-gray-700 dark:text-white mb-1">Container No</Label>
+          <input
+            type="text"
+            name="containerNumber"
+            value={formData.containerNumber}
             onChange={handleChange}
-            className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Container Category */}
+        <div>
+          <Label className="text-sm text-gray-700 dark:text-white mb-1">Container Category</Label>
+          <select
+            name="containerCategory"
+            value={formData.containerCategory}
+            onChange={handleChange}
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
           >
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="Tank">Tank</option>
+            <option value="Dry">Dry</option>
+            <option value="Refrigerated">Refrigerated</option>
           </select>
         </div>
 
-        {/* Two columns layout - keep structure, update styling */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-          {/* Container Number */}
-          <div>
-            <Label className="text-sm text-white mb-1">Container No</Label>
-            <input
-              type="text"
-              name="containerNumber"
-              value={formData.containerNumber}
-              onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-            />
-          </div>
+        {/* Container Type */}
+        <div>
+          <Label className="text-sm text-gray-700 dark:text-white mb-1">Container Type</Label>
+          <select
+            name="containerType"
+            value={formData.containerType}
+            onChange={handleChange}
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+          >
+            {containerTypeOptions.map((opt) => (
+              <option key={opt.value} value={opt.value} className="text-gray-900 dark:text-white bg-white dark:bg-neutral-800">
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {/* Container Category */}
+        {/* Container Size (only for Tank) */}
+        {isTank ? (
           <div>
-            <Label className="text-sm text-white mb-1">Container Category</Label>
+            <Label className="text-sm text-gray-700 dark:text-white mb-1">Container Size</Label>
             <select
-              name="containerCategory"
-              value={formData.containerCategory}
+              name="containerSize"
+              value={formData.containerSize}
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
+              className="w-full px-3 py-2 text-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
             >
-              <option value="Tank">Tank</option>
-              <option value="Dry">Dry</option>
-              <option value="Refrigerated">Refrigerated</option>
+              <option value="20TK" className="text-gray-900 dark:text-white bg-white dark:bg-neutral-800">20TK</option>
             </select>
           </div>
-
-          {/* Container Type */}
+        ) : (
+          // When not Tank, shift Container Class here
           <div>
-            <Label className="text-sm text-white mb-1">Container Type</Label>
+            <Label className="text-sm text-gray-700 dark:text-white mb-1">Container Class</Label>
             <select
-              name="containerType"
-              value={formData.containerType}
+              name="containerClass"
+              value={formData.containerClass}
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+              disabled={isRefrigerated}
             >
-              {containerTypeOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
+              <option value="">
+                {isRefrigerated ? "No options available" : "Select Class"}
+              </option>
+              {containerClassOptions.map((opt) => (
+                <option key={opt.value} value={opt.value} className="text-gray-900 dark:text-white bg-white dark:bg-neutral-800">
                   {opt.label}
                 </option>
               ))}
             </select>
           </div>
+        )}
 
-          {/* Container Size (only for Tank) */}
-          {isTank ? (
-            <div>
-              <Label className="text-sm text-white mb-1">Container Size</Label>
-              <select
-                name="containerSize"
-                value={formData.containerSize}
-                onChange={handleChange}
-                className="w-full px-3 py-2 text-md bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-              >
-                <option value="20TK">20TK</option>
-              </select>
-            </div>
-          ) : (
-            // When not Tank, shift Container Class here
-            <div>
-              <Label className="text-sm text-white mb-1">Container Class</Label>
-              <select
-                name="containerClass"
-                value={formData.containerClass}
-                onChange={handleChange}
-                className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-                disabled={isRefrigerated}
-              >
-                <option value="">
-                  {isRefrigerated ? "No options available" : "Select Class"}
-                </option>
-                {containerClassOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {/* When Tank, show Container Class in original place, else show Container Capacity here */}
-          {isTank ? (
-            <div>
-              <Label className="text-sm text-white mb-1">Container Class</Label>
-              <select
-                name="containerClass"
-                value={formData.containerClass}
-                onChange={handleChange}
-                className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-              >
-                {containerClassOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <div>
-              <Label className="text-sm text-white mb-1">Container Capacity</Label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  name="containerCapacity"
-                  value={formData.containerCapacity}
-                  onChange={handleChange}
-                  placeholder="Enter capacity value"
-                  className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-                />
-                <select
-                  name="capacityUnit"
-                  value={formData.capacityUnit}
-                  onChange={handleChange}
-                  className="px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-                >
-                  <option value="">Select Unit</option>
-                  <option value="MTN">MTN</option>
-                  <option value="LTRS">LTRS</option>
-                </select>
-              </div>
-            </div>
-          )}
-
-          {/* When Tank, show Container Capacity in its original place */}
-          {isTank && (
-            <div>
-              <Label className="text-sm text-white mb-1">Container Capacity</Label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  name="containerCapacity"
-                  value={formData.containerCapacity}
-                  onChange={handleChange}
-                  placeholder="Enter capacity value"
-                  className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-                />
-                <select
-                  name="capacityUnit"
-                  value={formData.capacityUnit}
-                  onChange={handleChange}
-                  className="px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-                >
-                  <option value="MTN">MTN</option>
-                  <option value="LTRS">LTRS</option>
-                </select>
-              </div>
-            </div>
-          )}
-
-          {/* Manufacturer */}
+        {/* When Tank, show Container Class in original place, else show Container Capacity here */}
+        {isTank ? (
           <div>
-            <Label className="text-sm text-white mb-1">Manufacturer</Label>
-            <input
-              type="text"
-              name="manufacturer"
-              value={formData.manufacturer}
-              onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-            />
-          </div>
-
-          {/* Build Year */}
-          <div>
-            <Label className="text-sm text-white mb-1">Build Year</Label>
-            <input
-              type="text"
-              name="buildYear"
-              value={formData.buildYear}
-              onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-            />
-          </div>
-
-          {/* Gross Weight */}
-          <div>
-            <Label className="text-sm text-white mb-1">Gross Wt</Label>
-            <input
-              type="text"
-              name="grossWeight"
-              value={formData.grossWeight}
-              onChange={handleChange}
-              placeholder="Enter gross weight"
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-            />
-          </div>
-
-          {/* Tare Weight */}
-          <div>
-            <Label className="text-sm text-white mb-1">Tare Wt</Label>
-            <input
-              type="text"
-              name="tareWeight"
-              value={formData.tareWeight}
-              onChange={handleChange}
-              placeholder="Enter tare weight"
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-            />
-          </div>
-
-          {/* Initial Survey Date */}
-          <div>
-            <Label className="text-sm text-white mb-1">Initial Survey Date</Label>
-            <input
-              type="date"
-              name="initialSurveyDate"
-              value={formData.initialSurveyDate}
-              onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
-            />
-          </div>
-        </div>
-
-        <div className="flex text-white flex-wrap gap-4 mb-4">
-          {/* Ownership */}
-          <div className="flex-1 min-w-[200px]">
-            <Label className="mb-1 font-medium">Ownership</Label>
+            <Label className="text-sm text-gray-700 dark:text-white mb-1">Container Class</Label>
             <select
-              name="ownership"
-              value={formData.ownership}
+              name="containerClass"
+              value={formData.containerClass}
               onChange={handleChange}
-              className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500"
+              className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
             >
-              <option value="">Select Ownership</option>
-              <option value="Own">Own</option>
-              <option value="Lease">Lease</option>
+              {containerClassOptions.map((opt) => (
+                <option key={opt.value} value={opt.value} className="text-gray-900 dark:text-white bg-white dark:bg-neutral-800">
+                  {opt.label}
+                </option>
+              ))}
             </select>
           </div>
-
-          {/* Only show these if ownership is "Own" */}
-          {(formData.ownership === "Own") && (
-            <>
-              {/* On Hire Location (Port) */}
-              <div className="flex-1 min-w-[200px]">
-                <Label className="mb-1 font-medium text-white">On Hire Location (Port)</Label>
-                <select
-                  name="onHireLocation"
-                  value={formData.onHireLocation}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500 cursor-pointer"
-                >
-                  <option value="">Select Port</option>
-                  {allPorts.map((port) => (
-                    <option key={port.id} value={port.portName}>
-                      {port.portName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex-1 min-w-[200px]">
-                <Label className="mb-1 font-medium text-white">On Hire Depot</Label>
-                <select
-                  value={selectedHireDepotId}
-                  onChange={e => {
-                    const selectedId = Number(e.target.value);
-                    setSelectedHireDepotId(selectedId);
-
-                    // Also update the formData with the selected depot ID and name
-                    const selectedDepot = hireDepotOptions.find(opt => opt.value === selectedId);
-                    setFormData(prev => ({
-                      ...prev,
-                      onHireDepotaddressbookId: selectedId.toString(),
-                      onHireDepotName: selectedDepot?.companyName || ""
-                    }));
-                  }}
-                  className="w-full px-3 py-2 text-sm bg-neutral-800 text-white rounded border border-neutral-700 focus:border-blue-500 cursor-pointer"
-                  disabled={!formData.onHireLocation}
-                >
-                  <option value="">
-                    {!formData.onHireLocation
-                      ? "Select a port first"
-                      : hireDepotOptions.length === 0
-                        ? "No depot terminals available for this port"
-                        : "Select Hire Depot"}
-                  </option>
-                  {hireDepotOptions.map(opt => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-                {formData.onHireLocation && hireDepotOptions.length === 0 && (
-                  <p className="mt-1 text-xs text-amber-500">
-                    No companies with business type "Deport Terminal" found for this port.
-                    Please add one in Address Book first.
-                  </p>
-                )}
-              </div>
-
-            </>
-          )}
-        </div>
-
-        {/* Leasing Info Section - only shows when Lease is selected */}
-        {formData.ownership === "Lease" && (
-          <div className="col-span-2 mt-4">
-            <Label className="text-white text-sm font-medium mb-2">Leasing Info</Label>
-            <div className="bg-neutral-800 p-4 rounded border border-neutral-700">
-              <table className="w-full mb-3 table-fixed" style={{ tableLayout: "fixed", width: "100%" }}>
-                <thead>
-                  <tr>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">Leasing Ref. No</th>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">Leasor Name</th>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[100px]">On Hire Date</th>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">On Hire Location</th>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">On Hire Depot</th>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[100px]">Off Hire Date</th>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[90px]">Lease Rent</th>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[100px]">remarks</th>
-                    <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[80px]">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {leasingRecords.map((record, index) => (
-                    <tr key={index} className="border-t border-neutral-700">
-                      <td className="py-2 pr-1">
-                        <input
-                          type="text"
-                          value={record.leasingRef}
-                          onChange={e => {
-                            const updated = [...leasingRecords];
-                            updated[index].leasingRef = e.target.value;
-                            // Mark as modified when changed
-                            updated[index].isModified = true;
-                            setLeasingRecords(updated);
-                          }}
-                          className="w-full p-1 bg-neutral-700 rounded text-white text-xs border border-neutral-600 focus:border-blue-500"
-                        />
-                      </td>
-                      <td className="py-2 pr-1">
-                        <select
-                          value={record.leasoraddressbookId}
-                          onChange={(e) => {
-                            const updated = [...leasingRecords];
-                            updated[index].leasoraddressbookId = e.target.value;
-                            const selected = leasoraddressbookIds.find(l => l.id.toString() === e.target.value);
-                            updated[index].leasorName = selected?.companyName || "";
-                            updated[index].isModified = true;
-                            setLeasingRecords(updated);
-                          }}
-                          className="w-full p-1 bg-neutral-700 rounded text-white text-xs border border-neutral-600 focus:border-blue-500"
-
-                        >
-                          <option value="">Select</option>
-                          {leasoraddressbookIds.map((leasor) => (
-                            <option key={leasor.id} value={leasor.id}>
-                              {leasor.companyName}
-                            </option>
-                          ))}
-                        </select>
-
-                      </td>
-                      <td className="py-2 pr-1">
-                        <input
-                          type="date"
-                          value={record.onHireDate}
-                          onChange={e => {
-                            const updated = [...leasingRecords];
-                            updated[index].onHireDate = e.target.value;
-                            updated[index].isModified = true;
-                            setLeasingRecords(updated);
-                          }}
-                          className="w-full p-1 bg-neutral-700 rounded text-white text-xs border border-neutral-600 focus:border-blue-500"
-                        />
-                      </td>
-
-                      {/* On Hire Location (Port) */}
-                      <td className="py-2 pr-1">
-                        <select
-                          value={record.portId || ""}
-                          onChange={(e) => {
-                            const selectedPortId = e.target.value;
-                            const selectedPort = allPorts.find((p) => p.id.toString() === selectedPortId);
-
-                            const updated = [...leasingRecords];
-                            updated[index].portId = selectedPortId;
-                            updated[index].onHireLocation = selectedPort?.portName || "";
-                            updated[index].onHireDepotaddressbookId = "";
-                            updated[index].onHireDepotName = "";
-                            updated[index].isModified = true;
-
-                            setLeasingRecords(updated);
-                            setCurrentLeasingRecordIndex(index);
-
-                            if (selectedPort) {
-                              console.log(`Leasing record ${index}: Selected port: ${selectedPort.portName} (ID: ${selectedPort.id})`);
-                              filterDepotsByPort(selectedPort.id);
-                            }
-                          }}
-                          className="w-full p-1 bg-neutral-700 rounded text-white text-xs border border-neutral-600 focus:border-blue-500"
-                        >
-                          <option value="">Select</option>
-                          {allPorts.map((port) => (
-                            <option key={port.id} value={port.id.toString()}>
-                              {port.portName}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-
-                      {/* On Hire Depot */}
-                      <td className="py-2 pr-1">
-                        <select
-                          value={record.onHireDepotaddressbookId || ""}
-                          onChange={(e) => {
-                            const selectedDepotId = e.target.value;
-                            const selectedDepot = hireDepotOptions.find((opt) => opt.value.toString() === selectedDepotId);
-
-                            const updated = [...leasingRecords];
-                            updated[index].onHireDepotaddressbookId = selectedDepotId;
-                            updated[index].onHireDepotName = selectedDepot?.companyName || selectedDepot?.label?.split(" - ")[0] || "";
-                            updated[index].isModified = true;
-
-                            setLeasingRecords(updated);
-                          }}
-                          disabled={!record.portId}
-                          className="w-full p-1 bg-neutral-700 rounded text-white text-xs border border-neutral-600 focus:border-blue-500"
-                        >
-                          <option value="">
-                            {!record.portId
-                              ? "Select a port first"
-                              : currentLeasingRecordIndex !== index
-                                ? "Click port again to load depots"
-                                : hireDepotOptions.length === 0
-                                  ? "No depot terminals available for this port"
-                                  : "Select Depot"}
-                          </option>
-                          {(currentLeasingRecordIndex === index || record.onHireDepotaddressbookId) &&
-                            hireDepotOptions.map((opt) => (
-                              <option key={opt.value} value={opt.value}>
-                                {opt.label}
-                              </option>
-                            ))}
-                        </select>
-                      </td>
-
-                      <td className="py-2 pr-1">
-                        <input
-                          type="date"
-                          value={record.offHireDate}
-                          onChange={e => {
-                            const updated = [...leasingRecords];
-                            updated[index].offHireDate = e.target.value;
-                            updated[index].isModified = true;
-                            setLeasingRecords(updated);
-                          }}
-                          className="w-full p-1 bg-neutral-700 rounded text-white text-xs border border-neutral-600 focus:border-blue-500"
-                        />
-                      </td>
-                      <td className="py-2 pr-1">
-                        <input
-                          type="text"
-                          placeholder="Lease Rent"
-                          value={record.leaseRentPerDay}
-                          onChange={e => {
-                            const updated = [...leasingRecords];
-                            updated[index].leaseRentPerDay = e.target.value;
-                            updated[index].isModified = true;
-                            setLeasingRecords(updated);
-                          }}
-                          className="w-full p-1 bg-neutral-700 rounded text-white text-xs border border-neutral-600 focus:border-blue-500"
-                        />
-                      </td>
-                      <td className="py-2 pr-1">
-                        <input
-                          type="text"
-                          placeholder="remarks"
-                          value={record.remarks}
-                          onChange={e => {
-                            const updated = [...leasingRecords];
-                            updated[index].remarks = e.target.value;
-                            updated[index].isModified = true;
-                            setLeasingRecords(updated);
-                          }}
-                          className="w-full p-1 bg-neutral-700 rounded text-white text-xs border border-neutral-600 focus:border-blue-500"
-                        />
-                      </td>
-                      <td className="py-2">
-                        <span
-                          onClick={() => handleDeleteLeasingRecord(index)}
-                          className="text-red-500 hover:text-red-400 cursor-pointer text-xs cursor-pointer"
-                        >
-                          Delete
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              <Button
-                type="button"
-                onClick={handleAddLeasingRecord}
-                className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
+        ) : (
+          <div>
+            <Label className="text-sm text-gray-700 dark:text-white mb-1">Container Capacity</Label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                name="containerCapacity"
+                value={formData.containerCapacity}
+                onChange={handleChange}
+                placeholder="Enter capacity value"
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+              />
+              <select
+                name="capacityUnit"
+                value={formData.capacityUnit}
+                onChange={handleChange}
+                className="px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
               >
-                + Add Leasing Record
-              </Button>
+                <option value="">Select Unit</option>
+                <option value="MTN" className="text-gray-900 dark:text-white bg-white dark:bg-neutral-800">MTN</option>
+                <option value="LTRS" className="text-gray-900 dark:text-white bg-white dark:bg-neutral-800">LTRS</option>
+              </select>
             </div>
           </div>
         )}
 
-        {/* Periodic Tank Certificates Section */}
+        {/* When Tank, show Container Capacity in its original place */}
+        {isTank && (
+          <div>
+            <Label className="text-sm text-gray-700 dark:text-white mb-1">Container Capacity</Label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                name="containerCapacity"
+                value={formData.containerCapacity}
+                onChange={handleChange}
+                placeholder="Enter capacity value"
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+              />
+              <select
+                name="capacityUnit"
+                value={formData.capacityUnit}
+                onChange={handleChange}
+                className="px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+              >
+                <option value="MTN" className="text-gray-900 dark:text-white bg-white dark:bg-neutral-800">MTN</option>
+                <option value="LTRS" className="text-gray-900 dark:text-white bg-white dark:bg-neutral-800">LTRS</option>
+              </select>
+            </div>
+          </div>
+        )}
+
+        {/* Manufacturer */}
+        <div>
+          <Label className="text-sm text-gray-700 dark:text-white mb-1">Manufacturer</Label>
+          <input
+            type="text"
+            name="manufacturer"
+            value={formData.manufacturer}
+            onChange={handleChange}
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Build Year */}
+        <div>
+          <Label className="text-sm text-gray-700 dark:text-white mb-1">Build Year</Label>
+          <input
+            type="text"
+            name="buildYear"
+            value={formData.buildYear}
+            onChange={handleChange}
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Gross Weight */}
+        <div>
+          <Label className="text-sm text-gray-700 dark:text-white mb-1">Gross Wt</Label>
+          <input
+            type="text"
+            name="grossWeight"
+            value={formData.grossWeight}
+            onChange={handleChange}
+            placeholder="Enter gross weight"
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Tare Weight */}
+        <div>
+          <Label className="text-sm text-gray-700 dark:text-white mb-1">Tare Wt</Label>
+          <input
+            type="text"
+            name="tareWeight"
+            value={formData.tareWeight}
+            onChange={handleChange}
+            placeholder="Enter tare weight"
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Initial Survey Date */}
+        <div>
+          <Label className="text-sm text-gray-700 dark:text-white mb-1">Initial Survey Date</Label>
+          <input
+            type="date"
+            name="initialSurveyDate"
+            value={formData.initialSurveyDate}
+            onChange={handleChange}
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+          />
+        </div>
+      </div>
+
+      <div className="flex text-white flex-wrap gap-4 mb-4">
+        {/* Ownership */}
+        <div className="flex-1 min-w-[200px]">
+          <Label className="mb-1 font-medium text-gray-700 dark:text-white">Ownership</Label>
+          <select
+            name="ownership"
+            value={formData.ownership}
+            onChange={handleChange}
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500"
+          >
+            <option value="">Select Ownership</option>
+            <option value="Own">Own</option>
+            <option value="Lease">Lease</option>
+          </select>
+        </div>
+
+        {/* Only show these if ownership is "Own" */}
+        {(formData.ownership === "Own") && (
+          <>
+            {/* On Hire Location (Port) */}
+            <div className="flex-1 min-w-[200px]">
+              <Label className="mb-1 font-medium text-gray-700 dark:text-white">On Hire Location (Port)</Label>
+              <select
+                name="onHireLocation"
+                value={formData.onHireLocation}
+                onChange={handleChange}
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500 cursor-pointer"
+              >
+                <option value="">Select Port</option>
+                {allPorts.map((port) => (
+                  <option key={port.id} value={port.portName}>
+                    {port.portName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex-1 min-w-[200px]">
+              <Label className="mb-1 font-medium text-gray-700 dark:text-white">On Hire Depot</Label>
+              <select
+                value={selectedHireDepotId}
+                onChange={e => {
+                  const selectedId = Number(e.target.value);
+                  setSelectedHireDepotId(selectedId);
+
+                  // Also update the formData with the selected depot ID and name
+                  const selectedDepot = hireDepotOptions.find(opt => opt.value === selectedId);
+                  setFormData(prev => ({
+                    ...prev,
+                    onHireDepotaddressbookId: selectedId.toString(),
+                    onHireDepotName: selectedDepot?.companyName || ""
+                  }));
+                }}
+                className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 focus:border-blue-500 cursor-pointer"
+                disabled={!formData.onHireLocation}
+              >
+                <option value="">
+                  {!formData.onHireLocation
+                    ? "Select a port first"
+                    : hireDepotOptions.length === 0
+                      ? "No depot terminals available for this port"
+                      : "Select Hire Depot"}
+                </option>
+                {hireDepotOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              {formData.onHireLocation && hireDepotOptions.length === 0 && (
+                <p className="mt-1 text-xs text-amber-500">
+                  No companies with business type "Deport Terminal" found for this port.
+                  Please add one in Address Book first.
+                </p>
+              )}
+            </div>
+
+          </>
+        )}
+      </div>
+
+      {/* Leasing Info Section - only shows when Lease is selected */}
+      {formData.ownership === "Lease" && (
         <div className="col-span-2 mt-4">
-          <Label className="text-white text-sm font-medium mb-2">Periodic Tank Certificates</Label>
-          <div className="bg-neutral-800 p-4 rounded border border-neutral-700">
-            <table className="w-full mb-3 table-fixed" style={tableStyle}>
+          <Label className="text-white text-sm font-medium mb-2">Leasing Info</Label>
+          <div className="bg-white dark:bg-neutral-900 p-4 rounded border border-neutral-200 dark:border-neutral-700">
+            <table className="w-full table-fixed mb-3" style={{ tableLayout: "fixed", width: "100%" }}>
               <thead>
                 <tr>
-                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">
-                    Inspection Date
-                  </th>
-                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">
-                    Inspection Type
-                  </th>
-                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">
-                    Next Due Date
-                  </th>
-                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[240px]">
-                    Certificate File
-                  </th>
-                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[70px]">
-                    Actions
-                  </th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">Leasing Ref. No</th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">Leasor Name</th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[100px]">On Hire Date</th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">On Hire Location</th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">On Hire Depot</th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[100px]">Off Hire Date</th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[90px]">Lease Rent</th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[100px]">remarks</th>
+                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[80px]">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {certificates.map((cert, idx) => (
-                  <tr key={idx} className="border-t border-neutral-700">
-                    <td className="py-2 min-w-[150px] pr-2">  {/* Added min-w-[150px] and pr-2 */}
+                {leasingRecords.map((record, index) => (
+                  <tr key={index} className="border-t border-neutral-700">
+                    <td className="py-2 pr-1">
                       <input
-                        type="date"
-                        value={cert.inspectionDate}
-                        onChange={(e) => {
-                          const newCerts = [...certificates];
-                          newCerts[idx].inspectionDate = e.target.value;
-                          // Mark as modified when changed
-                          newCerts[idx].isModified = true;
-                          setCertificates(newCerts);
+                        type="text"
+                        value={record.leasingRef}
+                        onChange={e => {
+                          const updated = [...leasingRecords];
+                          updated[index].leasingRef = e.target.value;
+                          updated[index].isModified = true;
+                          setLeasingRecords(updated);
                         }}
-                        className="w-full px-3 py-2 text-sm bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 cursor-pointer"
+                        className="w-full px-2 py-1 text-xs bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
                       />
                     </td>
-                    <td className="py-2 min-w-[150px] pr-2">
+                    <td className="py-2 pr-1">
                       <select
-                        value={cert.inspectionType}
+                        value={record.leasoraddressbookId}
                         onChange={(e) => {
-                          const newCerts = [...certificates];
-                          newCerts[idx].inspectionType = e.target.value;
-                          setCertificates(newCerts);
+                          const updated = [...leasingRecords];
+                          updated[index].leasoraddressbookId = e.target.value;
+                          const selected = leasoraddressbookIds.find(l => l.id.toString() === e.target.value);
+                          updated[index].leasorName = selected?.companyName || "";
+                          updated[index].isModified = true;
+                          setLeasingRecords(updated);
                         }}
-                        className="w-full px-3 py-2 text-sm bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500"
+                        className="w-full px-2 py-1 text-xs bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
                       >
-                        <option value="Periodic 2.5Yr">Periodic 2.5Yr</option>
-                        <option value="Periodic 5Yr">Periodic 5Yr</option>
+                        <option value="">Select</option>
+                        {leasoraddressbookIds.map((leasor) => (
+                          <option key={leasor.id} value={leasor.id} className="text-gray-900 dark:text-white bg-white dark:bg-neutral-700">
+                            {leasor.companyName}
+                          </option>
+                        ))}
                       </select>
                     </td>
-                    <td className="py-2 min-w-[150px] pr-2">
+                    <td className="py-2 pr-1">
                       <input
                         type="date"
-                        value={cert.nextDueDate}
+                        value={record.onHireDate}
+                        onChange={e => {
+                          const updated = [...leasingRecords];
+                          updated[index].onHireDate = e.target.value;
+                          updated[index].isModified = true;
+                          setLeasingRecords(updated);
+                        }}
+                        className="w-full px-2 py-1 text-xs bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
+                      />
+                    </td>
+                    {/* On Hire Location (Port) */}
+                    <td className="py-2 pr-1">
+                      <select
+                        value={record.portId || ""}
+                        onChange={(e) => {
+                          const selectedPortId = e.target.value;
+                          const selectedPort = allPorts.find((p) => p.id.toString() === selectedPortId);
+                          const updated = [...leasingRecords];
+                          updated[index].portId = selectedPortId;
+                          updated[index].onHireLocation = selectedPort?.portName || "";
+                          updated[index].onHireDepotaddressbookId = "";
+                          updated[index].onHireDepotName = "";
+                          updated[index].isModified = true;
+                          setLeasingRecords(updated);
+                          setCurrentLeasingRecordIndex(index);
+                          if (selectedPort) {
+                            filterDepotsByPort(selectedPort.id);
+                          }
+                        }}
+                        className="w-full px-2 py-1 text-xs bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
+                      >
+                        <option value="">Select</option>
+                        {allPorts.map((port) => (
+                          <option key={port.id} value={port.id.toString()} className="text-gray-900 dark:text-white bg-white dark:bg-neutral-700">
+                            {port.portName}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    {/* On Hire Depot */}
+                    <td className="py-2 pr-1">
+                      <select
+                        value={record.onHireDepotaddressbookId || ""}
+                        onChange={(e) => {
+                          const selectedDepotId = e.target.value;
+                          const selectedDepot = hireDepotOptions.find((opt) => opt.value.toString() === selectedDepotId);
+                          const updated = [...leasingRecords];
+                          updated[index].onHireDepotaddressbookId = selectedDepotId;
+                          updated[index].onHireDepotName = selectedDepot?.companyName || selectedDepot?.label?.split(" - ")[0] || "";
+                          updated[index].isModified = true;
+                          setLeasingRecords(updated);
+                        }}
+                        disabled={!record.portId}
+                        className="w-full px-2 py-1 text-xs bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
+                      >
+                        <option value="">
+                          {!record.portId
+                            ? "Select a port first"
+                            : currentLeasingRecordIndex !== index
+                              ? "Click port again to load depots"
+                              : hireDepotOptions.length === 0
+                                ? "No depot terminals available for this port"
+                                : "Select Depot"}
+                        </option>
+                        {(currentLeasingRecordIndex === index || record.onHireDepotaddressbookId) &&
+                          hireDepotOptions.map((opt) => (
+                            <option key={opt.value} value={opt.value} className="text-gray-900 dark:text-white bg-white dark:bg-neutral-700">
+                              {opt.label}
+                            </option>
+                          ))}
+                      </select>
+                    </td>
+                    <td className="py-2 pr-1">
+                      <input
+                        type="date"
+                        value={record.offHireDate}
+                        onChange={e => {
+                          const updated = [...leasingRecords];
+                          updated[index].offHireDate = e.target.value;
+                          updated[index].isModified = true;
+                          setLeasingRecords(updated);
+                        }}
+                        className="w-full px-2 py-1 text-xs bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
+                      />
+                    </td>
+                    <td className="py-2 pr-1">
+                      <input
+                        type="text"
+                        placeholder="Lease Rent"
+                        value={record.leaseRentPerDay}
+                        onChange={e => {
+                          const updated = [...leasingRecords];
+                          updated[index].leaseRentPerDay = e.target.value;
+                          updated[index].isModified = true;
+                          setLeasingRecords(updated);
+                        }}
+                        className="w-full px-2 py-1 text-xs bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
+                      />
+                    </td>
+                    <td className="py-2 pr-1">
+                      <input
+                        type="text"
+                        placeholder="remarks"
+                        value={record.remarks}
+                        onChange={e => {
+                          const updated = [...leasingRecords];
+                          updated[index].remarks = e.target.value;
+                          updated[index].isModified = true;
+                          setLeasingRecords(updated);
+                        }}
+                        className="w-full px-2 py-1 text-xs bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
+                      />
+                    </td>
+                    <td className="py-2">
+                      <span
+                        onClick={() => handleDeleteLeasingRecord(index)}
+                        className="text-red-500 hover:text-red-400 cursor-pointer text-xs cursor-pointer"
+                      >
+                        Delete
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <Button
+              type="button"
+              onClick={handleAddLeasingRecord}
+              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
+            >
+              + Add Leasing Record
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Periodic Tank Certificates Section */}
+      <div className="col-span-2 mt-4">
+        <Label className="text-white text-sm font-medium mb-2">Periodic Tank Certificates</Label>
+        <div className="bg-white dark:bg-neutral-900 p-4 rounded border border-neutral-200 dark:border-neutral-700">
+          <table className="w-full mb-3 table-fixed" style={tableStyle}>
+            <thead>
+              <tr>
+                <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">
+                  Inspection Date
+                </th>
+                <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">
+                  Inspection Type
+                </th>
+                <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[120px]">
+                  Next Due Date
+                </th>
+                <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[240px]">
+                  Certificate File
+                </th>
+                <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[70px]">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {certificates.map((cert, idx) => (
+                <tr key={idx} className="border-t border-neutral-700">
+                  <td className="py-2 min-w-[150px] pr-2">
+                    <input
+                      type="date"
+                      value={cert.inspectionDate}
+                      onChange={(e) => {
+                        const newCerts = [...certificates];
+                        newCerts[idx].inspectionDate = e.target.value;
+                        newCerts[idx].isModified = true;
+                        setCertificates(newCerts);
+                      }}
+                      className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500 cursor-pointer"
+                    />
+                  </td>
+                  <td className="py-2 min-w-[150px] pr-2">
+                    <select
+                      value={cert.inspectionType}
+                      onChange={(e) => {
+                        const newCerts = [...certificates];
+                        newCerts[idx].inspectionType = e.target.value;
+                        setCertificates(newCerts);
+                      }}
+                      className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500"
+                    >
+                      <option value="Periodic 2.5Yr" className="text-gray-900 dark:text-white bg-white dark:bg-neutral-700">Periodic 2.5Yr</option>
+                      <option value="Periodic 5Yr" className="text-gray-900 dark:text-white bg-white dark:bg-neutral-700">Periodic 5Yr</option>
+                    </select>
+                  </td>
+                  <td className="py-2 min-w-[150px] pr-2">
+                    <input
+                      type="date"
+                      value={cert.nextDueDate}
+                      onChange={(e) => {
+                        const newCerts = [...certificates];
+                        newCerts[idx].nextDueDate = e.target.value;
+                        setCertificates(newCerts);
+                      }}
+                      className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500 cursor-pointer"
+                    />
+                  </td>
+                  <td className="py-2 text-white min-w-[240px] pr-2">
+                    <div className="flex flex-col gap-1">
+                      <input
+                        type="file"
                         onChange={(e) => {
                           const newCerts = [...certificates];
-                          newCerts[idx].nextDueDate = e.target.value;
+                          newCerts[idx].certificateFile = e.target.files?.[0] || null;
                           setCertificates(newCerts);
                         }}
-                        className="w-full px-3 py-2 text-sm bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500  cursor-pointer"
+                        className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-neutral-600 file:text-white cursor-pointer"
                       />
-                    </td>
-                    <td className="py-2 text-white min-w-[240px] pr-2">
-                      <div className="flex flex-col gap-1">
-                        <input
-                          type="file"
-                          onChange={(e) => {
-                            const newCerts = [...certificates];
-                            newCerts[idx].certificateFile = e.target.files?.[0] || null;
-                            setCertificates(newCerts);
-                          }}
-                          className="w-full px-3 py-2 text-sm bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-neutral-600 file:text-white cursor-pointer"
-                        />
-
-                        {/* Show PDF link if certificate exists and no new file is selected */}
-                        {cert.certificate && !cert.certificateFile && (
-                          <a
-                            href={`http://localhost:8000/tankcertificate/uploads/certificates/${cert.certificate}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-400 hover:text-blue-300 mt-1 flex items-center"
-                          >
-                            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path>
-                              <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path>
-                            </svg>
-                            View certificate: {cert.certificate.split('-').pop()}
-                          </a>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-2 min-w-[70px]">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => handleDeleteCertificate(idx)}
-                        className="text-red-500 hover:text-red-400 hover:bg-red-950/30 cursor-pointer"
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <Button
-              type="button"
-              onClick={() =>
-                setCertificates([
-                  ...certificates,
-                  {
-                    inspectionDate: "",
-                    inspectionType: "Periodic 2.5Yr",
-                    nextDueDate: "",
-                    certificateFile: null,
-                  },
-                ])
-              }
-              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
-            >
-              + Add Certificate
-            </Button>
-          </div>
-        </div>
-
-        {/* On Hire Reports Section */}
-        <div className="col-span-2 mt-4">
-          <Label className="text-white text-sm font-medium mb-2">On Hire Reports</Label>
-          <div className="bg-neutral-800 p-4 rounded border border-neutral-700">
-            <table className="w-full mb-3 table-fixed" style={tableStyle}>
-              <thead>
-                <tr>
-                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[150px]"> {/* From 200px to 150px */}
-                    Report Date
-                  </th>
-                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[350px]"> {/* From 400px to 350px */}
-                    Report Document
-                  </th>
-                  <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[70px]"> {/* From 80px to 70px */}
-                    Actions
-                  </th>
+                      {cert.certificate && !cert.certificateFile && (
+                        <a
+                          href={`http://localhost:8000/tankcertificate/uploads/certificates/${cert.certificate}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-400 hover:text-blue-300 mt-1 flex items-center"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path>
+                            <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path>
+                          </svg>
+                          View certificate: {cert.certificate.split('-').pop()}
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-2 min-w-[70px]">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => handleDeleteCertificate(idx)}
+                      className="text-red-500 hover:text-red-400 hover:bg-red-950/30 cursor-pointer"
+                    >
+                      Delete
+                    </Button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {reports.map((report, idx) => (
-                  <tr key={idx} className="border-t border-neutral-700">
-                    <td className="py-2 min-w-[200px] pr-2">  {/* Added min-w-[200px] and pr-2 */}
-                      <input
-                        type="date"
-                        value={report.reportDate}
-                        onChange={(e) => {
-                          const newReports = [...reports];
-                          newReports[idx].reportDate = e.target.value;
-                          setReports(newReports);
-                        }}
-                        className="w-full px-3 py-2 text-sm bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500  cursor-pointer"
-                      />
-                    </td>
-                    <td className="py-2 text-white min-w-[350px] pr-2">
-                      <div className="flex flex-col gap-1">
-                        <input
-                          type="file"
-                          onChange={(e) => {
-                            const newReports = [...reports];
-                            newReports[idx].reportDocument = e.target.files?.[0] || null;
-                            setReports(newReports);
-                          }}
-                          className="w-full px-3 py-2 text-sm bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-neutral-600 file:text-white cursor-pointer"
-                        />
-
-                        {/* Show PDF link if report document exists and no new file is selected */}
-                        {report.reportDocumentName && (
-                          <a
-                            href={`http://localhost:8000/tankcertificate/uploads/reports/${report.reportDocumentName}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-400 hover:text-blue-300 mt-1 flex items-center"
-                          >
-                            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path>
-                              <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path>
-                            </svg>
-                            View report: {report.reportDocumentName.split('-').pop()}
-                          </a>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-2 min-w-[70px]">  {/* Added min-w-[80px] */}
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => handleDeleteReport(idx)}
-                        className="text-red-500 hover:text-red-400 hover:bg-red-950/30 cursor-pointer"
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <Button
-              type="button"
-              onClick={() =>
-                setReports([
-                  ...reports,
-                  {
-                    reportDate: "",
-                    reportDocument: null,
-                  },
-                ])
-              }
-              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
-            >
-              + Add Report
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex justify-center gap-3 mt-6">
+              ))}
+            </tbody>
+          </table>
           <Button
             type="button"
-            onClick={onClose}
-            className="w-full sm:w-auto bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
+            onClick={() =>
+              setCertificates([
+                ...certificates,
+                {
+                  inspectionDate: "",
+                  inspectionType: "Periodic 2.5Yr",
+                  nextDueDate: "",
+                  certificateFile: null,
+                },
+              ])
+            }
+            className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
           >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
-          >
-            {isEditMode ? "Update Container" : "Add Container"}
+            + Add Certificate
           </Button>
         </div>
-      </form>
-    </div>
+      </div>
+
+      {/* On Hire Reports Section */}
+      <div className="col-span-2 mt-4">
+        <Label className="text-white text-sm font-medium mb-2">On Hire Reports</Label>
+        <div className="bg-white dark:bg-neutral-900 p-4 rounded border border-neutral-200 dark:border-neutral-700">
+          <table className="w-full mb-3 table-fixed" style={tableStyle}>
+            <thead>
+              <tr>
+                <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[150px]"> {/* From 200px to 150px */}
+                  Report Date
+                </th>
+                <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[350px]"> {/* From 400px to 350px */}
+                  Report Document
+                </th>
+                <th className="text-left text-neutral-400 text-xs font-medium pb-2 w-[70px]"> {/* From 80px to 70px */}
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {reports.map((report, idx) => (
+                <tr key={idx} className="border-t border-neutral-700">
+                  <td className="py-2 min-w-[200px] pr-2">
+                    <input
+                      type="date"
+                      value={report.reportDate}
+                      onChange={(e) => {
+                        const newReports = [...reports];
+                        newReports[idx].reportDate = e.target.value;
+                        setReports(newReports);
+                      }}
+                      className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500 cursor-pointer"
+                    />
+                  </td>
+                  <td className="py-2 text-white min-w-[350px] pr-2">
+                    <div className="flex flex-col gap-1">
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          const newReports = [...reports];
+                          newReports[idx].reportDocument = e.target.files?.[0] || null;
+                          setReports(newReports);
+                        }}
+                        className="w-full px-3 py-2 text-sm bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-600 focus:border-blue-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-neutral-600 file:text-white cursor-pointer"
+                      />
+                      {report.reportDocumentName && (
+                        <a
+                          href={`http://localhost:8000/tankcertificate/uploads/reports/${report.reportDocumentName}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-400 hover:text-blue-300 mt-1 flex items-center"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path>
+                            <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path>
+                          </svg>
+                          View report: {report.reportDocumentName.split('-').pop()}
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-2 min-w-[70px]">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => handleDeleteReport(idx)}
+                      className="text-red-500 hover:text-red-400 hover:bg-red-950/30 cursor-pointer"
+                    >
+                      Delete
+
+                    </Button>
+                  </td>
+                </tr>
+                                     ))}
+            </tbody>
+          </table>
+
+          <Button
+            type="button"
+            onClick={() =>
+              setReports([
+                ...reports,
+                {
+                  reportDate: "",
+                  reportDocument: null,
+                },
+              ])
+            }
+            className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
+          >
+            + Add Report
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex justify-center gap-3 mt-6">
+        <Button
+          type="button"
+          onClick={onClose}
+          className="w-full sm:w-auto bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors cursor-pointer"
+        >
+          {isEditMode ? "Update Container" : "Add Container"}
+        </Button>
+      </div>
+    </form>
+  </div>
+</DialogContent>
+    </Dialog>
   );
 };
 

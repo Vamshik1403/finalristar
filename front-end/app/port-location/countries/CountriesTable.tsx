@@ -104,7 +104,7 @@ const CountryPage = () => {
   };
 
   return (
-    <div className="px-4 pt-0 pb-4">
+    <div className="px-4 pt-4 pb-4 dark:bg-black">
       <div className="flex items-center justify-between mt-0 mb-4">
         <div className="relative w-full mr-4">
           <Search
@@ -114,7 +114,7 @@ const CountryPage = () => {
           <input
             type="text"
             placeholder="Search countries..."
-            className="p-2 pl-10 rounded-lg bg-neutral-900 text-white placeholder-neutral-400 border border-neutral-800 focus:outline-none focus:border-blue-500 transition-all"
+            className="h-8 p-2 pl-10 rounded-lg bg-background text-foreground placeholder-muted-foreground border border-border focus:outline-none focus:border-blue-500 transition-all"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -131,38 +131,38 @@ const CountryPage = () => {
         </Button>
       </div>
 
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+        <TableHeader className="bg-background">
             <TableRow>
-              <TableHead className="text-white">Code</TableHead>
-              <TableHead className="text-white">Name</TableHead>
-              <TableHead className="text-white">Region</TableHead>
-              <TableHead className="text-white">Currency</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-white">Actions</TableHead>
+              <TableHead className="text-foreground">Code</TableHead>
+              <TableHead className="text-foreground">Name</TableHead>
+              <TableHead className="text-foreground">Region</TableHead>
+              <TableHead className="text-foreground">Currency</TableHead>
+              <TableHead className="text-foreground">Status</TableHead>
+              <TableHead className="text-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : filteredCountries.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   No countries found.
                 </TableCell>
               </TableRow>
             ) : (
               filteredCountries.map((country: any) => (
-                <TableRow key={country.id} className="transition-colors bg-neutral-900 hover:bg-neutral-800 border-b border-neutral-800">
-                  <TableCell className="text-white">{country.countryCode}</TableCell>
-                  <TableCell className="text-white">{country.countryName}</TableCell>
-                  <TableCell className="text-white">{country.regions}</TableCell>
-                  <TableCell className="text-white">{country.currency?.currencyName || "-"}</TableCell>
+                <TableRow key={country.id} className="transition-colors bg-background hover:bg-muted border-b border-border">
+                  <TableCell className="text-foreground">{country.countryCode}</TableCell>
+                  <TableCell className="text-foreground">{country.countryName}</TableCell>
+                  <TableCell className="text-foreground">{country.regions}</TableCell>
+                  <TableCell className="text-foreground">{country.currency?.currencyName || "-"}</TableCell>
                   <TableCell>
                     <StatusBadge status={country.status} />
                   </TableCell>
@@ -173,7 +173,7 @@ const CountryPage = () => {
                         size="icon"
                         title="Edit"
                         onClick={() => handleEditClick(country)}
-                        className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                       >
                         <Pencil size={16} />
                       </Button>
@@ -182,7 +182,7 @@ const CountryPage = () => {
                         size="icon"
                         title="Delete"
                         onClick={() => handleDelete(country.id)}
-                        className="hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                       >
                         <Trash2 size={16} />
                       </Button>

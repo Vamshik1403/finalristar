@@ -92,20 +92,13 @@ const AddContainerLeaseForm: React.FC<AddTariffModalProps> = ({ onClose, onSave,
 
   return (
     <div className="fixed inset-0 backdrop-blur-lg bg-opacity-40 flex items-center justify-center z-50">
-      <Dialog open onOpenChange={onClose}>
-        <DialogContent className="max-w-xl w-full bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-800">
-          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900">
-            <DialogTitle className="text-xl font-semibold text-white">
+      <Dialog open onOpenChange={onClose} modal={true}>
+        <DialogContent className="max-w-xl w-full bg-white dark:bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-200 dark:border-neutral-800" onInteractOutside={e => e.preventDefault()}>
+          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               {formTitle}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white cursor-pointer"
-            >
-              <X size={24} />
-            </Button>
+            {/* Removed duplicate X close button here */}
           </DialogHeader>
           {alert && (
             <div className="px-6 pt-4">
@@ -129,7 +122,7 @@ const AddContainerLeaseForm: React.FC<AddTariffModalProps> = ({ onClose, onSave,
             <div className="grid grid-cols-2 gap-x-6 gap-y-4">
               {/* Status */}
               <div className="flex items-center gap-2 mt-2">
-                <p className="flex items text-sm text-neutral-200">Status</p>
+                <p className="flex items text-sm text-gray-900 dark:text-neutral-200">Status</p>
                 <input
                   type="checkbox"
                   checked={form.status}
@@ -137,67 +130,67 @@ const AddContainerLeaseForm: React.FC<AddTariffModalProps> = ({ onClose, onSave,
                   className="accent-blue-600 w-4 h-4"
                   id="status"
                 />
-                <label htmlFor="status" className="text-neutral-200 text-sm cursor-pointer">Active</label>
+                <label htmlFor="status" className="text-gray-900 dark:text-neutral-200 text-sm cursor-pointer">Active</label>
               </div>
               <div></div>
               {/* Tariff Code */}
               <div>
-                <label className="block text-xs text-neutral-200 mb-1">Tariff Code</label>
+                <label className="block text-xs text-gray-900 dark:text-neutral-200 mb-1">Tariff Code</label>
                 <Input
                   type="text"
                   value={form.tariffCode}
                   readOnly
-                  className="w-full bg-neutral-800 text-white border border-neutral-700"
+                  className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
                 />
               </div>
               {/* Container Category */}
               <div>
-                <label className="block text-xs text-neutral-200 mb-1">Container Category</label>
+                <label className="block text-xs text-gray-900 dark:text-neutral-200 mb-1">Container Category</label>
                 <Input
                   type="text"
                   value={form.containerCategory}
                   readOnly
-                  className="w-full bg-neutral-800 text-white border border-neutral-700"
+                  className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
                 />
               </div>
               {/* Container Type */}
               <div>
-                <label className="block text-xs text-neutral-200 mb-1">Container Type</label>
+                <label className="block text-xs text-gray-900 dark:text-neutral-200 mb-1">Container Type</label>
                 <Input
                   type="text"
                   value={form.containerType}
                   readOnly
-                  className="w-full bg-neutral-800 text-white border border-neutral-700"
+                  className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
                 />
               </div>
               {/* Container Class */}
               <div>
-                <label className="block text-xs text-neutral-200 mb-1">Container Class</label>
+                <label className="block text-xs text-gray-900 dark:text-neutral-200 mb-1">Container Class</label>
                 <Input
                   type="text"
                   value={form.containerClass}
                   readOnly
-                  className="w-full bg-neutral-800 text-white border border-neutral-700"
+                  className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
                 />
               </div>
               {/* Lease Rent per Day */}
               <div>
-                <label className="block text-xs text-neutral-200 mb-1">Lease Rent per Day</label>
+                <label className="block text-xs text-gray-900 dark:text-neutral-200 mb-1">Lease Rent per Day</label>
                 <Input
                   type="text"
                   value={form.leaseRentPerDay}
                   onChange={(e) => setForm({ ...form, leaseRentPerDay: Number(e.target.value) })}
-                  className="w-full bg-neutral-800 text-white border border-neutral-700"
+                  className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
                 />
               </div>
               {/* Currency */}
               <div>
-                <label className="block text-xs text-neutral-200 mb-1">Currency</label>
+                <label className="block text-xs text-gray-900 dark:text-neutral-200 mb-1">Currency</label>
                 <Input
                   type="text"
                   value={form.currencyName}
                   readOnly
-                  className="w-full bg-neutral-800 text-white border border-neutral-700"
+                  className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
                 />
               </div>
             </div>
@@ -206,7 +199,7 @@ const AddContainerLeaseForm: React.FC<AddTariffModalProps> = ({ onClose, onSave,
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 cursor-pointer"
+                className="px-4 py-2 bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-gray-900 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 cursor-pointer"
               >
                 Cancel
               </Button>

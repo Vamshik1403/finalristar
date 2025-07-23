@@ -131,38 +131,38 @@ const CountryPage = () => {
         </Button>
       </div>
 
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-background">
             <TableRow>
-              <TableHead className="text-white">Code</TableHead>
-              <TableHead className="text-white">Name</TableHead>
-              <TableHead className="text-white">Region</TableHead>
-              <TableHead className="text-white">Currency</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-white">Actions</TableHead>
+              <TableHead className="text-foreground">Code</TableHead>
+              <TableHead className="text-foreground">Name</TableHead>
+              <TableHead className="text-foreground">Region</TableHead>
+              <TableHead className="text-foreground">Currency</TableHead>
+              <TableHead className="text-foreground">Status</TableHead>
+              <TableHead className="text-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : filteredCountries.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   No countries found.
                 </TableCell>
               </TableRow>
             ) : (
               filteredCountries.map((country: any) => (
-                <TableRow key={country.id} className="transition-colors bg-neutral-900 hover:bg-neutral-800 border-b border-neutral-800">
-                  <TableCell className="text-white">{country.countryCode}</TableCell>
-                  <TableCell className="text-white">{country.countryName}</TableCell>
-                  <TableCell className="text-white">{country.regions}</TableCell>
-                  <TableCell className="text-white">{country.currency?.currencyName || "-"}</TableCell>
+                <TableRow key={country.id} className="transition-colors bg-background hover:bg-muted border-b border-border">
+                  <TableCell className="text-foreground">{country.countryCode}</TableCell>
+                  <TableCell className="text-foreground">{country.countryName}</TableCell>
+                  <TableCell className="text-foreground">{country.regions}</TableCell>
+                  <TableCell className="text-foreground">{country.currency?.currencyName || "-"}</TableCell>
                   <TableCell>
                     <StatusBadge status={country.status} />
                   </TableCell>

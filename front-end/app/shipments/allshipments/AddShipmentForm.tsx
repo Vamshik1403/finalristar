@@ -14,6 +14,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Label } from "@/components/ui/label";
 
 type Option = { id: string | number; name: string };
 type ProductOption = {
@@ -936,39 +937,33 @@ const AddShipmentModal = ({
     <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50 backdrop-blur-lg">
       <Dialog open onOpenChange={onClose}>
         <DialogContent
-          className="!w-[90vw] !max-w-[1200px] min-w-0 bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-800"
+          onInteractOutside={e => e.preventDefault()}
+          className="!w-[90vw] !max-w-[1200px] min-w-0 bg-white dark:bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-800"
         >
-          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900">
-            <DialogTitle className="text-xl font-semibold text-white">
+          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               {formTitle}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white cursor-pointer"
-            >
-              &times;
-            </Button>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="px-6 pb-6 pt-2 space-y-4">
             {/* Import Data from Quotation */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">Import Data from Quotation</h3>
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">Import Data from Quotation</h3>
               </div>
-              <div className="flex items-end gap-4 bg-neutral-800 p-4 rounded">
+              <div className="flex items-end gap-4 w-full p-2 bg-white dark:bg-neutral-900 rounded border border-neutral-200 dark:border-neutral-800">
                 <div className="flex-1">
-                  <label className="block text-sm text-neutral-200 mb-1">
+                  <Label htmlFor="quotationRefNo" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                     Quotation Reference Number
-                  </label>
+                  </Label>
                   <Input
+                    id="quotationRefNo"
                     type="text"
                     value={form.quotationRefNo || ""}
                     onChange={(e) => setForm({ ...form, quotationRefNo: e.target.value })}
                     placeholder="Enter quotation reference number"
-                    className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                    className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                   />
                   <p className="text-xs text-neutral-400 mt-1">
                     Import shipping details from an existing quotation to auto-fill similar fields.
@@ -987,85 +982,93 @@ const AddShipmentModal = ({
             {/* Basic Information */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">
                   Basic Information
                 </h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
-                <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+              <div className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 bg-white dark:bg-neutral-900 rounded">
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="date" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Date (DD/MM/YY) <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
+                      id="date"
                       type="date"
                       value={form.date || ""}
                       onChange={(e) => setForm({ ...form, date: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="jobNumber" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Job Number <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
+                      id="jobNumber"
                       type="text"
                       value={form.jobNumber || ""}
                       onChange={(e) => setForm({ ...form, jobNumber: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="referenceNumber" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Reference Number
-                    </label>
+                    </Label>
                     <Input
+                      id="referenceNumber"
                       type="text"
                       value={form.referenceNumber || ""}
                       onChange={(e) => setForm({ ...form, referenceNumber: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="masterBL" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Master BL
-                    </label>
+                    </Label>
                     <Input
+                      id="masterBL"
                       type="text"
                       value={form.masterBL || ""}
                       onChange={(e) => setForm({ ...form, masterBL: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="shippingTerm" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Shipment Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
+                    </Label>
+                    <Select
                       value={form.shippingTerm || ""}
-                      onChange={(e) =>
-                        setForm({ ...form, shippingTerm: e.target.value })
-                      }
+                      onValueChange={(value) => setForm({ ...form, shippingTerm: value })}
                       disabled={!!form.quotationRefNo}
-                      className={`w-full p-2 text-white rounded border ${
-                        form.quotationRefNo
-                          ? "bg-gray-700 border-gray-600 cursor-not-allowed opacity-75"
-                          : "bg-gray-900 border-gray-700"
-                      }`}
                     >
-                      <option value="">Select Shipping Term</option>
-                      {selectOptions.shippingTerm.map((term) => (
-                        <option key={term.id} value={term.id}>
-                          {term.name}
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger
+                        className={`w-full p-2 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 ${
+                          form.quotationRefNo
+                            ? "cursor-not-allowed opacity-75"
+                            : ""
+                        }`}
+                      >
+                        <SelectValue placeholder="Select Shipping Term" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
+                        {selectOptions.shippingTerm.map((term) => (
+                          <SelectItem key={term.id} value={term.id.toString()}>
+                            {term.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="customerName" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Customer Name <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
+                      id="customerName"
                       type="text"
                       value={form.customerDisplayName || ""}
                       onChange={(e) => {
@@ -1079,7 +1082,7 @@ const AddShipmentModal = ({
                       onFocus={() => toggleSuggestions('customer', true)}
                       onBlur={() => setTimeout(() => toggleSuggestions('customer', false), 150)}
                       placeholder="Start typing customer name..."
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                     {showSuggestions.customer && form.customerDisplayName && (
                       <div className="absolute z-[9999] w-full mt-1 max-h-40 overflow-hidden">
@@ -1119,10 +1122,11 @@ const AddShipmentModal = ({
 
                   {/* Product Name - Fix dropdown positioning */}
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="productName" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Product Name <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
+                      id="productName"
                       type="text"
                       value={form.productDisplayName || ""}
                       onChange={(e) => {
@@ -1137,7 +1141,7 @@ const AddShipmentModal = ({
                       onFocus={() => toggleSuggestions('product', true)}
                       onBlur={() => setTimeout(() => toggleSuggestions('product', false), 150)}
                       placeholder="Start typing product name..."
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                     {showSuggestions.product && form.productDisplayName && (
                       <div className="absolute z-[9999] w-full mt-1 max-h-40 overflow-hidden">
@@ -1179,10 +1183,11 @@ const AddShipmentModal = ({
 
                   {/* Consignee Name - Fix dropdown visibility */}
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="consigneeName" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Consignee Name
-                    </label>
+                    </Label>
                     <Input
+                      id="consigneeName"
                       type="text"
                       value={form.consigneeName || ""}
                       onChange={(e) => {
@@ -1196,7 +1201,7 @@ const AddShipmentModal = ({
                       onFocus={() => toggleSuggestions('consignee', true)}
                       onBlur={() => setTimeout(() => toggleSuggestions('consignee', false), 150)}
                       placeholder="Start typing consignee name..."
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                     {showSuggestions.consignee && form.consigneeName && (
                       <ul className="absolute z-[9999] w-full bg-neutral-800 border border-neutral-700 rounded mt-1 max-h-40 overflow-y-auto shadow-lg">
@@ -1233,10 +1238,11 @@ const AddShipmentModal = ({
 
                   {/* Shipper Name - Fix dropdown visibility */}
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="shipperName" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Shipper Name
-                    </label>
+                    </Label>
                     <Input
+                      id="shipperName"
                       type="text"
                       value={form.shipperName || ""}
                       onChange={(e) => {
@@ -1250,7 +1256,7 @@ const AddShipmentModal = ({
                       onFocus={() => toggleSuggestions('shipper', true)}
                       onBlur={() => setTimeout(() => toggleSuggestions('shipper', false), 150)}
                       placeholder="Start typing shipper name..."
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                     {showSuggestions.shipper && form.shipperName && (
                       <ul className="absolute z-[9999] w-full bg-neutral-800 border border-neutral-700 rounded mt-1 max-h-40 overflow-y-auto shadow-lg">
@@ -1291,18 +1297,19 @@ const AddShipmentModal = ({
             {/* Port Information */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">
                   Port Information
                 </h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
-                <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+              <div className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 bg-white dark:bg-neutral-900 rounded">
                   {/* Port of Loading - Fix dropdown visibility */}
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="portOfLoading" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Port of Loading <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
+                      id="portOfLoading"
                       type="text"
                       value={form.portOfLoadingName || ""}
                       onChange={(e) => {
@@ -1316,7 +1323,7 @@ const AddShipmentModal = ({
                       onFocus={() => toggleSuggestions('portLoading', true)}
                       onBlur={() => setTimeout(() => toggleSuggestions('portLoading', false), 150)}
                       placeholder="Start typing port name..."
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                     {showSuggestions.portLoading && form.portOfLoadingName && (
                       <ul className="absolute z-[9999] w-full bg-neutral-800 border border-neutral-700 rounded mt-1 max-h-40 overflow-y-auto shadow-lg">
@@ -1356,10 +1363,11 @@ const AddShipmentModal = ({
 
                   {/* Port of Discharge - Fix dropdown visibility */}
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="portOfDischarge" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Port of Discharge <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
+                      id="portOfDischarge"
                       type="text"
                       value={form.portOfDischargeName || ""}
                       onChange={(e) => {
@@ -1373,7 +1381,7 @@ const AddShipmentModal = ({
                       onFocus={() => toggleSuggestions('portDischarge', true)}
                       onBlur={() => setTimeout(() => toggleSuggestions('portDischarge', false), 150)}
                       placeholder="Start typing port name..."
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                     {showSuggestions.portDischarge && form.portOfDischargeName && (
                       <ul className="absolute z-[9999] w-full bg-neutral-800 border border-neutral-700 rounded mt-1 max-h-40 overflow-y-auto shadow-lg">
@@ -1414,53 +1422,58 @@ const AddShipmentModal = ({
 
                   <div className="flex w-full gap-4 col-span-2">
                     <div className="flex-1">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="freeDays1" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Free Days
-                      </label>
+                      </Label>
                       <Input
+                        id="freeDays1"
                         type="text"
                         value={form.freeDays1 || ""}
                         onChange={(e) => setForm({ ...form, freeDays1: e.target.value })}
-                        className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                        className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="detentionRate1" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Detention Rate
-                      </label>
+                      </Label>
                       <Input
+                        id="detentionRate1"
                         type="text"
                         value={form.detentionRate1 || ""}
                         onChange={(e) => setForm({ ...form, detentionRate1: e.target.value })}
-                        className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                        className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="freeDays2" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Free Days
-                      </label>
+                      </Label>
                       <Input
+                        id="freeDays2"
                         type="text"
                         value={form.freeDays2 || ""}
                         onChange={(e) => setForm({ ...form, freeDays2: e.target.value })}
-                        className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                        className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="detentionRate2" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Detention Rate
-                      </label>
+                      </Label>
                       <Input
+                        id="detentionRate2"
                         type="text"
                         value={form.detentionRate2 || ""}
                         onChange={(e) => setForm({ ...form, detentionRate2: e.target.value })}
-                        className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                        className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                   </div>
 
                   <div className="col-span-2 flex items-center gap-2">
                     <Checkbox
+                      id="enableTranshipmentPort"
                       checked={!!form.enableTranshipmentPort}
                       onCheckedChange={(checked) =>
                         setForm({
@@ -1468,26 +1481,22 @@ const AddShipmentModal = ({
                           enableTranshipmentPort: checked,
                         })
                       }
-                      id="enableTranshipmentPort"
                     />
-                    <label
-                      htmlFor="enableTranshipmentPort"
-                      className="text-neutral-200 text-sm"
-                    >
+                    <Label htmlFor="enableTranshipmentPort" className="text-gray-900 dark:text-neutral-200 text-sm">
                       Enable Transhipment Port
-                    </label>
+                    </Label>
                   </div>
                   {form.enableTranshipmentPort && (
                     <div>
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="transhipmentPortName" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Transhipment Port
-                      </label>
+                      </Label>
                       <Select
                         value={form.transhipmentPortName || ""}
                         onValueChange={(value) => setForm({ ...form, transhipmentPortName: value })}
                       >
-                        <SelectTrigger className="w-full p-2.5 bg-neutral-800 text-white border border-neutral-700">
-                          <SelectValue placeholder="Select Port" />
+                        <SelectTrigger className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white border border-neutral-200 dark:border-neutral-700">
+                          <SelectValue placeholder="Select Transhipment Port" />
                         </SelectTrigger>
                         <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
                           {selectOptions.port.length > 0 ? (
@@ -1514,14 +1523,15 @@ const AddShipmentModal = ({
                   Handling Agents
                 </h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
+              <div className="w-full p-2 bg-white dark:bg-neutral-900 rounded border border-neutral-200 dark:border-neutral-800">
                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                   {/* EXP Handling Agent - Change to select dropdown */}
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="expHandlingAgent" className="block text-sm text-neutral-200 mb-1">
                       EXP Handling Agent <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <select
+                      id="expHandlingAgent"
                       value={form.expHandlingAgent || ""}
                       onChange={(e) => {
                         const selectedId = Number(e.target.value);
@@ -1532,7 +1542,7 @@ const AddShipmentModal = ({
                           expHandlingAgentName: selected?.companyName || "",
                         }));
                       }}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     >
                       <option value="">
                         {!form.portOfLoading ? "First Select Port of Loading" : "Select Handling Agent"}
@@ -1555,10 +1565,11 @@ const AddShipmentModal = ({
 
                   {/* IMP Handling Agent - Change to select dropdown */}
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="impHandlingAgent" className="block text-sm text-neutral-200 mb-1">
                       IMP Handling Agent <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <select
+                      id="impHandlingAgent"
                       value={form.impHandlingAgent || ""}
                       onChange={(e) => {
                         const selectedId = Number(e.target.value);
@@ -1569,7 +1580,7 @@ const AddShipmentModal = ({
                           impHandlingAgentName: selected?.companyName || "",
                         }));
                       }}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     >
                       <option value="">
                         {!form.portOfDischarge ? "First Select Port of Discharge" : "Select Handling Agent"}
@@ -1600,29 +1611,31 @@ const AddShipmentModal = ({
                   Add Inventory
                 </h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
-                <div className="mb-4">
-                  <label className="block text-sm text-neutral-200 mb-1">
+              <div className="w-full p-2 bg-white dark:bg-neutral-900 rounded border border-neutral-200 dark:border-neutral-800">
+                <div className="mb-4 bg-white dark:bg-neutral-900 rounded">
+                  <Label htmlFor="quantity" className="block text-sm text-neutral-200 mb-1">
                     Quantity <span className="text-red-500">*</span>
-                  </label>
+                  </Label>
                   <Input
+                    id="quantity"
                     type="text"
                     value={form.quantity || ""}
                     onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-                    className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                    className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                   />
                 </div>
-                <div className="relative mb-4">
-                  <label className="block text-sm text-neutral-200 mb-1">
+                <div className="relative mb-4 bg-white dark:bg-neutral-900 rounded">
+                  <Label htmlFor="containerNumber" className="block text-sm text-neutral-200 mb-1">
                     Container No.
-                  </label>
+                  </Label>
                   <div className="flex">
                     <Input
+                      id="containerNumber"
                       type="text"
                       value={form.containerNumber || ""}
                       onChange={(e) => handleContainerSearch(e.target.value)}
                       placeholder="Type at least 2 characters"
-                      className="rounded-l w-full p-2.5 bg-neutral-800 text-white border border-neutral-700"
+                      className="rounded-l w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white border border-neutral-200 dark:border-neutral-700"
                     />
                     <Button
                       type="button"
@@ -1672,45 +1685,43 @@ const AddShipmentModal = ({
                   </p>
                 </div>
                 {selectedContainers.length > 0 && (
-                  <div className="mt-6">
-                    <h5 className="text-white text-sm font-semibold mb-2">
+                  <div className="mt-6 bg-white dark:bg-neutral-900 rounded">
+                    <h5 className="text-gray-900 dark:text-white text-sm font-semibold mb-2">
                       Selected Containers
                     </h5>
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-neutral-900 border-b border-neutral-700">
-                          <TableHead className="text-neutral-200 text-xs">Container No</TableHead>
-                          <TableHead className="text-neutral-200 text-xs">Capacity</TableHead>
-                          <TableHead className="text-neutral-200 text-xs">Tare</TableHead>
-                          <TableHead className="text-neutral-200 text-xs">Last Location</TableHead>
-                          <TableHead className="text-neutral-200 text-xs">Size</TableHead>
-
-                          <TableHead className="text-neutral-200 text-xs text-center">Action</TableHead>
+                        <TableRow className="bg-white dark:bg-neutral-900 border-b border-neutral-700">
+                          <TableHead className="text-gray-900 dark:text-neutral-200 text-xs">Container No</TableHead>
+                          <TableHead className="text-gray-900 dark:text-neutral-200 text-xs">Capacity</TableHead>
+                          <TableHead className="text-gray-900 dark:text-neutral-200 text-xs">Tare</TableHead>
+                          <TableHead className="text-gray-900 dark:text-neutral-200 text-xs">Last Location</TableHead>
+                          <TableHead className="text-gray-900 dark:text-neutral-200 text-xs">Size</TableHead>
+                          <TableHead className="text-gray-900 dark:text-neutral-200 text-xs text-center">Action</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {selectedContainers.map((item: any, index: number) => (
                           <TableRow key={index} className="border-t border-neutral-700">
-                            <TableCell className="text-white">
+                            <TableCell className="text-gray-900 dark:text-white">
                               {item.inventory?.containerNumber ||
                                 item.containerNumber ||
                                 "N/A"}
                             </TableCell>
-                            <TableCell className="text-white">
+                            <TableCell className="text-gray-900 dark:text-white">
                               {(item.inventory?.capacity || item.capacity || "N/A") +
                                 " " +
                                 (item.inventory?.capacityUnit || "")}
                             </TableCell>
-                            <TableCell className="text-white">
+                            <TableCell className="text-gray-900 dark:text-white">
                               {item.tare || item.inventory?.tare || "N/A"}
                             </TableCell>
-                            <TableCell className="text-white">
+                            <TableCell className="text-gray-900 dark:text-white">
                               {(item.depotName || "N/A") + " - " + (item.port?.portName || "N/A")}
                             </TableCell>
-                            <TableCell className="text-white">
+                            <TableCell className="text-gray-900 dark:text-white">
                               {getContainerSize(item.inventoryId)}
                             </TableCell>
-
                             <TableCell className="text-center">
                               <Button
                                 type="button"
@@ -1739,13 +1750,14 @@ const AddShipmentModal = ({
                   Vessel Details
                 </h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
+              <div className="w-full p-2 bg-white dark:bg-neutral-900 rounded border border-neutral-200 dark:border-neutral-800">
                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="carrierName" className="block text-sm text-neutral-200 mb-1">
                       Carrier Name
-                    </label>
+                    </Label>
                     <Input
+                      id="carrierName"
                       type="text"
                       value={form.carrierName || ""}
                       onChange={(e) => {
@@ -1759,7 +1771,7 @@ const AddShipmentModal = ({
                       onFocus={() => toggleSuggestions('carrier', true)}
                       onBlur={() => setTimeout(() => toggleSuggestions('carrier', false), 150)}
                       placeholder="Start typing carrier name..."
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                     {showSuggestions.carrier && form.carrierName && (
                       <ul className="absolute z-[9999] w-full bg-neutral-800 border border-neutral-700 rounded mt-1 max-h-40 overflow-y-auto shadow-lg">
@@ -1794,48 +1806,51 @@ const AddShipmentModal = ({
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="vesselName" className="block text-sm text-neutral-200 mb-1">
                       Vessel Name <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
+                      id="vesselName"
                       type="text"
                       value={form.vesselName || ""}
                       onChange={(e) => setForm({ ...form, vesselName: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="gateClosingDate" className="block text-sm text-neutral-200 mb-1">
                       Gate Closing Date
-                    </label>
+                    </Label>
                     <Input
-
+                      id="gateClosingDate"
                       type="date"
                       value={form.gateClosingDate || ""}
                       onChange={(e) => setForm({ ...form, gateClosingDate: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="sobDate" className="block text-sm text-neutral-200 mb-1">
                       SOB Date
-                    </label>
+                    </Label>
                     <Input
+                      id="sobDate"
                       type="date"
                       value={form.sobDate || ""}
                       onChange={(e) => setForm({ ...form, sobDate: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="etaToPod" className="block text-sm text-neutral-200 mb-1">
                       ETA to PoD
-                    </label>
+                    </Label>
                     <Input
+                      id="etaToPod"
                       type="date"
                       value={form.etaToPod || ""}
                       onChange={(e) => setForm({ ...form, etaToPod: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                 </div>
@@ -1845,18 +1860,20 @@ const AddShipmentModal = ({
             {/* Return Depot Information */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">
                   Return Depot Information
                 </h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
-                <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                          
+                           <div className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 bg-white dark:bg-neutral-900 rounded">
                   {/* Empty Return Depot - Replace with select dropdown */}
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="emptyReturnDepot" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Empty Return Depot <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <select
+                      id="emptyReturnDepot"
                       value={form.emptyReturnDepot || ""}
                       onChange={(e) => {
                         const selectedId = Number(e.target.value);
@@ -1867,7 +1884,7 @@ const AddShipmentModal = ({
                           emptyReturnDepotName: selected?.companyName || "",
                         }));
                       }}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     >
                       <option value="">
                         {!form.portOfDischarge ? "First Select Port of Discharge" : "Select Depot"}
@@ -1882,21 +1899,22 @@ const AddShipmentModal = ({
                         form.portOfDischarge && emptyReturnDepots.length === 0 && (
                           <option value="" disabled>
                             Loading depots...
-      </option>
+                          </option>
                         )
                       )}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="estimatedEmptyReturnDate" className="block text-sm text-neutral-200 mb-1">
                       Estimated Empty Return Date
-                    </label>
+                    </Label>
                     <Input
+                      id="estimatedEmptyReturnDate"
                       type="date"
                       value={form.estimatedEmptyReturnDate || ""}
                       onChange={(e) => setForm({ ...form, estimatedEmptyReturnDate: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                 </div>
@@ -1904,12 +1922,12 @@ const AddShipmentModal = ({
             </div>
 
             {/* Submit Buttons */}
-            <DialogFooter className="flex justify-end px-6 py-4 border-t border-neutral-800 bg-neutral-900">
+            <DialogFooter className="flex justify-end px-6 py-4 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 cursor-pointer"
+                className="px-4 py-2 bg-neutral-200 hover:bg-neutral-300 text-gray-900 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 cursor-pointer"
               >
                 Cancel
               </Button>

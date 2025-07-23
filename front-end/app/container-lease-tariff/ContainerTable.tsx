@@ -48,6 +48,7 @@ const ContainerLeaseTariffPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editingTariff, setEditingTariff] = useState<ContainerLeaseTariff | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchTariffs = async () => {
@@ -115,19 +116,39 @@ const ContainerLeaseTariffPage = () => {
     }
   }
 
+  // Filtered tariffs based on searchTerm
+  const filteredTariffs = tariffs.filter((tariff) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      tariff.tariffCode?.toLowerCase().includes(term) ||
+      tariff.containerCategory?.toLowerCase().includes(term) ||
+      tariff.containerType?.toLowerCase().includes(term) ||
+      tariff.containerClass?.toLowerCase().includes(term) ||
+      tariff.currencyName?.toLowerCase().includes(term)
+    );
+  });
+
   return (
-    <div className="px-4 pt-0 pb-4">
+    <div className="px-4 pt-4 pb-4 dark:bg-black">
       <div className="flex items-center justify-between mt-0 mb-4">
         <div className="relative w-full mr-4">
-          <p className="font-bold text-lg text-white">Container Lease Tariff</p>
+          <input
+            type="text"
+            placeholder="Search tariffs..."
+            className="p-2 pl-10 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white placeholder-neutral-400 border border-neutral-800 focus:outline-none focus:border-blue-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </span>
         </div>
         <Button
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 shadow rounded-md transition-all duration-200 cursor-pointer"
+          className="bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium py-2 px-6 shadow rounded-md whitespace-nowrap"
           onClick={() => setShowModal(true)}
         >
           Add Tariff
         </Button>
-
         {showModal && (
           <AddContainerLeaseForm
             onClose={() => {
@@ -152,51 +173,54 @@ const ContainerLeaseTariffPage = () => {
         )}
       </div>
 
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto mt-4">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-white dark:bg-neutral-900">
             <TableRow>
-              <TableHead className="text-white">Tariff Code</TableHead>
-              <TableHead className="text-white">Container Category</TableHead>
-              <TableHead className="text-white">Type</TableHead>
-              <TableHead className="text-white">Class</TableHead>
-              <TableHead className="text-white">Lease Rent/Day</TableHead>
-              <TableHead className="text-white">Currency</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-center text-white">Actions</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Tariff Code</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Container Category</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Type</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Class</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Lease Rent/Day</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Currency</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Status</TableHead>
+              <TableHead className="text-center text-black dark:text-neutral-200">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={8} className="text-center py-8 text-neutral-400 bg-white dark:bg-neutral-900">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : error ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center text-red-400 py-8 bg-neutral-900">
+                <TableCell colSpan={8} className="text-center text-red-400 py-8 bg-white dark:bg-neutral-900">
                   {error}
                 </TableCell>
               </TableRow>
-            ) : tariffs.length === 0 ? (
+            ) : filteredTariffs.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={8} className="text-center py-8 text-neutral-400 bg-white dark:bg-neutral-900">
                   No tariffs found.
                 </TableCell>
               </TableRow>
             ) : (
-              tariffs.map((tariff) => (
+              filteredTariffs.map((tariff, idx) => (
                 <TableRow
                   key={tariff.id}
-                  className="transition-colors bg-neutral-900 hover:bg-neutral-800 border-b border-neutral-800"
+                  className={cn(
+                    "border-b border-neutral-800 text-black dark:text-white",
+                    idx % 2 === 1 ? "bg-gray-50 dark:bg-neutral-800" : "bg-white dark:bg-neutral-900"
+                  )}
                 >
-                  <TableCell className="text-white">{tariff.tariffCode}</TableCell>
-                  <TableCell className="text-white">{tariff.containerCategory}</TableCell>
-                  <TableCell className="text-white">{tariff.containerType}</TableCell>
-                  <TableCell className="text-white">{tariff.containerClass}</TableCell>
-                  <TableCell className="text-white">{tariff.leaseRentPerDay}</TableCell>
-                  <TableCell className="text-white">{tariff.currencyName}</TableCell>
+                  <TableCell>{tariff.tariffCode}</TableCell>
+                  <TableCell>{tariff.containerCategory}</TableCell>
+                  <TableCell>{tariff.containerType}</TableCell>
+                  <TableCell>{tariff.containerClass}</TableCell>
+                  <TableCell>{tariff.leaseRentPerDay}</TableCell>
+                  <TableCell>{tariff.currencyName}</TableCell>
                   <TableCell>
                     <StatusBadge status={tariff.status} />
                   </TableCell>
@@ -206,7 +230,7 @@ const ContainerLeaseTariffPage = () => {
                       size="icon"
                       onClick={() => handleEditClick(tariff.id)}
                       className={cn(
-                        "hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        "h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                       )}
                       title="Edit"
                     >
@@ -217,7 +241,7 @@ const ContainerLeaseTariffPage = () => {
                       size="icon"
                       onClick={() => handleDelete(tariff.id)}
                       className={cn(
-                        "hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        "h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                       )}
                       title="Delete"
                     >

@@ -104,7 +104,7 @@ const CurrencyPage = () => {
   );
 
   return (
-    <div className="px-4 pt-0 pb-4">
+    <div className="px-4 pt-4 pb-4 dark:bg-black">
       {/* Header Bar */}
       <div className="flex items-center justify-between mt-0 mb-4">
         <div className="relative mr-4 w-full max-w-xs">
@@ -114,7 +114,7 @@ const CurrencyPage = () => {
             placeholder="Search currencies..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 pl-10 rounded-lg bg-neutral-900 text-white placeholder-neutral-400 border border-neutral-800 focus:outline-none focus:border-blue-500 transition-all"
+            className="h-8 w-full p-2 pl-10 rounded-lg bg-background text-foreground placeholder-muted-foreground border border-border focus:outline-none focus:border-blue-500 transition-all"
           />
         </div>
         <Button
@@ -127,30 +127,30 @@ const CurrencyPage = () => {
       </div>
 
       {/* Currency Table */}
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+        <TableHeader className="bg-background">
             <TableRow>
-              <TableHead className="text-center text-white">Code</TableHead>
-              <TableHead className="text-center text-white">Name</TableHead>
-              <TableHead className="text-center text-white">Symbol</TableHead>
-              <TableHead className="text-center text-white">Status</TableHead>
-              <TableHead className="text-center text-white">Actions</TableHead>
+              <TableHead className="text-center text-foreground">Code</TableHead>
+              <TableHead className="text-center text-foreground">Name</TableHead>
+              <TableHead className="text-center text-foreground">Symbol</TableHead>
+              <TableHead className="text-center text-foreground">Status</TableHead>
+              <TableHead className="text-center text-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredCurrencies.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-6 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground bg-background">
                   No currencies found.
                 </TableCell>
               </TableRow>
             ) : (
               filteredCurrencies.map((currency) => (
-                <TableRow key={currency.id} className="hover:bg-neutral-800 transition border-b border-neutral-800">
-                  <TableCell className="text-center text-white">{currency.currencyCode}</TableCell>
-                  <TableCell className="text-center text-white">{currency.currencyName}</TableCell>
-                  <TableCell className="text-center text-white">{currency.currencySymbol}</TableCell>
+                <TableRow key={currency.id} className="hover:bg-muted transition border-b border-border bg-background text-foreground">
+                  <TableCell className="text-center text-foreground">{currency.currencyCode}</TableCell>
+                  <TableCell className="text-center text-foreground">{currency.currencyName}</TableCell>
+                  <TableCell className="text-center text-foreground">{currency.currencySymbol}</TableCell>
                   <TableCell className="text-center">
                     <StatusBadge status={currency.status} />
                   </TableCell>
@@ -161,7 +161,7 @@ const CurrencyPage = () => {
                         size="icon"
                         title="Edit"
                         onClick={() => handleEditClick(currency.id)}
-                        className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                       >
                         <Pencil size={16} />
                       </Button>
@@ -170,7 +170,7 @@ const CurrencyPage = () => {
                         size="icon"
                         title="Delete"
                         onClick={() => handleDelete(currency.id)}
-                        className="hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                       >
                         <Trash2 size={16} />
                       </Button>

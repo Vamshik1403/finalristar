@@ -114,56 +114,57 @@ const AddressBook = () => {
   );
 
   return (
+
     <div className="px-4 py-6">
       {/* Top Bar with Search & Add Button */}
       <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-2 bg-neutral-900 rounded px-2 py-1 shadow-sm border border-neutral-800">
-          <Search size={18} className="text-neutral-400" />
+        <div className="flex items-center gap-2 bg-background rounded px-2 py-1 shadow-sm border">
+          <Search size={18} className="text-muted-foreground" />
           <input
             type="text"
             placeholder="Search companies..."
-            className="outline-none text-sm w-60 bg-transparent text-white placeholder-neutral-400"
+            className="outline-none text-sm w-60 bg-transparent text-foreground placeholder:text-muted-foreground"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <Button
           onClick={handleAddCompanyClick}
-          className="bg-blue-700 hover:bg-blue-800 text-white font-semibold transition-all duration-200 shadow cursor-pointer"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-all duration-200 shadow cursor-pointer"
         >
           Add Company
         </Button>
       </div>
 
       {/* Table */}
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-800 overflow-x-auto">
+      <div className="rounded-lg shadow border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-muted">
             <TableRow>
-              <TableHead className="text-white">Company Name</TableHead>
-              <TableHead className="text-white">Business Type</TableHead>
-              <TableHead className="text-white">Country</TableHead>
-              <TableHead className="text-white">Ports</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-center text-white">Actions</TableHead>
+              <TableHead className="text-foreground">Company Name</TableHead>
+              <TableHead className="text-foreground">Business Type</TableHead>
+              <TableHead className="text-foreground">Country</TableHead>
+              <TableHead className="text-foreground">Ports</TableHead>
+              <TableHead className="text-foreground">Status</TableHead>
+              <TableHead className="text-center text-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : error ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-red-400 py-8 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center text-destructive py-8 bg-background">
                   {error}
                 </TableCell>
               </TableRow>
             ) : filteredCompanies.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   No matching companies found.
                 </TableCell>
               </TableRow>
@@ -171,20 +172,20 @@ const AddressBook = () => {
               filteredCompanies.map((company: any) => (
                 <TableRow
                   key={company.id}
-                  className="transition-colors bg-neutral-900 hover:bg-neutral-800 border-b border-neutral-800"
+                  className="transition-colors bg-background hover:bg-muted border-b"
                 >
-                  <TableCell className="text-white">{company.companyName}</TableCell>
+                  <TableCell className="text-foreground">{company.companyName}</TableCell>
                   <TableCell>
                     <BusinessTypeBadge type={company.businessType} />
                   </TableCell>
-                  <TableCell className="text-white">{company.country?.countryName || "N/A"}</TableCell>
-                  <TableCell className="text-white">
+                  <TableCell className="text-foreground">{company.country?.countryName || "N/A"}</TableCell>
+                  <TableCell className="text-foreground">
                     {company.businessPorts && company.businessPorts.length > 0 ? (
                       company.businessPorts.map((bp: any, idx: number) =>
                         bp.port?.portName ? (
                           <span
                             key={bp.port?.portName + idx}
-                            className="inline-block px-3 py-1 mx-1 rounded-full text-xs font-semibold bg-purple-400/30 text-purple-100 border border-purple-400 shadow transition-all duration-300 hover:scale-105"
+                            className="inline-block px-3 py-1 mx-1 rounded-full text-xs font-semibold bg-purple-400/30 text-purple-900 border border-purple-400 shadow transition-all duration-300 hover:scale-105"
                             style={{
                               minWidth: 70,
                               textAlign: "center",
@@ -196,7 +197,7 @@ const AddressBook = () => {
                         ) : null
                       )
                     ) : (
-                      <span className="text-neutral-400">N/A</span>
+                      <span className="text-muted-foreground">N/A</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -208,7 +209,7 @@ const AddressBook = () => {
                       size="icon"
                       onClick={() => handleEditClick(company.id)}
                       className={cn(
-                        "hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        "hover:bg-blue-100 hover:text-blue-700 text-muted-foreground transition-all duration-200 cursor-pointer"
                       )}
                       title="Edit"
                     >
@@ -219,7 +220,7 @@ const AddressBook = () => {
                       size="icon"
                       onClick={() => handleDelete(company.id)}
                       className={cn(
-                        "hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        "hover:bg-red-100 hover:text-red-700 text-muted-foreground transition-all duration-200 cursor-pointer"
                       )}
                       title="Delete"
                     >

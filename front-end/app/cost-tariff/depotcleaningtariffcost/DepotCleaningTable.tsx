@@ -63,7 +63,7 @@ const DepotCleaningTable = () => {
   }, [tariffData]);
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 bg-white dark:bg-black min-h-screen">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-white">Depot Cleaning Cost</h2>
         <Button
@@ -98,24 +98,24 @@ const DepotCleaningTable = () => {
         />
       )}
 
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-white">Tariff Code</TableHead>
-              <TableHead className="text-white">Depot Terminal</TableHead>
-              <TableHead className="text-white">Service Port</TableHead>
-              <TableHead className="text-white">Product</TableHead>
-              <TableHead className="text-white">Currency</TableHead>
-              <TableHead className="text-white">Cleaning Charge</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-white text-right">Actions</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200">Tariff Code</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200">Depot Terminal</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200">Service Port</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200">Product</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200">Currency</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200">Cleaning Charge</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200">Status</TableHead>
+              <TableHead className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {tariffData.length > 0 ? (
               tariffData.map((tariff: any) => (
-                <TableRow key={tariff.id} className="hover:bg-neutral-800 text-white">
+                <TableRow key={tariff.id} className="hover:bg-neutral-100 dark:hover:bg-neutral-800 text-black dark:text-white">
                   <TableCell>{tariff.tariffCode}</TableCell>
                   <TableCell>{tariff.addressBook?.companyName || "N/A"}</TableCell>
                   <TableCell>{tariff.port?.portName || "N/A"}</TableCell>
@@ -130,7 +130,7 @@ const DepotCleaningTable = () => {
                       variant="ghost"
                       size="icon"
                       title="Edit"
-                      className="text-blue-400 hover:text-blue-500"
+                      className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                       onClick={() => {
                         setForm({
                           id: tariff.id,
@@ -151,7 +151,7 @@ const DepotCleaningTable = () => {
                       variant="ghost"
                       size="icon"
                       title="Delete"
-                      className="text-red-500 hover:text-red-600"
+                      className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                       onClick={() => {
                         if (confirm("Are you sure you want to delete this tariff?")) {
                           axios

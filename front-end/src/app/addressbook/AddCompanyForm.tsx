@@ -347,16 +347,16 @@ const AddCompanyForm = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-lg">
       <Dialog open onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl w-full bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto p-0 border border-neutral-800">
-          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900">
-            <DialogTitle className="text-xl font-semibold text-white">
+        <DialogContent className="max-w-2xl w-full bg-background rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto p-0 border">
+          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b bg-background">
+            <DialogTitle className="text-xl font-semibold text-foreground">
               {editData ? "Edit Company" : "Add New Company"}
             </DialogTitle>
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="text-neutral-400 hover:text-white cursor-pointer"
+              className="text-muted-foreground hover:text-foreground cursor-pointer"
             >
               <X size={24} />
             </Button>
@@ -367,7 +367,7 @@ const AddCompanyForm = ({
               handleAddCompanyClick();
             }}
           >
-            <div className="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-neutral-900">
+            <div className="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-background">
               {/* Status Switch */}
               <div className="col-span-2 flex items-center">
                 <span className="text-neutral-200 mr-2">Status</span>

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { uuidv4 } from "@/lib/uuid";
 
 interface AddProductFormProps {
   onClose: () => void;
@@ -50,7 +51,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
   const [msdsRecords, setMsdsRecords] = useState<MSDS[]>(() => {
     if (editData?.msds?.length) {
       return editData.msds.map((m: any) => ({
-        id: m.id || crypto.randomUUID(),
+        id: m.id || uuidv4(),
         issueDate: m.msdcIssueDate ? new Date(m.msdcIssueDate).toISOString().split('T')[0] : "",
         certificate: null, // We can't load the file object
         certificateName: m.msdsCertificate || "", // Store the filename
@@ -90,7 +91,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
     setMsdsRecords((prev) => [
       ...prev,
       {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         issueDate: "",
         certificate: null,
         remark: "",

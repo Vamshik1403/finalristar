@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePortDto } from './dto/create-port.dto';
 import { UpdatePortDto } from './dto/update-port.dto';
@@ -8,9 +9,16 @@ export class PortsService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreatePortDto) {
-    return this.prisma.ports.create({
-      data,
-    });
+    try {
+      return await this.prisma.ports.create({
+        data,
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ConflictException('Port with this name already exists');
+      }
+      throw error;
+    }
   }
 
   async findAll() {

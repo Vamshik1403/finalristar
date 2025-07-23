@@ -46,10 +46,10 @@ const MovementHistoryModal: React.FC<Props> = ({ containerNumber, onClose }) => 
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center">
-      <div className="bg-neutral-900 text-white w-[800px] rounded-lg shadow-lg overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 text-white w-[800px] rounded-lg shadow-lg overflow-hidden">
         {/* Header */}
         <div className="flex justify-between items-center px-4 py-3 border-b border-neutral-800">
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-lg font-semibold text-black dark:text-white">
             Container {containerNumber} - Status History
             <span className="ml-2 text-gray-400 text-sm">({history.length} entries)</span>
           </h2>
@@ -69,31 +69,31 @@ const MovementHistoryModal: React.FC<Props> = ({ containerNumber, onClose }) => 
         {/* Table */}
         <div className="overflow-x-auto max-h-[400px] px-4">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-800">
+            <thead className="bg-white dark:bg-neutral-800">
               <tr>
-                <th className="text-left py-2 px-3">Date</th>
-                <th className="text-left py-2 px-3">Job No.</th>
-                <th className="text-left py-2 px-3">Location</th>
-                <th className="text-left py-2 px-3">Status</th>
+                <th className="text-left py-2 px-3 text-black dark:text-white">Date</th>
+                <th className="text-left py-2 px-3 text-black dark:text-white">Job No.</th>
+                <th className="text-left py-2 px-3 text-black dark:text-white">Location</th>
+                <th className="text-left py-2 px-3 text-black dark:text-white">Status</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={4} className="text-center py-4">Loading...</td></tr>
+                <tr><td colSpan={4} className="text-center py-4 text-black dark:text-white">Loading...</td></tr>
               ) : history.length === 0 ? (
                 <tr><td colSpan={4} className="text-center py-4 text-gray-400">No history found.</td></tr>
               ) : (
                 history.map((entry) => (
                   <tr key={entry.id} className="border-t border-neutral-800">
-                    <td className="py-2 px-3">{new Date(entry.date).toLocaleString('en-IN')}</td>
-                    <td className="py-2 px-3">
+                    <td className="py-2 px-3 text-black dark:text-white">{new Date(entry.date).toLocaleString('en-IN')}</td>
+                    <td className="py-2 px-3 text-black dark:text-white">
                       {entry.shipmentId
                         ? `25/${String(entry.shipmentId).padStart(5, '0')}`
                         : entry.emptyRepoJobId
                         ? `25/${String(entry.emptyRepoJobId).padStart(5, '0')}`
                         : 'NA'}
                     </td>
-                    <td className="py-2 px-3">{entry.port?.portName || 'Unknown'}</td>
+                    <td className="py-2 px-3 text-black dark:text-white">{entry.port?.portName || 'Unknown'}</td>
                     <td className="py-2 px-3">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${

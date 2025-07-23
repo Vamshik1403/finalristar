@@ -84,29 +84,27 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm, fetchTariffs }: any
   };
 
   return (
-    <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto border border-neutral-800 p-0">
+    <Dialog open onOpenChange={onClose} modal={true}>
+    <DialogContent className="bg-white dark:bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto border border-neutral-200 dark:border-neutral-800 p-0" onInteractOutside={e => e.preventDefault()}>
         <DialogTitle className="sr-only">{formTitle}</DialogTitle>
         <form className="px-6 pb-6 pt-2" onSubmit={handleSubmit}>
           <div className="flex justify-between items-center pt-6 pb-2 border-b border-neutral-800">
-            <h2 className="text-lg font-semibold text-white">{formTitle}</h2>
-            <Button type="button" variant="ghost" onClick={onClose} className="text-neutral-400 hover:text-white text-2xl px-2">
-              &times;
-            </Button>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{formTitle}</h2>
+            {/* Removed duplicate X close button here */}
           </div>
 
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div className="col-span-2">
-              <Label className="text-xs text-white">Land Transport Tariff Code</Label>
-              <Input readOnly value={form.landTransportTariffCode || ""} className="bg-neutral-800 text-white border border-neutral-700" />
+              <Label className="text-xs text-gray-900 dark:text-white">Land Transport Tariff Code</Label>
+              <Input readOnly value={form.landTransportTariffCode || ""} className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700" />
             </div>
 
             <div className="col-span-2">
-              <Label className="text-xs text-white">Transport Company</Label>
+              <Label className="text-xs text-gray-900 dark:text-white">Transport Company</Label>
               <select
                 value={form.addressBookId || ""}
                 onChange={(e) => setForm({ ...form, addressBookId: e.target.value })}
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 text-sm"
               >
                 <option value="">Select Company</option>
                 {addressBookList.map((company: any) => (
@@ -118,11 +116,11 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm, fetchTariffs }: any
             </div>
 
             <div className="col-span-2">
-              <Label className="text-xs text-white">Transport Type</Label>
+              <Label className="text-xs text-gray-900 dark:text-white">Transport Type</Label>
               <select
                 value={form.transportType}
                 onChange={(e) => setForm({ ...form, transportType: e.target.value })}
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 text-sm"
               >
                 <option value="">Select</option>
                 <option value="Road">Road</option>
@@ -131,26 +129,26 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm, fetchTariffs }: any
             </div>
 
             <div>
-              <Label className="text-xs text-white">From</Label>
-              <Input value={form.from} onChange={(e) => setForm({ ...form, from: e.target.value })} className="bg-neutral-800 text-white border border-neutral-700" />
+              <Label className="text-xs text-gray-900 dark:text-white">From</Label>
+              <Input value={form.from} onChange={(e) => setForm({ ...form, from: e.target.value })} className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700" />
             </div>
 
             <div>
-              <Label className="text-xs text-white">To</Label>
-              <Input value={form.to} onChange={(e) => setForm({ ...form, to: e.target.value })} className="bg-neutral-800 text-white border border-neutral-700" />
+              <Label className="text-xs text-gray-900 dark:text-white">To</Label>
+              <Input value={form.to} onChange={(e) => setForm({ ...form, to: e.target.value })} className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700" />
             </div>
 
             <div>
-              <Label className="text-xs text-white">Distance</Label>
-              <Input value={form.distance} onChange={(e) => setForm({ ...form, distance: e.target.value })} className="bg-neutral-800 text-white border border-neutral-700" />
+              <Label className="text-xs text-gray-900 dark:text-white">Distance</Label>
+              <Input value={form.distance} onChange={(e) => setForm({ ...form, distance: e.target.value })} className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700" />
             </div>
 
             <div>
-              <Label className="text-xs text-white">Currency</Label>
+              <Label className="text-xs text-gray-900 dark:text-white">Currency</Label>
               <select
                 value={form.currencyId || ""}
                 onChange={(e) => setForm({ ...form, currencyId: e.target.value })}
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 text-sm"
               >
                 <option value="">Select Currency</option>
                 {currencyList.map((currency: any) => (
@@ -162,16 +160,16 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm, fetchTariffs }: any
             </div>
 
             <div className="col-span-2">
-              <Label className="text-xs text-white">Amount</Label>
-              <Input value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} className="bg-neutral-800 text-white border border-neutral-700" />
+              <Label className="text-xs text-gray-900 dark:text-white">Amount</Label>
+              <Input value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700" />
             </div>
 
             <div className="col-span-2">
-              <Label className="text-xs text-white">Approval Status</Label>
+              <Label className="text-xs text-gray-900 dark:text-white">Approval Status</Label>
               <select
                 value={form.approvalStatus}
                 onChange={(e) => setForm({ ...form, approvalStatus: e.target.value })}
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700 text-sm"
               >
                 <option value="Pending">Pending</option>
                 <option value="Approved">Approved</option>

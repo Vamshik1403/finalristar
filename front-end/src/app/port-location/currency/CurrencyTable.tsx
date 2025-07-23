@@ -127,30 +127,30 @@ const CurrencyPage = () => {
       </div>
 
       {/* Currency Table */}
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-background">
             <TableRow>
-              <TableHead className="text-center text-white">Code</TableHead>
-              <TableHead className="text-center text-white">Name</TableHead>
-              <TableHead className="text-center text-white">Symbol</TableHead>
-              <TableHead className="text-center text-white">Status</TableHead>
-              <TableHead className="text-center text-white">Actions</TableHead>
+              <TableHead className="text-center text-foreground">Code</TableHead>
+              <TableHead className="text-center text-foreground">Name</TableHead>
+              <TableHead className="text-center text-foreground">Symbol</TableHead>
+              <TableHead className="text-center text-foreground">Status</TableHead>
+              <TableHead className="text-center text-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredCurrencies.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-6 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground bg-background">
                   No currencies found.
                 </TableCell>
               </TableRow>
             ) : (
               filteredCurrencies.map((currency) => (
-                <TableRow key={currency.id} className="hover:bg-neutral-800 transition border-b border-neutral-800">
-                  <TableCell className="text-center text-white">{currency.currencyCode}</TableCell>
-                  <TableCell className="text-center text-white">{currency.currencyName}</TableCell>
-                  <TableCell className="text-center text-white">{currency.currencySymbol}</TableCell>
+                <TableRow key={currency.id} className="hover:bg-muted transition border-b border-border bg-background text-foreground">
+                  <TableCell className="text-center">{currency.currencyCode}</TableCell>
+                  <TableCell className="text-center">{currency.currencyName}</TableCell>
+                  <TableCell className="text-center">{currency.currencySymbol}</TableCell>
                   <TableCell className="text-center">
                     <StatusBadge status={currency.status} />
                   </TableCell>
@@ -161,7 +161,7 @@ const CurrencyPage = () => {
                         size="icon"
                         title="Edit"
                         onClick={() => handleEditClick(currency.id)}
-                        className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        className="hover:bg-blue-100 hover:text-blue-900 dark:hover:bg-blue-900 dark:hover:text-blue-400 text-muted-foreground transition-all duration-200 cursor-pointer"
                       >
                         <Pencil size={16} />
                       </Button>
@@ -170,7 +170,7 @@ const CurrencyPage = () => {
                         size="icon"
                         title="Delete"
                         onClick={() => handleDelete(currency.id)}
-                        className="hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        className="hover:bg-red-100 hover:text-red-900 dark:hover:bg-red-900 dark:hover:text-red-400 text-muted-foreground transition-all duration-200 cursor-pointer"
                       >
                         <Trash2 size={16} />
                       </Button>

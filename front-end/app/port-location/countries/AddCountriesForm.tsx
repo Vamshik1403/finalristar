@@ -113,27 +113,20 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50 backdrop-blur-lg">
-      <Dialog open onOpenChange={onClose}>
-        <DialogContent className="max-w-xl w-full bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-800">
-          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900">
-            <DialogTitle className="text-xl font-semibold text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-lg">
+      <Dialog open onOpenChange={onClose} modal={true}>
+        <DialogContent className="max-w-xl w-full bg-white dark:bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-200 dark:border-neutral-800" onInteractOutside={e => e.preventDefault()}>
+          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               {editData ? "Edit Country" : "Add Country"}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white cursor-pointer"
-            >
-              <X size={24} />
-            </Button>
+            {/* Removed duplicate X close button here */}
           </DialogHeader>
           <form className="px-6 pb-6 pt-2" onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
                 htmlFor="countryCode"
-                className="block text-neutral-200 mb-1"
+                className="block text-gray-700 dark:text-neutral-200 mb-1"
               >
                 Country Code
               </label>
@@ -145,13 +138,13 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
                 onChange={handleChange}
                 placeholder="Country Code"
                 required
-                className="bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400"
+                className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400"
               />
             </div>
             <div className="mb-4">
               <label
                 htmlFor="countryName"
-                className="block text-neutral-200 mb-1"
+                className="block text-gray-700 dark:text-neutral-200 mb-1"
               >
                 Country Name
               </label>
@@ -163,11 +156,11 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
                 onChange={handleChange}
                 placeholder="Country Name"
                 required
-                className="bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400"
+                className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400"
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="regions" className="block text-neutral-200 mb-1">
+              <label htmlFor="regions" className="block text-gray-700 dark:text-neutral-200 mb-1">
                 Region
               </label>
               <select
@@ -175,7 +168,7 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
                 name="regions"
                 value={formData.regions}
                 onChange={handleChange}
-                className="w-full p-2 rounded bg-neutral-800 text-white border border-neutral-700 text-sm transition-all focus:ring-2 focus:ring-blue-400 cursor-pointer"
+                className="w-full p-2 rounded bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-sm transition-all focus:ring-2 focus:ring-blue-400 cursor-pointer"
               >
                 <option value="">Select Region</option>
                 <option value="AFRICA">AFRICA</option>
@@ -189,7 +182,7 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="currencyId" className="block text-neutral-200 mb-1">
+              <label htmlFor="currencyId" className="block text-gray-700 dark:text-neutral-200 mb-1">
                 Currency
               </label>
               <select
@@ -197,7 +190,7 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
                 name="currencyId"
                 value={formData.currencyId}
                 onChange={handleChange}
-                className="w-full p-2 rounded bg-neutral-800 text-white border border-neutral-700 text-sm transition-all focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 rounded bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-sm transition-all focus:ring-2 focus:ring-blue-400"
                 required
               >
                 <option value={0}>Select Currency</option>
@@ -217,7 +210,7 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
                 onChange={handleChange}
                 className="accent-blue-600 w-4 h-4"
               />
-              <label htmlFor="status" className="text-neutral-200 text-sm">
+              <label htmlFor="status" className="text-gray-700 dark:text-neutral-200 text-sm">
                 Active
               </label>
             </div>
@@ -226,7 +219,7 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 cursor-pointer"
+                className="px-4 py-2 bg-white dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-900 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 cursor-pointer"
               >
                 Cancel
               </Button>

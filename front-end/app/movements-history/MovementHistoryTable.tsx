@@ -202,25 +202,33 @@ const MovementHistoryTable = () => {
   };
 
   return (
-    <div className="p-6 text-white min-h-screen">
+    <div className="p-6 bg-white dark:bg-neutral-950 text-gray-900 dark:text-white min-h-screen">
       <div className="flex flex-wrap items-center gap-4 mb-6">
         <input
           type="text"
           placeholder="Search Container No."
           value={containerSearch}
           onChange={(e) => setContainerSearch(e.target.value)}
-          className="flex-1 min-w-[220px] bg-neutral-800 text-white px-4 py-2 rounded-md border border-neutral-700 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+          className="flex-1 min-w-[220px] bg-white dark:bg-neutral-800 text-gray-900 dark:text-white px-4 py-2 rounded-md border border-gray-300 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
         <input
           type="text"
           placeholder="Search Shipping Job No."
           value={jobSearch}
           onChange={(e) => setJobSearch(e.target.value)}
-          className="flex-1 min-w-[220px] bg-neutral-800 text-white px-4 py-2 rounded-md border border-neutral-700 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+          className="flex-1 min-w-[220px] bg-white dark:bg-neutral-800 text-gray-900 dark:text-white px-4 py-2 rounded-md border border-gray-300 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
         <button
           onClick={() => setShowFilterModal(true)}
-          className="flex items-center gap-2 px-4 py-2 cursor-pointer rounded-lg transition-colors bg-neutral-700 hover:bg-neutral-600 text-white"
+          className="flex items-center gap-2 px-4 py-2 cursor-pointer rounded-lg transition-colors
+            bg-gray-100 dark:bg-neutral-700
+            border border-gray-300 dark:border-neutral-600
+            shadow-sm
+            text-orange-600 dark:text-white
+            font-semibold
+            hover:bg-orange-100 hover:border-orange-400
+            hover:text-orange-700
+            hover:shadow-md"
         >
           <Filter className="h-4 w-4" />
           Filter
@@ -235,8 +243,8 @@ const MovementHistoryTable = () => {
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-neutral-700">
-        <table className="w-full text-sm bg-neutral-800">
-          <thead className="bg-neutral-900 text-left text-neutral-300">
+        <table className="w-full text-sm bg-white dark:bg-neutral-900">
+          <thead className="bg-white dark:bg-neutral-900 text-left text-gray-900 dark:text-neutral-300">
             <tr>
               <th className="p-3 text-center">Select</th>
               <th className="p-3">Date</th>
@@ -251,13 +259,13 @@ const MovementHistoryTable = () => {
           </thead>
           <tbody>
             {filteredData.map((row) => (
-              <tr key={row.id} className="border-t border-neutral-700 hover:bg-neutral-700/30">
+              <tr key={row.id} className="border-t border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-900 dark:text-white">
                 <td className="text-center p-2">
                   <input
                     type="checkbox"
                     checked={selectedIds.includes(row.id)}
                     onChange={() => toggleSelectRow(row)}
-                    className="w-4 h-4 text-orange-500 bg-neutral-800 border-neutral-600 rounded focus:ring-orange-500"
+                    className="w-4 h-4 text-orange-500 bg-white dark:bg-neutral-800 border-gray-300 dark:border-neutral-600 rounded focus:ring-orange-500"
                   />
                 </td>
                 <td className="p-2">{new Date(row.date).toLocaleDateString()}</td>
@@ -289,7 +297,7 @@ const MovementHistoryTable = () => {
       {/* Bulk Status Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-neutral-900 p-6 rounded-lg shadow-lg w-full max-w-md border border-neutral-700">
+          <div className="bg-white dark:bg-neutral-900 p-6 rounded-lg shadow-lg w-full max-w-md border border-gray-300 dark:border-neutral-700">
             <h2 className="text-lg font-semibold text-white mb-4">Bulk Update Container Status</h2>
 
             <div className="mb-4">
@@ -297,7 +305,7 @@ const MovementHistoryTable = () => {
               <select
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-3 py-2 rounded-md bg-white dark:bg-neutral-800 border-gray-300 dark:border-neutral-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="">Select New Status</option>
                 {availableStatusOptions.map((status) => (
@@ -314,7 +322,7 @@ const MovementHistoryTable = () => {
                 type="date"
                 value={movementDate}
                 onChange={(e) => setMovementDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white"
+                className="w-full px-3 py-2 rounded-md bg-white dark:bg-neutral-800 border-gray-300 dark:border-neutral-700 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -343,27 +351,27 @@ const MovementHistoryTable = () => {
       {/* Edit Date Modal - Moved Outside */}
       {editModalOpen && editingRow && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-neutral-900 p-6 rounded-lg shadow-lg w-full max-w-md border border-neutral-700">
-            <h2 className="text-lg font-semibold text-white mb-4">Edit Movement Date</h2>
+          <div className="bg-white dark:bg-neutral-900 p-6 rounded-lg shadow-lg w-full max-w-md border border-neutral-200 dark:border-neutral-700">
+            <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Edit Movement Date</h2>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-1 text-neutral-300">Container Number</label>
-              <div className="text-white mb-2">{editingRow.inventory?.containerNumber || "-"}</div>
+              <label className="block text-sm font-medium mb-1 text-neutral-700 dark:text-neutral-300">Container Number</label>
+              <div className="text-black dark:text-white mb-2">{editingRow.inventory?.containerNumber || "-"}</div>
 
-              <label className="block text-sm font-medium mb-1 text-neutral-300">Status</label>
-              <div className="text-white mb-2">{editingRow.status}</div>
+              <label className="block text-sm font-medium mb-1 text-neutral-700 dark:text-neutral-300">Status</label>
+              <div className="text-black dark:text-white mb-2">{editingRow.status}</div>
 
-              <label className="block text-sm font-medium mb-1 text-neutral-300">New Date</label>
+              <label className="block text-sm font-medium mb-1 text-neutral-700 dark:text-neutral-300">New Date</label>
               <input
                 type="date"
                 value={editDate}
                 onChange={(e) => setEditDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-neutral-800 border border-neutral-700 text-white"
+                className="w-full px-3 py-2 rounded-md bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-black dark:text-white"
               />
             </div>
 
             <div className="flex justify-end gap-3">
-              <button onClick={() => setEditModalOpen(false)} className="px-4 py-2 bg-neutral-600 text-white rounded-md">
+              <button onClick={() => setEditModalOpen(false)} className="px-4 py-2 bg-neutral-200 dark:bg-neutral-600 text-black dark:text-white rounded-md">
                 Cancel
               </button>
               <button onClick={handleDateUpdate} className="px-4 py-2 bg-blue-600 text-white rounded-md">
@@ -376,23 +384,23 @@ const MovementHistoryTable = () => {
 
       {showFilterModal && (
         <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-lg">
-          <div className="bg-neutral-800 rounded-lg p-6 w-96 max-w-md mx-4">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg p-6 w-96 max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-white">Filter Movements</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Filter Movements</h3>
               <button
                 onClick={() => setShowFilterModal(false)}
-                className="text-neutral-400 hover:text-white"
+                className="text-neutral-400 hover:text-black cursor-pointer"
               >
                 ✕
               </button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-2">Status</label>
+                <label className="block text-sm font-medium text-gray-900 dark:text-neutral-300 mb-2">Status</label>
                 <select
                   value={tempFilters.status}
                   onChange={e => setTempFilters(prev => ({ ...prev, status: e.target.value }))}
-                  className="w-full px-3 py-2 bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white dark:bg-neutral-700 text-black dark:text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
                 >
                   <option value="">All Status</option>
                   {[...new Set(data.map(row => row.status))].filter(Boolean).map(status => (
@@ -401,11 +409,11 @@ const MovementHistoryTable = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-2">Port</label>
+                <label className="block text-sm font-medium text-gray-900 dark:text-neutral-300 mb-2">Port</label>
                 <select
                   value={tempFilters.port}
                   onChange={e => setTempFilters(prev => ({ ...prev, port: e.target.value }))}
-                  className="w-full px-3 py-2 bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white dark:bg-neutral-700 text-black dark:text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
                 >
                   <option value="">All Ports</option>
                   {[...new Set(data.map(row => row.port?.portName))].filter(Boolean).map(port => (
@@ -414,11 +422,11 @@ const MovementHistoryTable = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-2">Location</label>
+                <label className="block text-sm font-medium text-gray-900 dark:text-neutral-300 mb-2">Location</label>
                 <select
                   value={tempFilters.location}
                   onChange={e => setTempFilters(prev => ({ ...prev, location: e.target.value }))}
-                  className="w-full px-3 py-2 bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white dark:bg-neutral-700 text-black dark:text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
                 >
                   <option value="">All Locations</option>
                   {[...new Set(data.map(row => row.addressBook?.companyName))].filter(Boolean).map(loc => (

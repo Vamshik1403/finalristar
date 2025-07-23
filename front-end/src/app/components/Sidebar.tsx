@@ -190,7 +190,7 @@ export default function SidebarWithHeader({
   const sectionTitle = getSectionTitle(pathname);
 
   return (
-    <div className="flex h-screen bg-neutral-950">
+    <div className="flex h-screen bg-background text-foreground">
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 4px;
@@ -215,8 +215,8 @@ export default function SidebarWithHeader({
           scrollbar-color: #525252 transparent;
         }
       `}</style>
-      <aside className="w-64 min-w-64 max-w-64 bg-neutral-900 border-r border-neutral-800 shadow-sm flex flex-col flex-shrink-0">
-        <div className="px-0 py-0 border-b border-neutral-800 flex items-center justify-center bg-neutral-800">
+      <aside className="w-64 min-w-64 max-w-64 bg-background border-r border-border shadow-sm flex flex-col flex-shrink-0">
+        <div className="px-0 py-0 border-b border-border flex items-center justify-center bg-background">
           <Image
             src="/ristar.png"
             alt="RISTAR Logo" 
@@ -227,7 +227,7 @@ export default function SidebarWithHeader({
           />
         </div>
         <nav className="flex-1 overflow-y-auto py-2 custom-scrollbar">
-          <ul className="space-y-1 px-3"> {/* Changed from space-y-0.5 to space-y-1 for parent items */}
+          <ul className="space-y-1 px-3">
             {navItems.map((item) =>
               item.children ? (
                 <Accordion 
@@ -238,11 +238,11 @@ export default function SidebarWithHeader({
                 >
                   <AccordionItem value={item.label} className="border-0">
                     <AccordionTrigger
-                      className={cn(
-                        "flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-md hover:bg-neutral-800 hover:text-orange-400 text-gray-300 cursor-pointer transition-colors duration-200 w-full",
-                        hasActiveChild(item, pathname) &&
-                          "bg-neutral-800 text-orange-400"
-                      )}
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-md hover:bg-muted hover:text-orange-400 text-foreground cursor-pointer transition-colors duration-200 w-full",
+                      hasActiveChild(item, pathname) &&
+                        "bg-muted text-orange-400"
+                    )}
                     >
                       <span className="flex items-center cursor-pointer">
                         {item.icon}
@@ -251,14 +251,14 @@ export default function SidebarWithHeader({
                         {item.label}
                       </span>
                     </AccordionTrigger>
-                    <AccordionContent className="pb-2 pt-1"> {/* Added pt-1 and pb-2 for spacing */}
-                      <ul className="space-y-1 pl-3"> {/* Changed from space-y-0.5 to space-y-1 for child items */}
+                    <AccordionContent className="pb-2 pt-1">
+                      <ul className="space-y-1 pl-3">
                         {item.children.map((child) => (
                           <li key={child.href}>
                             <Link
                               href={child.href}
                               className={cn(
-                                "flex items-center gap-2 pl-7 pr-4 py-2 rounded-md hover:bg-neutral-800 hover:text-orange-400 text-gray-400 cursor-pointer transition-colors duration-200 text-xs",
+                                "flex items-center gap-2 pl-7 pr-4 py-2 rounded-md hover:bg-muted hover:text-orange-400 text-foreground cursor-pointer transition-colors duration-200 text-xs",
                                 pathname === child.href &&
                                   "bg-orange-400/20 text-orange-400 hover:bg-orange-400/20 hover:text-orange-400"
                               )}
@@ -281,7 +281,7 @@ export default function SidebarWithHeader({
                   <Link
                     href={item.href!}
                     className={cn(
-                      "flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-md hover:bg-neutral-800 hover:text-orange-400 text-gray-300 cursor-pointer transition-colors duration-200 w-full",
+                      "flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-md hover:bg-muted hover:text-orange-400 text-foreground cursor-pointer transition-colors duration-200 w-full",
                       pathname === item.href && "bg-orange-400/20 text-orange-400 hover:bg-orange-400/20 hover:text-orange-400"
                     )}
                   >
@@ -297,12 +297,12 @@ export default function SidebarWithHeader({
             )}
           </ul>
         </nav>
-        <div className="p-3 text-xs text-gray-500 text-center border-t border-neutral-800">
+        <div className="p-3 text-xs text-muted-foreground text-center border-t border-border">
           &copy; {new Date().getFullYear()} Ristar Logistics.
         </div>
       </aside>
-      <main className="flex-1 flex flex-col min-h-screen bg-neutral-950 overflow-hidden">
-        <header className="bg-neutral-900 shadow px-6 py-4 flex items-center min-h-[64px] border-b border-neutral-800 flex-shrink-0">
+      <main className="flex-1 flex flex-col min-h-screen bg-background text-foreground overflow-hidden">
+        <header className="bg-background shadow px-6 py-4 flex items-center min-h-[64px] border-b border-border flex-shrink-0">
           {sectionTitle && (
             <span
               className="font-bold text-2xl text-orange-400 tracking-wide"
@@ -315,7 +315,7 @@ export default function SidebarWithHeader({
             </span>
           )}
         </header>
-        <section className="flex-1 bg-neutral-950 p-6 overflow-x-auto overflow-y-auto">
+        <section className="flex-1 bg-background p-6 overflow-x-auto overflow-y-auto">
           {children}
         </section>
       </main>

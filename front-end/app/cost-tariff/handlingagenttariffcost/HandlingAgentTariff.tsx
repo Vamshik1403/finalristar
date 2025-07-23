@@ -35,6 +35,8 @@ const AddTariffModal = ({
     if (form?.id) {
       setIsEditMode(true);
     } else {
+      // Set status to true (Active) by default if not in edit mode
+      setForm((prev: any) => ({ ...prev, status: true }));
       axios
         .get("http://localhost:8000/handling-agent-tariff-cost/next-tariff-code")
         .then((res) =>
@@ -108,52 +110,45 @@ const AddTariffModal = ({
   ];
 
   return (
-    <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto border border-neutral-800 p-0">
+    <Dialog open onOpenChange={onClose} modal={true}>
+      <DialogContent className="bg-white dark:bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto border border-neutral-200 dark:border-neutral-800 p-0" onInteractOutside={e => e.preventDefault()}>
         <DialogTitle className="sr-only">{formTitle}</DialogTitle>
-        <form className="px-6 pb-6 pt-2" onSubmit={handleSubmit}>
+        <form className="px-6 pb-6 pt-2 [&_label]:text-neutral-900 [&_input]:bg-white [&_input]:text-neutral-900 [&_select]:bg-white [&_select]:text-neutral-900 dark:[&_label]:text-white dark:[&_input]:bg-neutral-800 dark:[&_input]:text-white dark:[&_select]:bg-neutral-800 dark:[&_select]:text-white" onSubmit={handleSubmit}>
           <div className="flex justify-between items-center pt-6 pb-2 border-b border-neutral-800">
-            <h2 className="text-lg font-semibold text-white">{formTitle}</h2>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white text-2xl px-2"
-            >
-              &times;
-            </Button>
+               <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">{formTitle}</h2>
+               {/* Removed duplicate X close button here */}
           </div>
 
           <div className="flex items-center gap-2 mb-4 mt-4">
-            <Label className="text-white text-sm">Status</Label>
+            <Label className="text-neutral-900 dark:text-white text-sm">Status</Label>
             <Input
               type="checkbox"
-              checked={form.status === true}
+              checked={form.status === true || form.status === 'Active'}
               onChange={(e) => setForm({ ...form, status: e.target.checked })}
               className="accent-blue-500 w-4 h-4 ml-2"
               id="status"
             />
-            <Label htmlFor="status" className="text-white text-sm">
+            <Label htmlFor="status" className="text-neutral-900 dark:text-white text-sm">
               Active
             </Label>
-            <p className="text-xs text-neutral-300 mt-1">
+            <p className="text-xs text-neutral-500 dark:text-neutral-300 mt-1">
               Current status: <span className="font-medium">{form.status ? "Active" : "Inactive"}</span>
             </p>
           </div>
 
           <div className="mb-4">
-            <Label className="block text-xs text-white mb-1">Tariff Code</Label>
+            <Label className="block text-xs text-neutral-900 dark:text-white mb-1">Tariff Code</Label>
             <Input
               type="text"
               value={form.tariffCode || ""}
               readOnly
-              className="w-full bg-neutral-800 text-white rounded border border-neutral-700"
+              className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700"
             />
           </div>
 
           <div className="grid grid-cols-1 gap-y-4">
             <div>
-              <Label className="block text-xs text-white mb-1">Handling Agent</Label>
+              <Label className="block text-xs text-neutral-900 dark:text-white mb-1">Handling Agent</Label>
               <select
                 value={form.handlingAgentName || ""}
                 onChange={(e) =>
@@ -163,7 +158,7 @@ const AddTariffModal = ({
                     servicePort: "",
                   })
                 }
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700 text-sm"
               >
                 <option value="">Select</option>
                 {handlingAgents.map((agent: any) => (
@@ -175,13 +170,13 @@ const AddTariffModal = ({
             </div>
 
             <div>
-              <Label className="block text-xs text-white mb-1">Service Port</Label>
+              <Label className="block text-xs text-neutral-900 dark:text-white mb-1">Service Port</Label>
               <select
                 value={form.servicePort || ""}
                 onChange={(e) =>
                   setForm({ ...form, servicePort: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700 text-sm"
               >
                 <option value="">Select a Handling Agent first</option>
                 {ports.map((port: any) => (
@@ -193,13 +188,13 @@ const AddTariffModal = ({
             </div>
 
             <div>
-              <Label className="block text-xs text-white mb-1">Currency</Label>
+              <Label className="block text-xs text-neutral-900 dark:text-white mb-1">Currency</Label>
               <select
                 value={form.currency || ""}
                 onChange={(e) =>
                   setForm({ ...form, currency: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700 text-sm"
               >
                 <option value="">Select</option>
                 {currencies.map((currency: any) => (
@@ -212,22 +207,22 @@ const AddTariffModal = ({
           </div>
 
           <div className="mt-6">
-            <Label className="block text-xs text-white mb-2">Tariff Rates</Label>
-            <div className="grid grid-cols-2 bg-neutral-800 text-white font-semibold text-sm px-4 py-2 rounded-t">
+            <Label className="block text-xs text-neutral-900 dark:text-white mb-2">Tariff Rates</Label>
+            <div className="grid grid-cols-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold text-sm px-4 py-2 rounded-t">
               <div>Tariff Type</div>
               <div>Charge Amount</div>
             </div>
-            <div className="space-y-2 bg-neutral-900 p-4 rounded-b">
+            <div className="space-y-2 bg-neutral-100 dark:bg-neutral-900 p-4 rounded-b">
               {tariffFields.map((label) => (
                 <div key={label} className="grid grid-cols-2 items-center gap-4">
-                  <Label className="text-white text-xs">{label}</Label>
+                  <Label className="text-neutral-900 dark:text-white text-xs">{label}</Label>
                   <Input
                     type="text"
                     value={form[label] || ""}
                     onChange={(e) =>
                       setForm({ ...form, [label]: e.target.value })
                     }
-                    className="w-full bg-neutral-800 text-white rounded border border-neutral-700"
+                    className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700"
                   />
                 </div>
               ))}
@@ -239,7 +234,7 @@ const AddTariffModal = ({
               type="button"
               variant="outline"
               onClick={onClose}
-              className="bg-neutral-800 text-white rounded hover:bg-neutral-700 border border-neutral-700"
+              className="bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-white rounded hover:bg-neutral-300 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700"
             >
               Cancel
             </Button>

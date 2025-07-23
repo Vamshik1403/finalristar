@@ -81,7 +81,7 @@ const ExchangeRateTable = () => {
   };
 
   return (
-    <div className="px-4 pt-0 pb-4">
+    <div className="px-4 pt-4 pb-4 dark:bg-black">
       <div className="flex items-center justify-between mt-0 mb-4">
         <div className="relative w-full mr-4 max-w-xs">
           <Search
@@ -91,7 +91,7 @@ const ExchangeRateTable = () => {
           <input
             type="text"
             placeholder="Search exchange rates..."
-            className="p-2 pl-10 rounded-lg bg-neutral-900 text-white placeholder-neutral-400 border border-neutral-800 focus:outline-none focus:border-blue-500"
+            className="h-8 p-2 pl-10 rounded-lg bg-background text-foreground placeholder-muted-foreground border border-border focus:outline-none focus:border-blue-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -105,37 +105,37 @@ const ExchangeRateTable = () => {
         </Button>
       </div>
 
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-background">
             <TableRow>
-              <TableHead className="text-center text-white">From Currency</TableHead>
-              <TableHead className="text-center text-white">To Currency</TableHead>
-              <TableHead className="text-center text-white">Rate</TableHead>
-              <TableHead className="text-center text-white">Variance</TableHead>
-              <TableHead className="text-center text-white">Date</TableHead>
-              <TableHead className="text-center text-white">Actions</TableHead>
+              <TableHead className="text-center text-foreground">From Currency</TableHead>
+              <TableHead className="text-center text-foreground">To Currency</TableHead>
+              <TableHead className="text-center text-foreground">Rate</TableHead>
+              <TableHead className="text-center text-foreground">Variance</TableHead>
+              <TableHead className="text-center text-foreground">Date</TableHead>
+              <TableHead className="text-center text-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredRates.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   No exchange rates found.
                 </TableCell>
               </TableRow>
             ) : (
               filteredRates.map((rate) => (
-                <TableRow key={rate.id} className="hover:bg-neutral-800 transition border-b border-neutral-800">
-                  <TableCell className="text-center text-white">
+                <TableRow key={rate.id} className="hover:bg-muted transition border-b border-border">
+                  <TableCell className="text-center text-foreground">
                     {rate.fromCurrency?.currencyName} ({rate.fromCurrency?.currencyCode})
                   </TableCell>
-                  <TableCell className="text-center text-white">
+                  <TableCell className="text-center text-foreground">
                     {rate.toCurrency?.currencyName} ({rate.toCurrency?.currencyCode})
                   </TableCell>
-                  <TableCell className="text-center text-white">{rate.exchangeRate}</TableCell>
-                  <TableCell className="text-center text-white">{rate.variance}</TableCell>
-                  <TableCell className="text-center text-white">
+                  <TableCell className="text-center text-foreground">{rate.exchangeRate}</TableCell>
+                  <TableCell className="text-center text-foreground">{rate.variance}</TableCell>
+                  <TableCell className="text-center text-foreground">
                     {new Date(rate.date).toLocaleDateString()}
                   </TableCell>
                   <TableCell className="text-center">
@@ -145,7 +145,7 @@ const ExchangeRateTable = () => {
                         size="icon"
                         title="Edit"
                         onClick={() => handleEdit(rate)}
-                        className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                       >
                         <Pencil size={16} />
                       </Button>
@@ -154,7 +154,7 @@ const ExchangeRateTable = () => {
                         size="icon"
                         title="Delete"
                         onClick={() => handleDelete(rate.id)}
-                        className="hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                       >
                         <Trash2 size={16} />
                       </Button>

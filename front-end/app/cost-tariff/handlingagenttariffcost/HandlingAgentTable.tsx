@@ -75,9 +75,9 @@ const CostTariffPage = () => {
 
   return (
     // Keep the full height container with overflow-auto
-    <div className="h-screen overflow-auto">
+    <div className="h-screen overflow-auto bg-white dark:bg-black">
       {/* Reduce the min-width to prevent table from pushing sidebar */}
-      <div className="px-4 py-6 min-w-[1200px]"> {/* Reduced from 1500px to 1200px */}
+      <div className="px-4 py-6 min-w-[1200px]">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-white">Handling Agent Tariff</h2>
           <Button
@@ -104,35 +104,39 @@ const CostTariffPage = () => {
         </div>
 
         {showModal && (
-          <AddTariffModal
-            onClose={() => setShowModal(false)}
-            formTitle={form.id ? "Edit Tariff" : "Add Tariff"}
-            form={form}
-            setForm={setForm}
-            handleSuccess={fetchTariffData}
-          />
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto border border-neutral-200 dark:border-neutral-800 p-0">
+              <AddTariffModal
+                onClose={() => setShowModal(false)}
+                formTitle={form.id ? "Edit Tariff" : "Add Tariff"}
+                form={form}
+                setForm={setForm}
+                handleSuccess={fetchTariffData}
+              />
+            </div>
+          </div>
         )}
 
-        <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-hidden">
+        <div className="rounded-lg shadow border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden">
           {/* Add a wrapper div with horizontal scroll for just the table */}
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
-                  {/* Make header cells more compact */}
-                  {["Tariff Code", "Agent", "Service", "Currency", "IMP", "EXP", "Tranship", "Empty Repo", "Detention", "Status", "Actions"].map(
-                    (header) => (
-                      <TableHead key={header} className="text-white px-2 py-2 whitespace-nowrap">
-                        {header}
-                      </TableHead>
-                    )
-                  )}
-                </TableRow>
+                      <TableRow>
+                        {/* Make header cells more compact */}
+                        {["Tariff Code", "Agent", "Service", "Currency", "IMP", "EXP", "Tranship", "Empty Repo", "Detention", "Status", "Actions"].map(
+                          (header) => (
+                            <TableHead key={header} className="px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200">
+                              {header}
+                            </TableHead>
+                          )
+                        )}
+                      </TableRow>
               </TableHeader>
               <TableBody>
                 {tariffData.length > 0 ? (
                   tariffData.map((item: any) => (
-                    <TableRow key={item.id} className="hover:bg-neutral-800 text-white">
+                    <TableRow key={item.id} className="hover:bg-neutral-100 dark:hover:bg-neutral-800 text-black dark:text-white">
                       <TableCell>{item.tariffCode}</TableCell>
                       <TableCell>{item.addressBook?.companyName || "N/A"}</TableCell>
                       <TableCell>{item.port?.portName || "N/A"}</TableCell>
@@ -165,7 +169,7 @@ const CostTariffPage = () => {
                             });
                             setShowModal(true);
                           }}
-                          className="text-blue-400 hover:text-blue-500"
+                          className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                         >
                           <Pencil size={16} />
                         </Button>
@@ -173,7 +177,7 @@ const CostTariffPage = () => {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDelete(item.id)}
-                          className="text-red-500 hover:text-red-600"
+                          className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                         >
                           <Trash2 size={16} />
                         </Button>

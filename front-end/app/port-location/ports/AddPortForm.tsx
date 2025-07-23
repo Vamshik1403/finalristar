@@ -145,36 +145,34 @@ const AddPortForm: React.FC<PortFormProps> = ({ onClose, editData, isEditMode })
       }
       onClose();
     } catch (error: any) {
-      alert("Server error: " + (error.response?.data?.message || error.message));
+      if (error.response?.status === 409 || (error.response?.data?.message && error.response.data.message.includes('already exists'))) {
+        alert('Port with this name already exists!');
+        onClose(); // Close the form/modal after alert
+      } else {
+        alert("Server error: " + (error.response?.data?.message || error.message));
+      }
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50 backdrop-blur-lg">
-      <Dialog open onOpenChange={onClose}>
-        <DialogContent className="max-w-xl w-full bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-800">
-          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900">
-            <DialogTitle className="text-xl font-semibold text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-lg">
+      <Dialog open onOpenChange={onClose} modal={true}>
+        <DialogContent className="max-w-xl w-full bg-white dark:bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-200 dark:border-neutral-800" onInteractOutside={e => e.preventDefault()}>
+          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               {isEditMode ? "Edit Port" : "Add Port"}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white cursor-pointer"
-            >
-              <X size={24} />
-            </Button>
+            {/* Removed duplicate X close button here */}
           </DialogHeader>
           <form className="px-6 pb-6 pt-2" onSubmit={handleSubmit}>
             {/* Port Type */}
             <div className="mb-4">
-              <label className="block text-sm text-neutral-200 mb-1">Port Type</label>
+              <label className="block text-sm text-gray-700 dark:text-neutral-200 mb-1">Port Type</label>
               <select
                 name="portType"
                 value={formData.portType}
                 onChange={handleChange}
-                className="w-full p-2 rounded bg-neutral-800 text-white border border-neutral-700"
+                className="w-full p-2 rounded bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
               >
                 <option value="Main">Main</option>
                 <option value="ICD">ICD</option>
@@ -182,7 +180,7 @@ const AddPortForm: React.FC<PortFormProps> = ({ onClose, editData, isEditMode })
             </div>
             {/* Port Code */}
             <div className="mb-4">
-              <label className="block text-sm text-neutral-200 mb-1">Port Code</label>
+              <label className="block text-sm text-gray-700 dark:text-neutral-200 mb-1">Port Code</label>
               <Input
                 type="text"
                 name="portCode"
@@ -190,12 +188,12 @@ const AddPortForm: React.FC<PortFormProps> = ({ onClose, editData, isEditMode })
                 onChange={handleChange}
                 placeholder="Enter Port Code"
                 required
-                className="w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             {/* Port Name */}
             <div className="mb-4">
-              <label className="block text-sm text-neutral-200 mb-1">Port Name</label>
+              <label className="block text-sm text-gray-700 dark:text-neutral-200 mb-1">Port Name</label>
               <Input
                 type="text"
                 name="portName"
@@ -203,29 +201,29 @@ const AddPortForm: React.FC<PortFormProps> = ({ onClose, editData, isEditMode })
                 onChange={handleChange}
                 placeholder="Enter Port Name"
                 required
-                className="w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             {/* Port Long Name */}
             <div className="mb-4">
-              <label className="block text-sm text-neutral-200 mb-1">Port Long Name</label>
+              <label className="block text-sm text-gray-700 dark:text-neutral-200 mb-1">Port Long Name</label>
               <Input
                 type="text"
                 name="portLongName"
                 value={formData.portLongName}
                 onChange={handleChange}
                 placeholder="Enter Port Long Name"
-                className="w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             {/* Country */}
             <div className="mb-4">
-              <label className="block text-sm text-neutral-200 mb-1">Country</label>
+              <label className="block text-sm text-gray-700 dark:text-neutral-200 mb-1">Country</label>
               <select
                 name="countryId"
                 value={formData.countryId || ""}
                 onChange={handleChange}
-                className="w-full p-2 rounded bg-neutral-800 text-white border border-neutral-700"
+                className="w-full p-2 rounded bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
                 required
               >
                 <option value="">Select Country</option>
@@ -238,13 +236,13 @@ const AddPortForm: React.FC<PortFormProps> = ({ onClose, editData, isEditMode })
             </div>
             {/* Currency (auto-filled) */}
             <div className="mb-4">
-              <label className="block text-sm text-neutral-200 mb-1">Currency</label>
+              <label className="block text-sm text-gray-700 dark:text-neutral-200 mb-1">Currency</label>
               <select
                 name="currencyId"
                 value={formData.currencyId || ""}
                 onChange={handleChange}
                 disabled
-                className="w-full p-2 rounded bg-neutral-800 text-white border border-neutral-700 opacity-70 cursor-not-allowed"
+                className="w-full p-2 rounded bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 opacity-70 cursor-not-allowed"
                 required
               >
                 <option value="">
@@ -260,7 +258,7 @@ const AddPortForm: React.FC<PortFormProps> = ({ onClose, editData, isEditMode })
             {/* Parent Port (Only for ICD) */}
             {formData.portType === "ICD" && (
               <div className="mb-4">
-                <label className="block text-sm text-neutral-200 mb-1">
+                <label className="block text-sm text-gray-700 dark:text-neutral-200 mb-1">
                   Parent Port (Only for ICD)
                 </label>
                 <select
@@ -280,12 +278,12 @@ const AddPortForm: React.FC<PortFormProps> = ({ onClose, editData, isEditMode })
             )}
             {/* Status */}
             <div className="mb-4">
-              <label className="block text-sm text-neutral-200 mb-1">Status</label>
+              <label className="block text-sm text-gray-700 dark:text-neutral-200 mb-1">Status</label>
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full p-2 rounded bg-neutral-800 text-white border border-neutral-700"
+                className="w-full p-2 rounded bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
               >
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
@@ -297,7 +295,7 @@ const AddPortForm: React.FC<PortFormProps> = ({ onClose, editData, isEditMode })
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 cursor-pointer"
+                className="px-4 py-2 bg-white dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-900 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 cursor-pointer"
               >
                 Cancel
               </Button>

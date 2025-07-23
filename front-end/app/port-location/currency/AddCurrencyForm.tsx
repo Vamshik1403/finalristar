@@ -73,27 +73,20 @@ const AddCurrencyForm: React.FC<CurrencyFormProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50 backdrop-blur-lg">
-      <Dialog open onOpenChange={onClose}>
-        <DialogContent className="max-w-lg w-full bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-800">
-          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900">
-            <DialogTitle className="text-xl font-semibold text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-lg">
+      <Dialog open onOpenChange={onClose} modal={true}>
+        <DialogContent className="max-w-lg w-full bg-white dark:bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-200 dark:border-neutral-800" onInteractOutside={e => e.preventDefault()}>
+          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               {initialData ? "Edit Currency" : "Add Currency"}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white cursor-pointer"
-            >
-              <X size={24} />
-            </Button>
+            {/* Removed duplicate X close button here */}
           </DialogHeader>
           <form className="px-6 pb-6 pt-2" onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
                 htmlFor="currencyCode"
-                className="block text-neutral-200 mb-1"
+                className="block text-gray-700 dark:text-neutral-200 mb-1"
               >
                 Currency Code
               </label>
@@ -105,13 +98,13 @@ const AddCurrencyForm: React.FC<CurrencyFormProps> = ({
                 onChange={handleChange}
                 placeholder="Currency Code"
                 required
-                className="bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400"
+                className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400"
               />
             </div>
             <div className="mb-4">
               <label
                 htmlFor="currencyName"
-                className="block text-neutral-200 mb-1"
+                className="block text-gray-700 dark:text-neutral-200 mb-1"
               >
                 Currency Name
               </label>
@@ -123,13 +116,13 @@ const AddCurrencyForm: React.FC<CurrencyFormProps> = ({
                 onChange={handleChange}
                 placeholder="Currency Name"
                 required
-                className="bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400"
+                className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400"
               />
             </div>
             <div className="mb-4">
               <label
                 htmlFor="currencySymbol"
-                className="block text-neutral-200 mb-1"
+                className="block text-gray-700 dark:text-neutral-200 mb-1"
               >
                 Symbol
               </label>
@@ -141,11 +134,11 @@ const AddCurrencyForm: React.FC<CurrencyFormProps> = ({
                 onChange={handleChange}
                 placeholder="Symbol"
                 required
-                className="bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400"
+                className="bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-gray-400 dark:placeholder-neutral-400"
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="status" className="block text-neutral-200 mb-1">
+              <label htmlFor="status" className="block text-gray-700 dark:text-neutral-200 mb-1">
                 Status
               </label>
               <select
@@ -153,7 +146,7 @@ const AddCurrencyForm: React.FC<CurrencyFormProps> = ({
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full p-2 rounded bg-neutral-800 text-white border border-neutral-700 text-sm transition-all focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 rounded bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-neutral-200 dark:border-neutral-700 text-sm transition-all focus:ring-2 focus:ring-blue-400"
                 required
               >
                 <option value="Active">Active</option>
@@ -165,7 +158,7 @@ const AddCurrencyForm: React.FC<CurrencyFormProps> = ({
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 cursor-pointer"
+                className="px-4 py-2 bg-white dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-700 text-gray-900 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 cursor-pointer"
               >
                 Cancel
               </Button>

@@ -163,7 +163,12 @@ const AddCompanyForm = ({
       });
 
       setStatusActive(editData.status === "active");
-      setBusinessTypes(editData.businessType?.split(", ") || []);
+      // Always set as array, regardless of input type
+      setBusinessTypes(
+        Array.isArray(editData.businessType)
+          ? editData.businessType
+          : editData.businessType.split(/\s*,\s*/).map((s: string) => s.trim())
+      );
       setBankAccounts(
         editData.bankDetails?.map((b: any) => ({
           accountNo: b.accountNumber,
@@ -281,20 +286,23 @@ const AddCompanyForm = ({
 
     try {
       if (editData && editData.id) {
-        // ✅ Use PUT to update
         await axios.patch(
           `http://localhost:8000/addressbook/${editData.id}`,
           payload
         );
         alert("Company updated successfully");
       } else {
-        // ✅ Use POST to add
         await axios.post("http://localhost:8000/addressbook", payload);
         alert("Company added successfully");
       }
       onClose();
-    } catch (err) {
-      alert(editData ? "Failed to update company" : "Failed to add company");
+    } catch (err: any) {
+      if (err.response?.status === 409 || (err.response?.data?.message && err.response.data.message.includes('already exists'))) {
+        alert('Company with this name already exists!');
+        onClose(); // Close the form/modal after alert
+      } else {
+        alert(editData ? "Failed to update company" : "Failed to add company");
+      }
     }
   };
 
@@ -346,20 +354,13 @@ const AddCompanyForm = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-lg">
-      <Dialog open onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl w-full bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto p-0 border border-neutral-800">
-          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900">
-            <DialogTitle className="text-xl font-semibold text-white">
+      <Dialog open onOpenChange={onClose} modal={true}>
+        <DialogContent className="max-w-2xl w-full bg-white dark:bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto p-0 border border-neutral-200 dark:border-neutral-800" onInteractOutside={e => e.preventDefault()}>
+          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+            <DialogTitle className="text-xl font-semibold text-black dark:text-white">
               {editData ? "Edit Company" : "Add New Company"}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white cursor-pointer"
-            >
-              <X size={24} />
-            </Button>
+            {/* Removed duplicate X close button here */}
           </DialogHeader>
           <form
             onSubmit={e => {
@@ -367,16 +368,16 @@ const AddCompanyForm = ({
               handleAddCompanyClick();
             }}
           >
-            <div className="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-neutral-900">
+            <div className="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-white dark:bg-neutral-900">
               {/* Status Switch */}
               <div className="col-span-2 flex items-center">
-                <span className="text-neutral-200 mr-2">Status</span>
+                <span className="text-black dark:text-neutral-200 mr-2">Status</span>
                 <Button
                   type="button"
                   variant={statusActive ? "default" : "outline"}
                   className={cn(
                     "rounded-full px-6 py-1 transition-colors cursor-pointer",
-                    statusActive ? "bg-blue-600 text-white" : "bg-neutral-800 text-neutral-300 border border-neutral-700"
+                    statusActive ? "bg-blue-600 text-white" : "bg-white dark:bg-neutral-800 text-neutral-300 border border-neutral-200 dark:border-neutral-700"
                   )}
                   onClick={() => setStatusActive(!statusActive)}
                 >
@@ -419,7 +420,7 @@ const AddCompanyForm = ({
                 <div key={field.id} className={field.fullWidth ? "col-span-2" : ""}>
                   <label
                     htmlFor={field.id}
-                    className="block text-sm font-medium text-neutral-200 mb-1"
+                    className="block text-sm font-medium text-black dark:text-neutral-200 mb-1"
                   >
                     {field.label}{" "}
                     {field.required && <span className="text-red-500">*</span>}
@@ -430,7 +431,7 @@ const AddCompanyForm = ({
                       rows={3}
                       value={(formData as any)[field.id] ?? ""}
                       onChange={handleInputChange}
-                      className="w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full bg-white dark:bg-neutral-800 text-black dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   ) : (
                     <Input
@@ -439,7 +440,7 @@ const AddCompanyForm = ({
                       value={(formData as any)[field.id] ?? ""}
                       onChange={handleInputChange}
                       readOnly={field.readOnly}
-                      className="w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full bg-white dark:bg-neutral-800 text-black dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   )}
                 </div>
@@ -454,7 +455,7 @@ const AddCompanyForm = ({
                 }}
                 tabIndex={-1}
               >
-                <label htmlFor="countrySearch" className="block text-sm font-medium text-neutral-200 mb-1">
+                <label htmlFor="countrySearch" className="block text-sm font-medium text-black dark:text-neutral-200 mb-1">
                   Country <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -470,7 +471,7 @@ const AddCompanyForm = ({
                       if (countrySearchTerm && userTypedCountry) setShowSuggestions(true);
                     }}
                     placeholder="Type to search country..."
-                    className="w-full pr-10 bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full pr-10 bg-white dark:bg-neutral-800 text-black dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     autoComplete="off"
                   />
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
@@ -491,7 +492,7 @@ const AddCompanyForm = ({
                   </div>
                 </div>
                 {showSuggestions && (
-                  <ul className="absolute z-10 w-full bg-neutral-900 text-white border border-neutral-700 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
+                  <ul className="absolute z-10 w-full bg-white dark:bg-neutral-900 text-black dark:text-white border border-neutral-200 dark:border-neutral-700 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
                     {filteredCountries.length > 0 ? (
                       filteredCountries.map((country) => (
                         <li
@@ -510,7 +511,7 @@ const AddCompanyForm = ({
               </div>
               {/* Business Types */}
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-neutral-200 mb-2">
+                <label className="block text-sm font-medium text-black dark:text-neutral-200 mb-2">
                   Business Types <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 cursor-pointer">
@@ -528,7 +529,7 @@ const AddCompanyForm = ({
                   ].map((type) => (
                     <label
                       key={type}
-                      className="flex items-center text-neutral-200 text-sm cursor-pointer"
+                      className="flex items-center text-black dark:text-neutral-200 text-sm cursor-pointer"
                     >
                       <Checkbox
                         checked={businessTypes.includes(type)}
@@ -542,9 +543,9 @@ const AddCompanyForm = ({
               </div>
             </div>
             {/* Bank Accounts Section */}
-            <div className="px-6 py-4 border-t border-neutral-800">
+            <div className="px-6 py-4 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">Bank Accounts</h3>
+                <h3 className="text-lg font-semibold text-black dark:text-white">Bank Accounts</h3>
                 <Button
                   type="button"
                   variant="link"
@@ -559,9 +560,9 @@ const AddCompanyForm = ({
                   {bankAccounts.map((account, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-neutral-800 rounded-lg p-4 mb-4 relative bg-neutral-900"
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 mb-4 relative bg-white dark:bg-neutral-900"
                     >
-                      <h4 className="col-span-2 text-md font-semibold text-neutral-200 mb-2">
+                      <h4 className="col-span-2 text-md font-semibold text-black dark:text-neutral-200 mb-2">
                         Bank Account #{index + 1}
                       </h4>
                       <Button
@@ -587,7 +588,7 @@ const AddCompanyForm = ({
                         <div key={field.id} className={field.isFull ? "md:col-span-2" : ""}>
                           <label
                             htmlFor={`${String(field.id)}-${index}`}
-                            className="block text-sm font-medium text-neutral-200 mb-1"
+                            className="block text-sm font-medium text-black dark:text-neutral-200 mb-1"
                           >
                             {field.label}
                           </label>
@@ -599,7 +600,7 @@ const AddCompanyForm = ({
                               updated[index][field.id] = e.target.value;
                               setBankAccounts(updated);
                             }}
-                            className="w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full bg-white dark:bg-neutral-800 text-black dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           />
                         </div>
                       ))}
@@ -616,9 +617,9 @@ const AddCompanyForm = ({
               )}
             </div>
             {/* Ports of Business Section */}
-            <div className="px-6 py-4 border-t border-neutral-800">
+            <div className="px-6 py-4 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-black dark:text-white">
                   Ports of Business
                 </h3>
                 <Button
@@ -634,10 +635,10 @@ const AddCompanyForm = ({
                 <div className="grid grid-cols-1 gap-4 mt-4">
                   {/* Port Type */}
                   <div>
-                    <label className="block text-sm font-medium text-neutral-200 mb-1">Port Type</label>
+                    <label className="block text-sm font-medium text-black dark:text-white mb-1">Port Type</label>
                     <div className="flex gap-4">
                       {["Main", "ICD"].map((type) => (
-                        <label key={type} className="inline-flex items-center text-neutral-200 cursor-pointer">
+                        <label key={type} className="inline-flex items-center text-black dark:text-white cursor-pointer">
                           <input
                             type="radio"
                             name="portType"
@@ -652,7 +653,7 @@ const AddCompanyForm = ({
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="searchPorts" className="block text-sm font-medium text-neutral-200 mb-1">
+                    <label htmlFor="searchPorts" className="block text-sm font-medium text-black dark:text-white mb-1">
                       Search Ports
                     </label>
                     <div className="relative">
@@ -668,7 +669,7 @@ const AddCompanyForm = ({
                         onFocus={() => {
                           if (portSearchTerm) setShowPortSuggestions(true);
                         }}
-                        className="w-full pl-10 pr-10 bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full pl-10 pr-10 bg-white dark:bg-neutral-800 text-black dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                       <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                       {portSearchTerm && (
@@ -689,7 +690,7 @@ const AddCompanyForm = ({
                   {/* Filtered Ports */}
                   {portSearchTerm && showPortSuggestions && filteredPorts.length > 0 && (
                     <div 
-                      className="space-y-2 bg-neutral-900 p-2 rounded-md border border-neutral-800 mt-2 max-h-60 overflow-y-auto"
+                      className="space-y-2 bg-white dark:bg-neutral-900 p-2 rounded-md border border-neutral-200 dark:border-neutral-800 mt-2 max-h-60 overflow-y-auto"
                       onBlur={() => setShowPortSuggestions(false)}
                     >
                       {filteredPorts.map((port) => (
@@ -699,7 +700,7 @@ const AddCompanyForm = ({
                             "cursor-pointer p-2 rounded transition-colors",
                             selectedPorts.find((p) => p.portName === port.portName)
                               ? "bg-blue-500 text-white"
-                              : "text-neutral-200 hover:bg-blue-900 hover:text-blue-400"
+                              : "text-black dark:text-white hover:bg-blue-900 hover:text-blue-400"
                           )}
                           onClick={() => {
                             togglePortSelect(port);
@@ -717,7 +718,7 @@ const AddCompanyForm = ({
                   {/* Selected Ports with Clear All Button */}
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label className="block text-sm font-medium text-neutral-200">Selected Ports</label>
+                      <label className="block text-sm font-medium text-black dark:text-white">Selected Ports</label>
                       {selectedPorts.length > 0 && (
                         <button
                           type="button"
@@ -728,7 +729,7 @@ const AddCompanyForm = ({
                         </button>
                       )}
                     </div>
-                    <div className="w-full p-2 rounded-lg bg-neutral-800 text-white border border-neutral-700 min-h-[40px] flex flex-wrap gap-2">
+                    <div className="w-full p-2 rounded-lg bg-white dark:bg-neutral-800 text-black dark:text-white border border-neutral-200 dark:border-neutral-700 min-h-[40px] flex flex-wrap gap-2">
                       {selectedPorts.length > 0
                         ? selectedPorts.map((p) => (
                           <span
@@ -753,9 +754,9 @@ const AddCompanyForm = ({
               )}
             </div>
             {/* Contacts Section */}
-            <div className="px-6 py-4 border-t border-neutral-800">
+            <div className="px-6 py-4 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
               <div className="flex items-center justify-between mb-4 cursor-pointer">
-                <h3 className="text-lg font-semibold text-white">Contacts</h3>
+                <h3 className="text-lg font-semibold text-black dark:text-white">Contacts</h3>
                 <Button
                   type="button"
                   variant="link"
@@ -770,7 +771,7 @@ const AddCompanyForm = ({
                   {contacts.map((contact, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-neutral-800 rounded-lg p-4 mb-4 relative bg-neutral-900"
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 mb-4 relative bg-white dark:bg-neutral-900"
                     >
                       <h4 className="col-span-2 text-md font-semibold text-neutral-200 mb-2">
                         Contact #{index + 1}
@@ -795,22 +796,22 @@ const AddCompanyForm = ({
                         { label: "Mobile No", id: "mobile" },
                       ].map((field) => (
                         <div key={field.id}>
-                          <label
-                            htmlFor={`contact-${field.id}-${index}`}
-                            className="block text-sm font-medium text-neutral-200 mb-1"
-                          >
-                            {field.label}
-                          </label>
-                          <Input
-                            id={`contact-${field.id}-${index}`}
-                            value={contacts[index][field.id] || ""}
-                            onChange={(e) => {
-                              const updated = [...contacts];
-                              updated[index][field.id] = e.target.value;
-                              setContacts(updated);
-                            }}
-                            className="w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
+                        <label
+                          htmlFor={`contact-${field.id}-${index}`}
+                          className="block text-sm font-medium text-black dark:text-neutral-200 mb-1"
+                        >
+                          {field.label}
+                        </label>
+                        <Input
+                          id={`contact-${field.id}-${index}`}
+                          value={contacts[index][field.id] || ""}
+                          onChange={(e) => {
+                            const updated = [...contacts];
+                            updated[index][field.id] = e.target.value;
+                            setContacts(updated);
+                          }}
+                          className="w-full bg-white dark:bg-neutral-800 text-black dark:text-white border border-neutral-200 dark:border-neutral-700 placeholder-neutral-400 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
                         </div>
                       ))}
                     </div>
@@ -825,12 +826,12 @@ const AddCompanyForm = ({
                 </>
               )}
             </div>
-            <DialogFooter className="px-6 py-4 border-t border-neutral-800 flex justify-center gap-2 bg-neutral-900">
+            <DialogFooter className="px-6 py-4 border-t border-neutral-200 dark:border-neutral-800 flex justify-center gap-2 bg-white dark:bg-neutral-900">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 cursor-pointer"
+                className="bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-black dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 cursor-pointer"
               >
                 Cancel
               </Button>

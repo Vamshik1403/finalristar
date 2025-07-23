@@ -15,6 +15,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Label } from "@/components/ui/label";
 
 type Option = { id: string | number; name: string };
 type SelectOptions = {
@@ -462,80 +463,73 @@ const AddShipmentModal = ({
 
   return (
     <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50 backdrop-blur-lg">
-      <Dialog open onOpenChange={onClose}>
+      <Dialog open onOpenChange={onClose} modal={true}>
         <DialogContent
-          className="!w-[90vw] !max-w-[1200px] min-w-0 bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-800"
+          className="!w-[90vw] !max-w-[1200px] min-w-0 bg-white dark:bg-neutral-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto p-0 border border-neutral-200 dark:border-neutral-800"
+          onInteractOutside={e => e.preventDefault()}
         >
-          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900">
-            <DialogTitle className="text-xl font-semibold text-white">
+          <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               {formTitle}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white cursor-pointer"
-            >
-              &times;
-            </Button>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="px-6 pb-6 pt-2 space-y-4">
             {/* Basic Information */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">Basic Information</h3>
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">Basic Information</h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
+              <div className="bg-white dark:bg-neutral-900 p-4 rounded space-y-4 border border-neutral-200 dark:border-neutral-700">
                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="date" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Date (DD/MM/YY) <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="date"
                       value={form.date || ""}
                       onChange={(e) => setForm({ ...form, date: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="jobNumber" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Job Number <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       value={form.jobNumber || ""}
                       readOnly
-                      className="w-full p-2.5 bg-neutral-700 text-neutral-300 rounded border border-neutral-600 cursor-not-allowed"
+                      className="w-full p-2.5 bg-neutral-100 dark:bg-neutral-700 text-gray-900 dark:text-neutral-300 rounded border border-neutral-200 dark:border-neutral-600 cursor-not-allowed"
                       placeholder="Auto-generated..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="houseBL" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       House BL <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       value={form.houseBL || ""}
                       readOnly
-                      className="w-full p-2.5 bg-neutral-700 text-neutral-300 rounded border border-neutral-600 cursor-not-allowed"
+                      className="w-full p-2.5 bg-neutral-100 dark:bg-neutral-700 text-gray-900 dark:text-neutral-300 rounded border border-neutral-200 dark:border-neutral-600 cursor-not-allowed"
                       placeholder="Auto-generated..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="shippingTerm" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Shipping Term <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       value={form.shippingTerm || "CY-CY"}
                       onChange={(e) => setForm({ ...form, shippingTerm: e.target.value })}
                       placeholder="CY-CY"
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                 </div>
@@ -545,14 +539,14 @@ const AddShipmentModal = ({
             {/* Port Information */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">Port Information</h3>
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">Port Information</h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
+              <div className="bg-white dark:bg-neutral-900 p-4 rounded space-y-4 border border-neutral-200 dark:border-neutral-700">
                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="portOfLoading" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Port Of Loading <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       value={form.portOfLoading || ""}
@@ -581,7 +575,7 @@ const AddShipmentModal = ({
                       onBlur={() => {
                         setTimeout(() => setShowPortDropdown(false), 100);
                       }}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       placeholder="Start typing port of loading..."
                     />
                     {showPortDropdown && portSuggestions.length > 0 && (
@@ -607,9 +601,9 @@ const AddShipmentModal = ({
                   </div>
 
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="portOfDischarge" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                       Port Of Discharge <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       value={form.portOfDischarge || ""}
@@ -637,7 +631,7 @@ const AddShipmentModal = ({
                       onBlur={() => {
                         setTimeout(() => setShowDischargeDropdown(false), 100);
                       }}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       placeholder="Start typing port of discharge..."
                     />
                     {showDischargeDropdown && portSuggestions.length > 0 && (
@@ -664,53 +658,54 @@ const AddShipmentModal = ({
 
                   <div className="flex w-full gap-4 col-span-2">
                     <div className="flex-1">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="polFreeDays" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Free Days
-                      </label>
+                      </Label>
                       <Input
                         type="text"
                         value={form.polFreeDays || ""}
                         onChange={(e) => setForm({ ...form, polFreeDays: e.target.value })}
-                        className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                        className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="polDetentionRate" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Detention Rate
-                      </label>
+                      </Label>
                       <Input
                         type="text"
                         value={form.polDetentionRate || ""}
                         onChange={(e) => setForm({ ...form, polDetentionRate: e.target.value })}
-                        className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                        className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="podFreeDays" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Free Days
-                      </label>
+                      </Label>
                       <Input
                         type="text"
                         value={form.podFreeDays || ""}
                         onChange={(e) => setForm({ ...form, podFreeDays: e.target.value })}
-                        className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                        className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="podDetentionRate" className="block text-sm text-gray-900 dark:text-neutral-200 mb-1">
                         Detention Rate
-                      </label>
+                      </Label>
                       <Input
                         type="text"
                         value={form.podDetentionRate || ""}
                         onChange={(e) => setForm({ ...form, podDetentionRate: e.target.value })}
-                        className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                        className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                   </div>
 
                   <div className="col-span-2 flex items-center gap-2">
                     <Checkbox
+                      id="enableTranshipmentPort"
                       checked={!!form.enableTranshipmentPort}
                       onCheckedChange={(checked) =>
                         setForm({
@@ -718,21 +713,17 @@ const AddShipmentModal = ({
                           enableTranshipmentPort: checked,
                         })
                       }
-                      id="enableTranshipmentPort"
                     />
-                    <label
-                      htmlFor="enableTranshipmentPort"
-                      className="text-neutral-200 text-sm"
-                    >
+                    <Label htmlFor="enableTranshipmentPort" className="text-gray-900 dark:text-neutral-200 text-sm">
                       Enable Transhipment Port
-                    </label>
+                    </Label>
                   </div>
 
                   {form.enableTranshipmentPort && (
                     <div className="col-span-2">
-                      <label className="block text-sm text-neutral-200 mb-1">
+                      <Label htmlFor="transhipmentPortName" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                         Transhipment Port
-                      </label>
+                      </Label>
                       <div className="relative w-1/2">
                         <Input
                           type="text"
@@ -759,7 +750,7 @@ const AddShipmentModal = ({
                             }
                           }}
                           onBlur={() => setTimeout(() => setShowTranshipmentDropdown(false), 150)}
-                          className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                          className="w-full p-2.5 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-700"
                           placeholder="Start typing transhipment port..."
                         />
                         {showTranshipmentDropdown && transhipmentPortSuggestions.length > 0 && (
@@ -792,31 +783,31 @@ const AddShipmentModal = ({
             {/* Container Information */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">Add Inventory</h3>
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">Add Inventory</h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
+              <div className="bg-white dark:bg-neutral-900 p-4 rounded space-y-4 border border-neutral-200 dark:border-neutral-700">
                 <div className="mb-4">
-                  <label className="block text-sm text-neutral-200 mb-1">
+                  <Label htmlFor="quantity" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                     Quantity <span className="text-red-500">*</span>
-                  </label>
+                  </Label>
                   <Input
                     type="text"
                     value={form.quantity || ""}
                     onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-                    className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                    className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                   />
                 </div>
                 <div className="relative mb-4">
-                  <label className="block text-sm text-neutral-200 mb-1">
+                  <Label htmlFor="containerNumber" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                     Container No.
-                  </label>
+                  </Label>
                   <div className="flex">
                     <Input
                       type="text"
                       value={form.containerNumber || ""}
                       onChange={(e) => handleContainerSearch(e.target.value)}
                       placeholder="Type at least 2 characters"
-                      className="rounded-l w-full p-2.5 bg-neutral-800 text-white border border-neutral-700"
+                      className="rounded-l w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700"
                     />
                     <Button
                       type="button"
@@ -922,14 +913,14 @@ const AddShipmentModal = ({
             {/* Handling Agents */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">Handling Agents</h3>
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">Handling Agents</h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
+              <div className="bg-white dark:bg-neutral-900 p-4 rounded space-y-4 border border-neutral-200 dark:border-neutral-700">
                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="expHandlingAgentAddressBookId" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       Exp. H. Agent Name <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Select
                       value={form.expHandlingAgentAddressBookId?.toString() || ""}
                       onValueChange={(value) => {
@@ -942,7 +933,7 @@ const AddShipmentModal = ({
                         });
                       }}
                     >
-                      <SelectTrigger className="w-full p-2.5 bg-neutral-800 text-white border border-neutral-700">
+                      <SelectTrigger className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700">
                         <SelectValue placeholder="Select Agent" />
                       </SelectTrigger>
                       <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
@@ -956,9 +947,9 @@ const AddShipmentModal = ({
                   </div>
 
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="impHandlingAgentAddressBookId" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       Imp. H. Agent Name <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Select
                       value={form.impHandlingAgentAddressBookId?.toString() || ""}
                       onValueChange={(value) => {
@@ -971,7 +962,7 @@ const AddShipmentModal = ({
                         });
                       }}
                     >
-                      <SelectTrigger className="w-full p-2.5 bg-neutral-800 text-white border border-neutral-700">
+                      <SelectTrigger className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700">
                         <SelectValue placeholder="Select Agent" />
                       </SelectTrigger>
                       <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
@@ -990,14 +981,14 @@ const AddShipmentModal = ({
             {/* Vessel Details */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">Vessel Details</h3>
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">Vessel Details</h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
+              <div className="bg-white dark:bg-neutral-900 p-4 rounded space-y-4 border border-neutral-200 dark:border-neutral-700">
                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                   <div className="relative">
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="carrierName" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       Carrier Name
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       value={form.carrierName || ""}
@@ -1005,14 +996,14 @@ const AddShipmentModal = ({
                         setForm((prev: any) => ({
                           ...prev,
                           carrierName: e.target.value,
-                          carrierId: null, // reset on typing
+                          carrierId: null,
                         }));
                         setShowSuggestions(true);
                       }}
                       onFocus={() => setShowSuggestions(true)}
                       onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                       placeholder="Start typing carrier name..."
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                     {showSuggestions && form.carrierName && (
                       <ul className="absolute z-10 w-full bg-neutral-800 border border-neutral-700 rounded mt-1 max-h-40 overflow-y-auto">
@@ -1050,47 +1041,47 @@ const AddShipmentModal = ({
                   </div>
 
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="vesselName" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       Vessel Name <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Input
                       type="text"
                       value={form.vesselName || ""}
                       onChange={(e) => setForm({ ...form, vesselName: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="gateClosingDate" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       Gate Closing Date
-                    </label>
+                    </Label>
                     <Input
                       type="date"
                       value={form.gateClosingDate || ""}
                       onChange={(e) => setForm({ ...form, gateClosingDate: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="sobDate" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       SOB Date
-                    </label>
+                    </Label>
                     <Input
                       type="date"
                       value={form.sobDate || ""}
                       onChange={(e) => setForm({ ...form, sobDate: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="etaToPod" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       ETA to PoD
-                    </label>
+                    </Label>
                     <Input
                       type="date"
                       value={form.etaToPod || ""}
                       onChange={(e) => setForm({ ...form, etaToPod: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                 </div>
@@ -1100,27 +1091,19 @@ const AddShipmentModal = ({
             {/* Return Depot Information */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-white text-base font-semibold">Return Depot Information</h3>
+                <h3 className="text-gray-900 dark:text-white text-base font-semibold">Return Depot Information</h3>
               </div>
-              <div className="bg-neutral-800 p-4 rounded space-y-4">
+              <div className="bg-white dark:bg-neutral-900 p-4 rounded space-y-4 border border-neutral-200 dark:border-neutral-700">
                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="emptyReturnDepot" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       Empty Return Depot <span className="text-red-500">*</span>
-                    </label>
+                    </Label>
                     <Select
                       value={form.emptyReturnDepot?.toString() || ""}
-                      onValueChange={(value) => {
-                        const selectedId = Number(value);
-                        const selectedDepot = emptyReturnDepots.find((d) => d.id === selectedId);
-                        setForm({
-                          ...form,
-                          emptyReturnDepot: selectedId,
-                          emptyReturnDepotName: selectedDepot?.companyName || "",
-                        });
-                      }}
+                      onValueChange={(value) => setForm({ ...form, emptyReturnDepot: value })}
                     >
-                      <SelectTrigger className="w-full p-2.5 bg-neutral-800 text-white border border-neutral-700">
+                      <SelectTrigger className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700">
                         <SelectValue placeholder="Select Return Depot" />
                       </SelectTrigger>
                       <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
@@ -1137,16 +1120,15 @@ const AddShipmentModal = ({
                       </SelectContent>
                     </Select>
                   </div>
-
                   <div>
-                    <label className="block text-sm text-neutral-200 mb-1">
+                    <Label htmlFor="estimatedEmptyReturnDate" className="text-gray-900 dark:text-neutral-200 text-sm mb-1">
                       Estimated Empty Return Date
-                    </label>
+                    </Label>
                     <Input
                       type="date"
                       value={form.estimatedEmptyReturnDate || ""}
                       onChange={(e) => setForm({ ...form, estimatedEmptyReturnDate: e.target.value })}
-                      className="w-full p-2.5 bg-neutral-800 text-white rounded border border-neutral-700"
+                      className="w-full p-2.5 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
                     />
                   </div>
                 </div>

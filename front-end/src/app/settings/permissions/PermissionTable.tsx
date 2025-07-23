@@ -50,25 +50,25 @@ const PermissionTable = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-gray-800 rounded-lg overflow-hidden mt-4 text-white">
+      <div className="rounded-lg shadow border border-border bg-background overflow-hidden mt-4">
         <table className="min-w-full leading-normal">
           <thead>
             <tr>
-              <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Name</th>
-              <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Description</th>
-              <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+              <th className="px-5 py-3 bg-background border-b-2 border-border text-left text-xs font-semibold text-foreground uppercase tracking-wider">Name</th>
+              <th className="px-5 py-3 bg-background border-b-2 border-border text-left text-xs font-semibold text-foreground uppercase tracking-wider">Description</th>
+              <th className="px-5 py-3 bg-background border-b-2 border-border text-left text-xs font-semibold text-foreground uppercase tracking-wider">
                 {activeTab === "permissions" ? "Module" : "Permissions"}
               </th>
-              <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Status</th>
+              <th className="px-5 py-3 bg-background border-b-2 border-border text-left text-xs font-semibold text-foreground uppercase tracking-wider">Status</th>
               {activeTab === "roles" && (
-                <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Actions</th>
+                <th className="px-5 py-3 bg-background border-b-2 border-border text-left text-xs font-semibold text-foreground uppercase tracking-wider">Actions</th>
               )}
             </tr>
           </thead>
           <tbody>
             {tableData.length > 0 ? (
               tableData.map((item, index) => (
-                <tr key={index} className="border-b border-gray-700">
+                <tr key={index} className="border-b border-border bg-background text-foreground">
                   <td className="px-5 py-3">{item.name}</td>
                   <td className="px-5 py-3">{item.description}</td>
                   <td className="px-5 py-3">
@@ -77,14 +77,14 @@ const PermissionTable = () => {
                   <td className="px-5 py-3 capitalize">{item.status}</td>
                   {activeTab === "roles" && (
                     <td className="px-5 py-3">
-                      <button className="text-blue-400 hover:underline text-sm">Edit</button>
+                      <button className="text-blue-600 hover:underline text-sm">Edit</button>
                     </td>
                   )}
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={activeTab === "permissions" ? 4 : 5} className="text-center text-gray-400 py-6">
+                <td colSpan={activeTab === "permissions" ? 4 : 5} className="text-center text-muted-foreground py-6">
                   No {activeTab === "permissions" ? "permissions" : "roles"} found
                 </td>
               </tr>

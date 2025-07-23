@@ -347,7 +347,7 @@ const QuotationPage = () => {
 
       <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-white dark:bg-neutral-900">
            <TableRow>
               {[
                 'Quote Ref.',
@@ -364,7 +364,7 @@ const QuotationPage = () => {
               ].map((heading, i) => (
                 <TableHead
                   key={i}
-                  className="text-center text-white"
+                  className="text-center px-2 py-2 whitespace-nowrap text-black dark:text-neutral-200"
                 >
                   {heading}
                 </TableHead>
@@ -373,7 +373,7 @@ const QuotationPage = () => {
           </TableHeader>
           <TableBody>
             {quotations.map((q) => (
-              <TableRow key={q.id} className="border-b border-neutral-800 text-white bg-neutral-900 hover:bg-neutral-800 transition">
+              <TableRow key={q.id} className="border-b border-neutral-200 dark:border-neutral-800 text-black dark:text-white bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
                <TableCell className="text-center">{q.quotationRefNumber}</TableCell>
                 <TableCell className="text-center">{q.effectiveDate?.split('T')[0]}</TableCell>
                 <TableCell className="text-center">{q.validTillDate?.split('T')[0]}</TableCell>
@@ -393,7 +393,7 @@ const QuotationPage = () => {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleView(q)}
-                    className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                    className="h-8 w-8 text-purple-400 hover:text-purple-300 hover:bg-purple-900/40 cursor-pointer"
                     title="View Details"
                   >
                     <Eye size={16} />
@@ -404,7 +404,7 @@ const QuotationPage = () => {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleDownloadPDF(q)}
-                    className="hover:bg-green-900 hover:text-green-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                    className="h-8 w-8 text-green-400 hover:text-green-300 hover:bg-green-900/40 cursor-pointer"
                     title="Download PDF"
                     disabled={isGenerating}
                   >
@@ -416,7 +416,7 @@ const QuotationPage = () => {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleEdit(q)}
-                    className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                    className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                     title="Edit"
                   >
                     <Pencil size={16} />
@@ -427,7 +427,7 @@ const QuotationPage = () => {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleDelete(q.id)}
-                    className="hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                    className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                     title="Delete"
                   >
                     <Trash2 size={16} />

@@ -348,9 +348,9 @@ containerPreparationCost: quote.containerPreparationCost || '',
         </Button>
       </div>
 
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-background">
            <TableRow>
               {[
                 'Quote Ref.',
@@ -367,7 +367,7 @@ containerPreparationCost: quote.containerPreparationCost || '',
               ].map((heading, i) => (
                 <TableHead
                   key={i}
-                  className="text-center text-white"
+                  className="text-center text-foreground"
                 >
                   {heading}
                 </TableHead>
@@ -376,7 +376,7 @@ containerPreparationCost: quote.containerPreparationCost || '',
           </TableHeader>
           <TableBody>
             {quotations.map((q) => (
-              <TableRow key={q.id} className="border-b border-neutral-800 text-white bg-neutral-900 hover:bg-neutral-800 transition">
+              <TableRow key={q.id} className="border-b border-border text-foreground bg-background hover:bg-muted transition">
                <TableCell className="text-center">{q.quotationRefNumber}</TableCell>
                 <TableCell className="text-center">{q.effectiveDate?.split('T')[0]}</TableCell>
                 <TableCell className="text-center">{q.validTillDate?.split('T')[0]}</TableCell>
@@ -396,7 +396,7 @@ containerPreparationCost: quote.containerPreparationCost || '',
                     variant="ghost"
                     size="icon"
                     onClick={() => handleView(q)}
-                    className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                    className="hover:bg-blue-100 hover:text-blue-900 dark:hover:bg-blue-900 dark:hover:text-blue-400 text-muted-foreground transition-all duration-200 cursor-pointer"
                     title="View Details"
                   >
                     <Eye size={16} />

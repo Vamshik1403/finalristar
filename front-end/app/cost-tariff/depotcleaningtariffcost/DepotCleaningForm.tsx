@@ -116,6 +116,23 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
     }
   }, [form?.depotTerminalId, depots]);
 
+  // When editing, ensure ports are set for the selected depot and portId is set
+  useEffect(() => {
+    // When editing, ensure ports are set for the selected depot and portId is set
+    if (form.id && form.addressBookId) {
+      const selectedDepot = depots.find((d) => d.id === form.addressBookId);
+      if (selectedDepot) {
+        const portList = selectedDepot.businessPorts || [];
+        setPorts(portList);
+        // If the current portId is not in the list, reset it
+        const hasValidPort = portList.some((bp: any) => bp.port.id === form.portId);
+        if (!hasValidPort && form.portId !== 0) {
+          setForm((prev: typeof form) => ({ ...prev, portId: 0 }));
+        }
+      }
+    }
+  }, [form.id, form.addressBookId, depots]);
+
   // ✅ Handle form submit (create or patch based on `form.id`)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -165,26 +182,16 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
   };
 
   return (
-    <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto border border-neutral-800 p-0">
+    <Dialog open onOpenChange={onClose} modal={true}>
+      <DialogContent className="bg-white dark:bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto border border-neutral-200 dark:border-neutral-800 p-0" onInteractOutside={e => e.preventDefault()}>
         <DialogHeader className="px-6 pt-6 pb-2 flex flex-row items-center justify-between">
-          <DialogTitle className="text-lg font-semibold text-white">{formTitle}</DialogTitle>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-gray-400 hover:text-white"
-            aria-label="Close"
-          >
-            <X size={22} />
-          </Button>
+          <DialogTitle className="text-lg font-semibold text-neutral-900 dark:text-white">{formTitle}</DialogTitle>
         </DialogHeader>
 
         <form className="px-6 pb-6 pt-2" onSubmit={handleSubmit}>
           {/* Status */}
           <div className="mb-4 flex items-center">
-            <Label htmlFor="status" className="block text-white mb-1 mr-2">Status</Label>
+            <Label htmlFor="status" className="block text-neutral-900 dark:text-white mb-1 mr-2">Status</Label>
             <Checkbox
               id="status"
               checked={form.status === "active"}
@@ -193,34 +200,34 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
               }
               className="data-[state=checked]:bg-blue-600"
             />
-            <Label htmlFor="status" className="ml-2 text-white">
+            <Label htmlFor="status" className="ml-2 text-neutral-900 dark:text-white">
               {form.status === "active" ? "Active" : "Inactive"}
             </Label>
           </div>
 
           {/* Tariff Code */}
           <div className="mb-4">
-            <Label htmlFor="tariffCode" className="block text-white mb-1">Tariff Code</Label>
+            <Label htmlFor="tariffCode" className="block text-neutral-900 dark:text-white mb-1">Tariff Code</Label>
             <Input
               id="tariffCode"
               type="text"
               value={loadingCode ? "Loading..." : form.tariffCode || ""}
               readOnly
-              className="bg-neutral-800 text-white border border-neutral-700"
+              className="bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700"
             />
           </div>
 
           {/* Product */}
           <div className="mb-4">
-            <Label htmlFor="product" className="block text-white mb-1">Product</Label>
+            <Label htmlFor="product" className="block text-neutral-900 dark:text-white mb-1">Product</Label>
             <Select
               value={form.productId?.toString() || "0"}
               onValueChange={(value) => setForm({ ...form, productId: Number(value) })}
             >
-              <SelectTrigger className="w-full bg-neutral-800 text-white border border-neutral-700">
+              <SelectTrigger className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700">
                 <SelectValue placeholder="Select Product" />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
+              <SelectContent className="bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700">
                 <SelectItem value="0">Select Product</SelectItem>
                 {products.map((p) => (
                   <SelectItem key={p.id} value={p.id.toString()}>
@@ -233,15 +240,15 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
 
           {/* Depot Terminal */}
          <div className="mb-4">
-  <Label htmlFor="depot" className="block text-white mb-1">Depot Terminal</Label>
+  <Label htmlFor="depot" className="block text-neutral-900 dark:text-white mb-1">Depot Terminal</Label>
   <Select
     value={form.addressBookId?.toString() || "0"}
     onValueChange={(value) => setForm({ ...form, addressBookId: Number(value) })}
   >
-    <SelectTrigger className="w-full bg-neutral-800 text-white border border-neutral-700">
+    <SelectTrigger className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700">
       <SelectValue placeholder="Select Depot Terminal" />
     </SelectTrigger>
-    <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
+    <SelectContent className="bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700">
       <SelectItem value="0">Select Depot Terminal</SelectItem>
       {depots.map((d) => (
         <SelectItem key={d.id} value={d.id.toString()}>
@@ -255,17 +262,16 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
 
           {/* Service Port */}
           <div className="mb-4">
-            <Label htmlFor="port" className="block text-white mb-1">Service Port</Label>
+            <Label htmlFor="port" className="block text-neutral-900 dark:text-white mb-1">Service Port</Label>
             <Select
               value={form.portId?.toString() || "0"} 
-            
               onValueChange={(value) => setForm({ ...form, portId: Number(value) })}
             >
-              <SelectTrigger className="w-full bg-neutral-800 text-white border border-neutral-700">
+              <SelectTrigger className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700">
                 <SelectValue placeholder="Select Port" />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
-                <SelectItem value="0">Select Port</SelectItem> {/* ← Changed from "" to "0" */}
+              <SelectContent className="bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700">
+                <SelectItem value="0">Select Port</SelectItem>
                 {ports.map((bp) => (
                   <SelectItem key={bp.port?.id} value={bp.port?.id?.toString() || "0"}>
                     {bp.portName || bp.port?.portName} {bp.portLongName ? `(${bp.portLongName})` : ''}
@@ -277,15 +283,15 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
 
           {/* Currency */}
           <div className="mb-4">
-            <Label htmlFor="currency" className="block text-white mb-1">Currency</Label>
+            <Label htmlFor="currency" className="block text-neutral-900 dark:text-white mb-1">Currency</Label>
             <Select
               value={form.currencyId?.toString() || "0"}
               onValueChange={(value) => setForm({ ...form, currencyId: Number(value) })}
             >
-              <SelectTrigger className="w-full bg-neutral-800 text-white border border-neutral-700">
+              <SelectTrigger className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700">
                 <SelectValue placeholder="Select Currency" />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 text-white border border-neutral-700">
+              <SelectContent className="bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700">
                 <SelectItem value="0">Select Currency</SelectItem>
                 {currencies.map((c) => (
                   <SelectItem key={c.id} value={c.id.toString()}>
@@ -298,7 +304,7 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
 
           {/* Cleaning Charges */}
           <div className="mb-6">
-            <Label htmlFor="cleaningCharges" className="block text-white mb-1">Cleaning Charges</Label>
+            <Label htmlFor="cleaningCharges" className="block text-neutral-900 dark:text-white mb-1">Cleaning Charges</Label>
             <Input
               id="cleaningCharges"
               type="text"
@@ -306,7 +312,7 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
               onChange={(e) =>
                 setForm({ ...form, cleaningCharges: (e.target.value) })
               }
-              className="bg-neutral-800 text-white border border-neutral-700"
+              className="bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white border border-neutral-700"
             />
           </div>
 
@@ -316,7 +322,7 @@ const AddTariffModal = ({ onClose, formTitle, form, setForm }: any) => {
               type="button"
               variant="outline"
               onClick={onClose}
-              className="bg-neutral-800 text-white hover:bg-neutral-700 border-neutral-700"
+              className="bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-white hover:bg-neutral-300 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700"
             >
               Cancel
             </Button>

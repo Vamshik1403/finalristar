@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import PermissionForm from "./PermissionForm";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 const PermissionTable = () => {
   const [activeTab, setActiveTab] = useState<"permissions" | "roles">("permissions");
@@ -18,79 +20,69 @@ const PermissionTable = () => {
   return (
     <>
       {/* Tabs and Add Button */}
-      <div className="bg-gray-800 rounded-lg shadow-md mt-4 px-4 py-2 flex justify-between items-center border-b border-gray-700 text-white">
+      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black shadow-md mt-4 px-4 py-2 flex justify-between items-center">
         <div className="flex">
-          <button
+          <Button
+            variant={activeTab === "permissions" ? "secondary" : "ghost"}
+            className={`px-4 py-2 text-sm font-medium rounded-none border-b-2 ${activeTab === "permissions" ? "border-blue-600 text-blue-600 dark:text-blue-400 bg-neutral-100 dark:bg-neutral-900" : "border-transparent text-black dark:text-gray-400 bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
             onClick={() => setActiveTab("permissions")}
-            className={`px-4 py-2 text-sm font-medium ${
-              activeTab === "permissions"
-                ? "text-blue-400 border-b-2 border-blue-400"
-                : "text-gray-400"
-            }`}
           >
             Permissions
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={activeTab === "roles" ? "secondary" : "ghost"}
+            className={`px-4 py-2 text-sm font-medium rounded-none border-b-2 ml-2 ${activeTab === "roles" ? "border-blue-600 text-blue-600 dark:text-blue-400 bg-neutral-100 dark:bg-neutral-900" : "border-transparent text-black dark:text-gray-400 bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
             onClick={() => setActiveTab("roles")}
-            className={`px-4 py-2 text-sm font-medium ml-4 ${
-              activeTab === "roles"
-                ? "text-blue-400 border-b-2 border-blue-400"
-                : "text-gray-400"
-            }`}
           >
             Roles
-          </button>
+          </Button>
         </div>
-        <button
+        <Button
           onClick={handleAddClick}
           className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-medium"
         >
-          + {activeTab === "permissions" ? "Add Permission" : "Add Role"}
-        </button>
+          + {activeTab === "permissions" ? "Add Permissions" : "Add Roles"}
+        </Button>
       </div>
 
       {/* Table */}
-      <div className="bg-gray-800 rounded-lg overflow-hidden mt-4 text-white">
-        <table className="min-w-full leading-normal">
-          <thead>
-            <tr>
-              <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Name</th>
-              <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Description</th>
-              <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                {activeTab === "permissions" ? "Module" : "Permissions"}
-              </th>
-              <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Status</th>
+      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black overflow-x-auto mt-4">
+        <Table className="min-w-full border-separate border-spacing-0">
+          <TableHeader className="bg-neutral-100 dark:bg-black">
+            <TableRow>
+              <TableHead className="text-black dark:text-neutral-200 text-sm font-semibold tracking-normal border-b border-neutral-200 dark:border-neutral-800 px-6 py-3 text-left">Name</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 text-sm font-semibold tracking-normal border-b border-neutral-200 dark:border-neutral-800 px-6 py-3 text-left">Description</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 text-sm font-semibold tracking-normal border-b border-neutral-200 dark:border-neutral-800 px-6 py-3 text-left">{activeTab === "permissions" ? "Module" : "Permissions"}</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 text-sm font-semibold tracking-normal border-b border-neutral-200 dark:border-neutral-800 px-6 py-3 text-left">Status</TableHead>
               {activeTab === "roles" && (
-                <th className="px-5 py-3 bg-gray-700 border-b-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Actions</th>
+                <TableHead className="text-black dark:text-neutral-200 text-sm font-semibold tracking-normal border-b border-neutral-200 dark:border-neutral-800 px-6 py-3 text-left">Actions</TableHead>
               )}
-            </tr>
-          </thead>
-          <tbody>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {tableData.length > 0 ? (
               tableData.map((item, index) => (
-                <tr key={index} className="border-b border-gray-700">
-                  <td className="px-5 py-3">{item.name}</td>
-                  <td className="px-5 py-3">{item.description}</td>
-                  <td className="px-5 py-3">
-                    {activeTab === "permissions" ? item.module : item.permissions}
-                  </td>
-                  <td className="px-5 py-3 capitalize">{item.status}</td>
+                <TableRow key={index} className="border-b border-neutral-200 dark:border-neutral-800">
+                  <TableCell className="px-6 py-3">{item.name}</TableCell>
+                  <TableCell className="px-6 py-3">{item.description}</TableCell>
+                  <TableCell className="px-6 py-3">{activeTab === "permissions" ? item.module : item.permissions}</TableCell>
+                  <TableCell className="capitalize px-6 py-3">{item.status}</TableCell>
                   {activeTab === "roles" && (
-                    <td className="px-5 py-3">
-                      <button className="text-blue-400 hover:underline text-sm">Edit</button>
-                    </td>
+                    <TableCell className="px-6 py-3">
+                      <Button variant="link" className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer">Edit</Button>
+                    </TableCell>
                   )}
-                </tr>
+                </TableRow>
               ))
             ) : (
-              <tr>
-                <td colSpan={activeTab === "permissions" ? 4 : 5} className="text-center text-gray-400 py-6">
+              <TableRow>
+                <TableCell colSpan={activeTab === "permissions" ? 4 : 5} className="text-center text-gray-400 py-6 bg-white dark:bg-black">
                   No {activeTab === "permissions" ? "permissions" : "roles"} found
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {/* Modal */}

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAddressBookDto, UpdateAddressBookDto } from './dto/address-book.dto.ts';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AddressbookService {
@@ -12,8 +13,17 @@ export class AddressbookService {
     businessPorts = [],
     contacts = [],
     remark="",
+    businessType,
     ...scalarFields
   } = dto;
+
+  // Convert businessType to string if it's an array, using ', ' as delimiter
+  let businessTypeString = '';
+  if (Array.isArray(businessType)) {
+    businessTypeString = businessType.join(', ');
+  } else if (typeof businessType === 'string') {
+    businessTypeString = businessType;
+  }
 
   // STEP 1: Get latest refId
   const latestEntry = await this.prisma.addressBook.findFirst({
@@ -36,26 +46,34 @@ export class AddressbookService {
     newRefId = `RST/CUS/${nextNumber}`;
   }
 
-  return this.prisma.addressBook.create({
-    data: {
-      ...scalarFields,
-      remark,
-      refId: newRefId,
-      bankDetails: { create: bankDetails },
-      businessPorts: {
-        create: businessPorts.map((bp) => ({
-          port: { connect: { id: bp.portId } },
-        })),
+  try {
+    return await this.prisma.addressBook.create({
+      data: {
+        ...scalarFields,
+        remark,
+        refId: newRefId,
+        businessType: businessTypeString,
+        bankDetails: { create: bankDetails },
+        businessPorts: {
+          create: businessPorts.map((bp) => ({
+            port: { connect: { id: bp.portId } },
+          })),
+        },
+        contacts: { create: contacts },
       },
-      contacts: { create: contacts },
-    },
-    include: {
-      bankDetails: true,
-      businessPorts: { include: { port: true } },
-      contacts: true,
-      country: true,
-    },
-  });
+      include: {
+        bankDetails: true,
+        businessPorts: { include: { port: true } },
+        contacts: true,
+        country: true,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      throw new ConflictException('Company with this name already exists');
+    }
+    throw error;
+  }
 }
 
 
@@ -97,16 +115,28 @@ async getNextRefId(): Promise<{ refId: string }> {
         contacts: true,
         country: true,
       },
+    }).then(company => {
+      if (!company) return null;
+      return {
+        ...company,
+        businessType: company.businessType ? company.businessType.split(/\s*,\s*/).map((s: string) => s.trim()) : [],
+      };
     });
   }
 
   async update(id: number, dto: UpdateAddressBookDto) {
-    const { bankDetails, businessPorts, contacts, ...rest } = dto;
-
+    const { bankDetails, businessPorts, contacts, businessType, ...rest } = dto;
+    let businessTypeString = '';
+    if (Array.isArray(businessType)) {
+      businessTypeString = businessType.join(', ');
+    } else if (typeof businessType === 'string') {
+      businessTypeString = businessType;
+    }
     return this.prisma.addressBook.update({
       where: { id },
       data: {
         ...rest,
+        businessType: businessTypeString,
         bankDetails: bankDetails && { deleteMany: {}, create: bankDetails },
         businessPorts: businessPorts && { deleteMany: {}, create: businessPorts },
         contacts: contacts && { deleteMany: {}, create: contacts },

@@ -21,8 +21,8 @@ const StatusBadge = ({ status }: { status: string }) => {
     <span
       className={`inline-block px-4 py-1 rounded-full text-sm font-semibold shadow transition-all duration-300
         ${isActive
-          ? "bg-green-700 text-green-100"
-          : "bg-red-500 text-red-100"}
+          ? "bg-green-200 text-green-900 dark:bg-green-700 dark:text-green-100"
+          : "bg-red-200 text-red-900 dark:bg-red-500 dark:text-red-100"}
         hover:scale-105`}
       style={{
         minWidth: 70,
@@ -45,7 +45,7 @@ const BusinessTypeBadge = ({ type }: { type: string }) => {
       {types.map((t, idx) => (
         <span
           key={idx}
-          className="inline-block px-3 py-1 mb-1 rounded-full text-xs font-semibold bg-blue-500/30 text-blue-100 border border-blue-400"
+          className="inline-block px-3 py-1 mb-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-900 dark:bg-blue-500/30 dark:text-blue-100 border border-blue-400"
           style={{
             minWidth: 70,
             textAlign: "center",
@@ -66,6 +66,15 @@ const AddressBook = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [companyToEdit, setCompanyToEdit] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  // Filter state
+  const [showFilter, setShowFilter] = useState(false);
+  const [filterBusinessType, setFilterBusinessType] = useState<string>("");
+  const [filterCountry, setFilterCountry] = useState<string>("");
+  const [filterPort, setFilterPort] = useState<string>("");
+  // Unique options for filter dropdowns
+  const businessTypeOptions = Array.from(new Set(companies.flatMap((c: any) => c.businessType?.split(/,\s*/) || []))).filter(Boolean);
+  const countryOptions = Array.from(new Set(companies.map((c: any) => c.country?.countryName).filter(Boolean)));
+  const portOptions = Array.from(new Set(companies.flatMap((c: any) => (c.businessPorts || []).map((bp: any) => bp.port?.portName)).filter(Boolean)));
 
   const fetchCompanies = async () => {
     try {
@@ -110,22 +119,41 @@ const AddressBook = () => {
   }, []);
 
   const filteredCompanies = companies.filter((company: any) =>
-    company.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+    company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (filterBusinessType ? company.businessType?.split(/,\s*/).includes(filterBusinessType) : true) &&
+    (filterCountry ? company.country?.countryName === filterCountry : true) &&
+    (filterPort ? (company.businessPorts?.some((bp: any) => bp.port?.portName === filterPort)) : true)
   );
 
   return (
     <div className="px-4 py-6">
-      {/* Top Bar with Search & Add Button */}
+      {/* Top Bar with Search, Filter & Add Button */}
       <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-2 bg-neutral-900 rounded px-2 py-1 shadow-sm border border-neutral-800">
-          <Search size={18} className="text-neutral-400" />
-          <input
-            type="text"
-            placeholder="Search companies..."
-            className="outline-none text-sm w-60 bg-transparent text-white placeholder-neutral-400"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="flex items-center">
+          <div className="flex items-center gap-2 bg-background rounded px-2 py-1 shadow-sm border border-border">
+            <Search size={18} className="text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search companies..."
+              className="outline-none text-sm w-60 bg-transparent text-foreground placeholder-muted-foreground"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="ml-8">
+          <Button
+            type="button"
+            className="bg-white text-black dark:bg-neutral-900 dark:text-white px-4 py-2 rounded-lg shadow border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
+            onClick={() => setShowFilter(true)}
+          >
+            <span className="mr-2">
+              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" className="inline-block">
+                <path d="M4 6h10M6 10h6M8 14h2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            Filter
+          </Button>
+          </div>
         </div>
         <Button
           onClick={handleAddCompanyClick}
@@ -134,36 +162,110 @@ const AddressBook = () => {
           Add Company
         </Button>
       </div>
+      {/* Filter Modal */}
+      {showFilter && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-40 backdrop-blur-lg">
+          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-lg w-[400px] p-6 border border-neutral-200 dark:border-neutral-800 relative">
+            <button
+              className="absolute top-3 right-3 text-neutral-400 hover:text-gray-900 dark:hover:text-white text-xl"
+              onClick={() => setShowFilter(false)}
+            >
+              &times;
+            </button>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Filter Companies</h3>
+            <div className="mb-4">
+              <label className="block text-xs font-semibold text-gray-900 dark:text-white mb-1">Business Type</label>
+              <select
+                value={filterBusinessType}
+                onChange={e => setFilterBusinessType(e.target.value)}
+                className="w-full p-2 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
+              >
+                <option value="">All Business Types</option>
+                {businessTypeOptions.map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-xs font-semibold text-gray-900 dark:text-white mb-1">Country</label>
+              <select
+                value={filterCountry}
+                onChange={e => setFilterCountry(e.target.value)}
+                className="w-full p-2 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
+              >
+                <option value="">All Countries</option>
+                {countryOptions.map((country) => (
+                  <option key={country} value={country}>{country}</option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-xs font-semibold text-gray-900 dark:text-white mb-1">Ports</label>
+              <select
+                value={filterPort}
+                onChange={e => setFilterPort(e.target.value)}
+                className="w-full p-2 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-700"
+              >
+                <option value="">All Ports</option>
+                {portOptions.map((port) => (
+                  <option key={port} value={port}>{port}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex justify-end gap-2 mt-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="px-3 py-1 text-sm border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                onClick={() => {
+                  setFilterBusinessType("");
+                  setFilterCountry("");
+                  setFilterPort("");
+                }}
+              >
+                Reset
+              </Button>
+              <Button
+                type="button"
+                className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded"
+                onClick={() => setShowFilter(false)}
+              >
+                Apply Filters
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Table */}
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-800 overflow-x-auto">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-background">
             <TableRow>
-              <TableHead className="text-white">Company Name</TableHead>
-              <TableHead className="text-white">Business Type</TableHead>
-              <TableHead className="text-white">Country</TableHead>
-              <TableHead className="text-white">Ports</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-center text-white">Actions</TableHead>
+              <TableHead className="text-foreground">Company Name</TableHead>
+              <TableHead className="text-foreground">Business Type</TableHead>
+              <TableHead className="text-foreground">Country</TableHead>
+              <TableHead className="text-foreground">Ports</TableHead>
+              <TableHead className="text-foreground">Status</TableHead>
+              <TableHead className="text-center text-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : error ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-red-400 py-8 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center text-red-500 py-8 bg-background">
                   {error}
                 </TableCell>
               </TableRow>
             ) : filteredCompanies.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground bg-background">
                   No matching companies found.
                 </TableCell>
               </TableRow>
@@ -171,20 +273,20 @@ const AddressBook = () => {
               filteredCompanies.map((company: any) => (
                 <TableRow
                   key={company.id}
-                  className="transition-colors bg-neutral-900 hover:bg-neutral-800 border-b border-neutral-800"
+                  className="transition-colors bg-background hover:bg-muted border-b border-border"
                 >
-                  <TableCell className="text-white">{company.companyName}</TableCell>
+                  <TableCell className="text-foreground">{company.companyName}</TableCell>
                   <TableCell>
                     <BusinessTypeBadge type={company.businessType} />
                   </TableCell>
-                  <TableCell className="text-white">{company.country?.countryName || "N/A"}</TableCell>
-                  <TableCell className="text-white">
+                  <TableCell className="text-foreground">{company.country?.countryName || "N/A"}</TableCell>
+                  <TableCell className="text-foreground">
                     {company.businessPorts && company.businessPorts.length > 0 ? (
                       company.businessPorts.map((bp: any, idx: number) =>
                         bp.port?.portName ? (
                           <span
                             key={bp.port?.portName + idx}
-                            className="inline-block px-3 py-1 mx-1 rounded-full text-xs font-semibold bg-purple-400/30 text-purple-100 border border-purple-400 shadow transition-all duration-300 hover:scale-105"
+                            className="inline-block px-3 py-1 mx-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-900 dark:bg-purple-400/30 dark:text-purple-100 border border-purple-400 shadow transition-all duration-300 hover:scale-105"
                             style={{
                               minWidth: 70,
                               textAlign: "center",
@@ -196,7 +298,7 @@ const AddressBook = () => {
                         ) : null
                       )
                     ) : (
-                      <span className="text-neutral-400">N/A</span>
+                      <span className="text-muted-foreground">N/A</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -208,7 +310,7 @@ const AddressBook = () => {
                       size="icon"
                       onClick={() => handleEditClick(company.id)}
                       className={cn(
-                        "hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        "h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                       )}
                       title="Edit"
                     >
@@ -219,7 +321,7 @@ const AddressBook = () => {
                       size="icon"
                       onClick={() => handleDelete(company.id)}
                       className={cn(
-                        "hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200 cursor-pointer"
+                        "h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                       )}
                       title="Delete"
                     >

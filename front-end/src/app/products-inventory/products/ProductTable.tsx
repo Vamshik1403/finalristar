@@ -319,42 +319,42 @@ const ProductsInventoryPage = () => {
       )}
 
       {/* Table Container */}
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto mt-4">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto mt-4">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-background">
             <TableRow>
-              <TableHead className="text-white">Product ID</TableHead>
-              <TableHead className="text-white">Product Name</TableHead>
-              <TableHead className="text-white">Trade Name</TableHead>
-              <TableHead className="text-white">Type</TableHead>
-              <TableHead className="text-white">Grade</TableHead>
-              <TableHead className="text-white">Shipper Name</TableHead>
-              <TableHead className="text-white">Cont. Category</TableHead>
-              <TableHead className="text-white">Cont. Type</TableHead>
-              <TableHead className="text-white">Cont. Class</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-white">Actions</TableHead>
-              <TableHead className="text-white">MSDS</TableHead>
+              <TableHead className="text-foreground">Product ID</TableHead>
+              <TableHead className="text-foreground">Product Name</TableHead>
+              <TableHead className="text-foreground">Trade Name</TableHead>
+              <TableHead className="text-foreground">Type</TableHead>
+              <TableHead className="text-foreground">Grade</TableHead>
+              <TableHead className="text-foreground">Shipper Name</TableHead>
+              <TableHead className="text-foreground">Cont. Category</TableHead>
+              <TableHead className="text-foreground">Cont. Type</TableHead>
+              <TableHead className="text-foreground">Cont. Class</TableHead>
+              <TableHead className="text-foreground">Status</TableHead>
+              <TableHead className="text-foreground">Actions</TableHead>
+              <TableHead className="text-foreground">MSDS</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredProducts.map((product) => (
-              <TableRow key={product.id} className="hover:bg-neutral-800 border-b border-neutral-800">
-                <TableCell className="text-white">{product.productId}</TableCell>
-                <TableCell className="text-white">{product.productName}</TableCell>
-                <TableCell className="text-white">{product.tradeName}</TableCell>
-                <TableCell className="text-white">{product.productType}</TableCell>
-                <TableCell className="text-white">{product.grade}</TableCell>
-                <TableCell className="text-white">{product.shippingName}</TableCell>
-                <TableCell className="text-white">{product.containerCategory}</TableCell>
-                <TableCell className="text-white">{product.containerType}</TableCell>
-                <TableCell className="text-white">{product.classType}</TableCell>
+              <TableRow key={product.id} className="hover:bg-muted border-b border-border bg-background text-foreground">
+                <TableCell>{product.productId}</TableCell>
+                <TableCell>{product.productName}</TableCell>
+                <TableCell>{product.tradeName}</TableCell>
+                <TableCell>{product.productType}</TableCell>
+                <TableCell>{product.grade}</TableCell>
+                <TableCell>{product.shippingName}</TableCell>
+                <TableCell>{product.containerCategory}</TableCell>
+                <TableCell>{product.containerType}</TableCell>
+                <TableCell>{product.classType}</TableCell>
                 <TableCell>
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${
                       product.status === "Approved"
-                        ? "bg-green-900/80 text-green-300"
-                        : "bg-yellow-900/80 text-yellow-300"
+                        ? "bg-green-200 text-green-900 dark:bg-green-700 dark:text-green-100"
+                        : "bg-yellow-200 text-yellow-900 dark:bg-yellow-700 dark:text-yellow-100"
                     }`}
                   >
                     {product.status}
@@ -367,7 +367,7 @@ const ProductsInventoryPage = () => {
                       size="icon"
                       title="Edit"
                       onClick={() => handleEditClick(product.id)}
-                      className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200"
+                      className="hover:bg-blue-100 hover:text-blue-900 dark:hover:bg-blue-900 dark:hover:text-blue-400 text-muted-foreground transition-all duration-200"
                     >
                       <Pencil size={16} />
                     </Button>

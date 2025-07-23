@@ -245,24 +245,24 @@ const EmptyRepo = () => {
         )}
       </div>
 
-      <div className="rounded-lg border border-neutral-800 bg-neutral-900 overflow-hidden shadow-sm">
+      <div className="rounded-lg border border-border bg-background overflow-hidden shadow-sm">
         <Table>
-          <TableHeader className="bg-neutral-800">
-            <TableRow className="hover:bg-neutral-800/60 border-neutral-700">
-              <TableHead className="text-neutral-300 font-medium">Job Number</TableHead>
-              <TableHead className="text-neutral-300 font-medium">House BL</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Port of Loading</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Port of Discharge</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Vessel</TableHead>
-              <TableHead className="text-neutral-300 font-medium">ETD</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Containers</TableHead>
-              <TableHead className="text-neutral-300 font-medium">Actions</TableHead>
+          <TableHeader className="bg-background">
+            <TableRow className="border-border">
+              <TableHead className="text-foreground font-medium">Job Number</TableHead>
+              <TableHead className="text-foreground font-medium">House BL</TableHead>
+              <TableHead className="text-foreground font-medium">Port of Loading</TableHead>
+              <TableHead className="text-foreground font-medium">Port of Discharge</TableHead>
+              <TableHead className="text-foreground font-medium">Vessel</TableHead>
+              <TableHead className="text-foreground font-medium">ETD</TableHead>
+              <TableHead className="text-foreground font-medium">Containers</TableHead>
+              <TableHead className="text-foreground font-medium">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredJobs.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center text-neutral-400 py-6">
+                <TableCell colSpan={8} className="text-center text-muted-foreground py-6">
                   No empty repo jobs found.
                 </TableCell>
               </TableRow>

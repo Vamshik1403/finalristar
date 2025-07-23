@@ -1,6 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 const AddQuotationModal = ({
   onClose,
@@ -809,18 +819,18 @@ const AddQuotationModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-neutral-900 rounded-lg shadow-lg w-[1200px] max-h-[90vh] overflow-y-auto border border-neutral-800">
-        <div className="flex justify-between items-center px-6 pt-6 pb-2">
-          <h2 className="text-lg font-semibold text-white">{formTitle}</h2>
+      <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-lg w-[1200px] max-h-[90vh] overflow-y-auto border border-neutral-200 dark:border-neutral-800">
+        <div className="flex justify-between items-center px-6 pt-6 pb-2 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{formTitle}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white text-2xl"
+          className="text-gray-400 hover:text-gray-900 dark:hover:text-white text-2xl"
           >
             &times;
           </button>
         </div>
         <form
-          className="px-6 pb-6 pt-2"
+          className="px-6 pb-6 pt-2 [&_label]:text-gray-900 [&_input]:bg-white [&_input]:text-gray-900 [&_select]:bg-white [&_select]:text-gray-900 dark:[&_label]:text-white dark:[&_input]:bg-neutral-900 dark:[&_input]:text-white dark:[&_select]:bg-neutral-900 dark:[&_select]:text-white"
           onSubmit={handleSubmit}
           onKeyDown={(e) => {
             if (e.key === "Enter") e.preventDefault();
@@ -829,91 +839,92 @@ const AddQuotationModal = ({
           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
             {/* Status */}
             <div className="flex items-center gap-2 mt-2">
-              <span className="text-white">Status</span>
-              <input
-                type="checkbox"
-                checked={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.checked })}
-                className="accent-orange-400 w-4 h-4"
+              <span className="text-gray-900 dark:text-white">Status</span>
+              <Checkbox
                 id="status"
+                checked={form.status}
+                onCheckedChange={(checked) =>
+                  setForm({ ...form, status: checked })
+                }
               />
-              <label htmlFor="status" className="text-white text-sm">
+              <Label htmlFor="status" className="text-gray-900 dark:text-white text-sm">
                 Active
-              </label>
+              </Label>
             </div>
             <div></div>
 
             {/* Quotation Ref No. */}
             <div className="col-span-2">
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="quotationRef" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Quotation Ref No.
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.quotationRef || ""}
                 readOnly
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="quotationRef"
+                className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800"
               />
             </div>
 
             {/* Effective Date */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="effectiveDate" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Effective Date
-              </label>
-              <input
+              </Label>
+              <Input
                 type="date"
                 value={form.effectiveDate || ""}
                 onChange={(e) =>
                   setForm({ ...form, effectiveDate: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="effectiveDate"
+                className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800"
               />
             </div>
 
             {/* Valid Till */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="validTillDate" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Valid Till
-              </label>
-              <input
+              </Label>
+              <Input
                 type="date"
                 value={form.validTillDate || ""}
                 onChange={(e) =>
                   setForm({ ...form, validTillDate: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="validTillDate"
+                className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800"
               />
             </div>
 
             {/* Shipping Term */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="shippingTerm" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Shipping Term
-              </label>
-              <select
-                value={form.shippingTerm}
-                onChange={(e) =>
-                  setForm({ ...form, shippingTerm: e.target.value })
-                }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
-              >
-                <option value="">Select Term</option>
-                <option value="CY-CY">CY-CY</option>
-                <option value="CY-Door">CY-Door</option>
-                <option value="Door-CY">Door-CY</option>
-                <option value="Door-Door">Door-Door</option>
-                <option value="EX-WORK-CY">EX-WORK-CY</option>
-                <option value="EX-WORK-DOOR">EX-WORK-DOOR</option>
-              </select>
+              </Label>
+              <Select onValueChange={(value) => setForm({ ...form, shippingTerm: value })} value={form.shippingTerm}>
+              <SelectTrigger className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800">
+                  <SelectValue placeholder="Select Term" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="CY-CY">CY-CY</SelectItem>
+                  <SelectItem value="CY-Door">CY-Door</SelectItem>
+                  <SelectItem value="Door-CY">Door-CY</SelectItem>
+                  <SelectItem value="Door-Door">Door-Door</SelectItem>
+                  <SelectItem value="EX-WORK-CY">EX-WORK-CY</SelectItem>
+                  <SelectItem value="EX-WORK-DOOR">EX-WORK-DOOR</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Customer Name */}
             <div className="relative">
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="customerName" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Customer Name
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.customerName || ""}
                 onChange={(e) => {
@@ -926,11 +937,12 @@ const AddQuotationModal = ({
                 }}
                 onFocus={() => setShowSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="customerName"
+                className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800"
                 placeholder="Start typing customer name..."
               />
               {showSuggestions && form.customerName && (
-                <ul className="absolute z-10 w-full bg-neutral-900 border border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
+                <ul className="absolute z-10 w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
                   {customerSuggestions
                     .filter((c) =>
                       c.companyName
@@ -948,7 +960,7 @@ const AddQuotationModal = ({
                           }));
                           setShowSuggestions(false);
                         }}
-                        className="px-3 py-1 hover:bg-neutral-800 cursor-pointer text-sm text-white"
+                        className="px-3 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer text-sm text-gray-900 dark:text-white"
                       >
                         {company.companyName}
                       </li>
@@ -968,62 +980,58 @@ const AddQuotationModal = ({
 
             {/* Billing Party */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="billingParty" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Billing Party
-              </label>
-              <select
-                value={form.billingParty}
-                onChange={(e) =>
-                  setForm({ ...form, billingParty: e.target.value })
-                }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
-              >
-                <option value="">Select</option>
-                <option value="Freight Forwarder">Freight Forwarder</option>
-                <option value="Shipper">Shipper</option>
-              </select>
+              </Label>
+              <Select onValueChange={(value) => setForm({ ...form, billingParty: value })} value={form.billingParty}>
+              <SelectTrigger className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Freight Forwarder">Freight Forwarder</SelectItem>
+                  <SelectItem value="Shipper">Shipper</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Rate Type */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="rateType" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Rate Type
-              </label>
-              <select
-                value={form.rateType}
-                onChange={(e) => setForm({ ...form, rateType: e.target.value })}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
-              >
-                <option value="">Select</option>
-                <option value="Tender">Tender</option>
-                <option value="Spot">Spot</option>
-              </select>
+              </Label>
+              <Select onValueChange={(value) => setForm({ ...form, rateType: value })} value={form.rateType}>
+              <SelectTrigger className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-200 dark:border-neutral-800">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Tender">Tender</SelectItem>
+                  <SelectItem value="Spot">Spot</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Billing Type */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="billingType" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Billing Type
-              </label>
-              <select
-                value={form.billingType}
-                onChange={(e) =>
-                  setForm({ ...form, billingType: e.target.value })
-                }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
-              >
-                <option value="">Select</option>
-                <option value="Ocean Freight">Ocean Freight</option>
-                <option value="Rental">Rental</option>
-              </select>
+              </Label>
+              <Select onValueChange={(value) => setForm({ ...form, billingType: value })} value={form.billingType}>
+                <SelectTrigger className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Ocean Freight">Ocean Freight</SelectItem>
+                  <SelectItem value="Rental">Rental</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Product Name */}
             <div className="relative">
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="productName" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Product Name
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.productName || ""}
                 onChange={(e) => {
@@ -1051,12 +1059,13 @@ const AddQuotationModal = ({
                 onBlur={() => {
                   setTimeout(() => setShowProductDropdown(false), 100);
                 }}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="productName"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 placeholder="Start typing product name..."
               />
 
               {showProductDropdown && productSuggestions.length > 0 && (
-                <ul className="absolute z-10 w-full bg-neutral-900 border border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
+                <ul className="absolute z-10 w-full bg-white dark:bg-neutral-900 border border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
                   {productSuggestions.map((product) => (
                     <li
                       key={product.id}
@@ -1117,7 +1126,7 @@ const AddQuotationModal = ({
                           );
                         }
                       }}
-                      className="px-3 py-1 hover:bg-neutral-800 cursor-pointer text-sm text-white"
+                      className="px-3 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer text-sm text-gray-900 dark:text-white"
                     >
                       {`${product.productId} - ${product.productName} - ${product.productType}`}
                     </li>
@@ -1130,10 +1139,10 @@ const AddQuotationModal = ({
 
             {/* Port Of Loading */}
             <div className="relative">
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="portOfLoading" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Port Of Loading
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.portOfLoading || ""}
                 onChange={(e) => {
@@ -1161,12 +1170,13 @@ const AddQuotationModal = ({
                 onBlur={() => {
                   setTimeout(() => setShowPortDropdown(false), 100);
                 }}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="portOfLoading"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 placeholder="Start typing port of loading..."
               />
 
               {showPortDropdown && portSuggestions.length > 0 && (
-                <ul className="absolute z-10 w-full bg-neutral-900 border text-white border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
+                <ul className="absolute z-10 w-full bg-white dark:bg-neutral-900 border border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
                   {portSuggestions.map((port) => (
                     <li
                       key={port.id}
@@ -1178,7 +1188,7 @@ const AddQuotationModal = ({
                         }));
                         setShowPortDropdown(false);
                       }}
-                      className="px-3 py-1 hover:bg-neutral-800 cursor-pointer text-sm text-white"
+                      className="px-3 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer text-sm text-gray-900 dark:text-white"
                     >
                       {port.portName}
                     </li>
@@ -1189,10 +1199,10 @@ const AddQuotationModal = ({
 
             {/* Port Of Discharge */}
             <div className="relative">
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="portOfDischarge" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Port Of Discharge
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.portOfDischarge || ""}
                 onChange={(e) => {
@@ -1219,12 +1229,13 @@ const AddQuotationModal = ({
                 onBlur={() => {
                   setTimeout(() => setShowDischargeDropdown(false), 100);
                 }}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="portOfDischarge"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 placeholder="Start typing port of discharge..."
               />
 
               {showDischargeDropdown && portSuggestions.length > 0 && (
-                <ul className="absolute z-10 w-full bg-neutral-900 border text-white border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
+                <ul className="absolute z-10 w-full bg-white dark:bg-neutral-900 border border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
                   {portSuggestions.map((port) => (
                     <li
                       key={port.id}
@@ -1236,7 +1247,7 @@ const AddQuotationModal = ({
                         }));
                         setShowDischargeDropdown(false);
                       }}
-                      className="px-3 py-1 hover:bg-neutral-800 cursor-pointer text-sm text-white"
+                      className="px-3 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer text-sm text-gray-900 dark:text-white"
                     >
                       {port.portName}
                     </li>
@@ -1248,225 +1259,228 @@ const AddQuotationModal = ({
             {/* Free Days and Detention Rate */}
             <div className="flex w-full gap-4 col-span-2">
               <div className="flex-5">
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="expFreeDays" className="block text-sm text-gray-900 dark:text-white mb-1">
                   Free Days
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={form.expFreeDays}
                   onChange={(e) =>
                     setForm({ ...form, expFreeDays: e.target.value })
                   }
-                  className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                  id="expFreeDays"
+                  className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 />
               </div>
 
               <div className="flex-5 gap-1">
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="expDetentionRate" className="block text-sm text-gray-900 dark:text-white mb-1">
                   Detention Rate
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={form.expDetentionRate}
                   onChange={(e) =>
                     setForm({ ...form, expDetentionRate: e.target.value })
                   }
-                  className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                  id="expDetentionRate"
+                  className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 />
               </div>
 
               <div className="flex-5">
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="impFreeDays" className="block text-sm text-gray-900 dark:text-white mb-1">
                   Free Days
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={form.impFreeDays}
                   onChange={(e) =>
                     setForm({ ...form, impFreeDays: e.target.value })
                   }
-                  className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                  id="impFreeDays"
+                  className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 />
               </div>
 
               <div className="flex-5">
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="impDetentionRate" className="block text-sm text-gray-900 dark:text-white mb-1">
                   Detention Rate
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={form.impDetentionRate}
                   onChange={(e) =>
                     setForm({ ...form, impDetentionRate: e.target.value })
                   }
-                  className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                  id="impDetentionRate"
+                  className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 />
               </div>
             </div>
 
             {/* Exp. Depot Name */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="expDepotId" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Exp. Depot Name
-              </label>
-              <select
-                value={form.expDepotId || ""}
-                onChange={(e) => {
-                  const selectedId = Number(e.target.value);
-                  const selectedDepot = expDepots.find(
-                    (d: any) => d.id === selectedId
-                  );
-                  setForm({
-                    ...form,
-                    expDepotId: selectedId,
-                    expDepotName: selectedDepot?.companyName || "",
-                  });
-                }}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
-              >
-                <option value="">First Select Port of Loading</option>
-                {expDepots.map((depot: any) => (
-                  <option key={depot.id} value={depot.id}>
-                    {depot.companyName} - {depot.businessType}
-                  </option>
-                ))}
-              </select>
+              </Label>
+              <Select onValueChange={(value) => {
+                const selectedId = Number(value);
+                const selectedDepot = expDepots.find(
+                  (d: any) => d.id === selectedId
+                );
+                setForm({
+                  ...form,
+                  expDepotId: selectedId,
+                  expDepotName: selectedDepot?.companyName || "",
+                });
+              }} value={form.expDepotId || ""}>
+                <SelectTrigger className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800">
+                  <SelectValue placeholder="First Select Port of Loading" />
+                </SelectTrigger>
+                <SelectContent>
+                  {expDepots.map((depot: any) => (
+                    <SelectItem key={depot.id} value={depot.id}>
+                      {depot.companyName} - {depot.businessType}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Empty Return Depot */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="emptyReturnDepot" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Empty Return Depot
-              </label>
+              </Label>
 
-              <select
-                value={form.emptyReturnDepot || ""}
-                onChange={(e) => {
-                  const selectedId = Number(e.target.value);
-                  const selectedDepot = emptyReturnDepots.find(
-                    (d) => d.id === selectedId
-                  );
-                  setForm({
-                    ...form,
-                    emptyReturnDepot: selectedId,
-                    emptyReturnDepotName: selectedDepot?.companyName || "",
-                  });
-                }}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
-              >
-                <option value="">First Select Port of Discharge</option>
-                {emptyReturnDepots.map((depot: any) => (
-                  <option key={depot.id} value={depot.id}>
-                    {depot.companyName} - {depot.businessType}
-                  </option>
-                ))}
-              </select>
+              <Select onValueChange={(value) => {
+                const selectedId = Number(value);
+                const selectedDepot = emptyReturnDepots.find(
+                  (d) => d.id === selectedId
+                );
+                setForm({
+                  ...form,
+                  emptyReturnDepot: selectedId,
+                  emptyReturnDepotName: selectedDepot?.companyName || "",
+                });
+              }} value={form.emptyReturnDepot || ""}>
+                <SelectTrigger className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800">
+                  <SelectValue placeholder="First Select Port of Discharge" />
+                </SelectTrigger>
+                <SelectContent>
+                  {emptyReturnDepots.map((depot: any) => (
+                    <SelectItem key={depot.id} value={depot.id}>
+                      {depot.companyName} - {depot.businessType}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Exp. H. Agent Name */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="expHAgentId" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Exp. H. Agent Name
-              </label>
-              <select
-                value={form.expHAgentId || ""}
-                onChange={(e) => {
-                  const selectedId = Number(e.target.value);
-                  const selected = expAgents.find(
-                    (a: any) => a.id === selectedId
-                  );
-                  setForm({
-                    ...form,
-                    expHAgentId: selectedId,
-                    expHAgentName: selected?.companyName || "",
-                  });
-                }}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
-              >
-                <option value="">Select</option>
-                {expAgents.map((agent: any) => (
-                  <option key={agent.id} value={agent.id}>
-                    {agent.companyName}
-                  </option>
-                ))}
-              </select>
+              </Label>
+              <Select onValueChange={(value) => {
+                const selectedId = Number(value);
+                const selected = expAgents.find(
+                  (a: any) => a.id === selectedId
+                );
+                setForm({
+                  ...form,
+                  expHAgentId: selectedId,
+                  expHAgentName: selected?.companyName || "",
+                });
+              }} value={form.expHAgentId || ""}>
+                <SelectTrigger className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  {expAgents.map((agent: any) => (
+                    <SelectItem key={agent.id} value={agent.id}>
+                      {agent.companyName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Imp. H. Agent Name */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="impHAgentId" className="block text-sm text-gray-900 dark:text-white mb-1">
                 Imp. H. Agent Name
-              </label>
-              <select
-                value={form.impHAgentId || ""}
-                onChange={(e) => {
-                  const selectedId = Number(e.target.value);
-                  const selected = impHandlingAgents.find(
-                    (a: any) => a.id === selectedId
-                  );
-                  setForm({
-                    ...form,
-                    impHAgentId: selectedId,
-                    impHAgentName: selected?.companyName || "",
-                  });
-                }}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
-              >
-                <option value="">Select</option>
-                {impHandlingAgents.map((agent: any) => (
-                  <option key={agent.id} value={agent.id}>
-                    {agent.companyName}
-                  </option>
-                ))}
-              </select>
+              </Label>
+              <Select onValueChange={(value) => {
+                const selectedId = Number(value);
+                const selected = impHandlingAgents.find(
+                  (a: any) => a.id === selectedId
+                );
+                setForm({
+                  ...form,
+                  impHAgentId: selectedId,
+                  impHAgentName: selected?.companyName || "",
+                });
+              }} value={form.impHAgentId || ""}>
+                <SelectTrigger className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  {impHandlingAgents.map((agent: any) => (
+                    <SelectItem key={agent.id} value={agent.id}>
+                      {agent.companyName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <hr className="border-t border-gray-600 my-4 col-span-2" />
 
             {/* Transit Days */}
             <div className="col-span-2">
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="transitDays" className="block text-sm text-white mb-1">
                 Transit Days
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.transitDays}
                 onChange={(e) =>
                   setForm({ ...form, transitDays: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="transitDays"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
               />
             </div>
 
             {/* Enable Transhipment Port */}
             <div className="col-span-2 flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={form.enableTranshipmentPort ?? false}
-                onChange={(e) =>
-                  setForm({ ...form, enableTranshipmentPort: e.target.checked })
-                }
-                className="accent-orange-400 w-4 h-4"
+              <Checkbox
                 id="enableTranshipmentPort"
+                checked={form.enableTranshipmentPort ?? false}
+                onCheckedChange={(checked) =>
+                  setForm({ ...form, enableTranshipmentPort: checked })
+                }
               />
 
-              <label
+              <Label
                 htmlFor="enableTranshipmentPort"
                 className="text-white text-sm"
               >
                 Enable Transhipment Port
-              </label>
+              </Label>
             </div>
 
             {form.enableTranshipmentPort && (
               <>
                 {/* Transhipment Port */}
                 <div className="col-span-2">
-                  <label className="block text-sm text-gray-400 mb-1">
+                  <Label htmlFor="transhipmentPortName" className="block text-sm text-white mb-1">
                     Transhipment Port
-                  </label>
+                  </Label>
                   <div className="relative w-1/2">
-                    <input
+                    <Input
                       type="text"
                       value={form.transhipmentPortName || ""}
                       onChange={(e) => {
@@ -1498,12 +1512,13 @@ const AddQuotationModal = ({
                           150
                         )
                       }
-                      className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                      id="transhipmentPortName"
+                      className="w-full p-2 bg-white dark:bg-neutral-900 text-gray-900 dark:text-white rounded border border-neutral-800"
                       placeholder="Start typing transhipment port..."
                     />
                     {showTranshipmentDropdown &&
                       transhipmentPortSuggestions.length > 0 && (
-                        <ul className="absolute z-10 w-full bg-neutral-900 border text-white border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
+                        <ul className="absolute z-10 w-full bg-white dark:bg-neutral-900 border border-neutral-800 rounded mt-1 max-h-40 overflow-y-auto">
                           {transhipmentPortSuggestions.map((port) => (
                             <li
                               key={port.id}
@@ -1515,7 +1530,7 @@ const AddQuotationModal = ({
                                 }));
                                 setShowTranshipmentDropdown(false);
                               }}
-                              className="px-3 py-1 hover:bg-neutral-800 cursor-pointer text-sm text-white"
+                              className="px-3 py-1 hover:bg-blue-600 hover:text-white cursor-pointer text-sm text-gray-900 dark:text-white"
                             >
                               {port.portName}
                             </li>
@@ -1527,32 +1542,33 @@ const AddQuotationModal = ({
 
                 {/* TRS. H. Agent Name */}
                 <div className="col-span-2">
-                  <label className="block text-sm text-gray-400 mb-1">
+                  <Label htmlFor="transhipmentAgentId" className="block text-sm text-white mb-1">
                     TRS. H. Agent Name
-                  </label>
+                  </Label>
                   <div className="w-1/2">
-                    <select
-                      value={form.transhipmentAgentId || ""}
-                      onChange={(e) => {
-                        const selectedId = Number(e.target.value);
-                        const selected = trsHandlingAgents.find(
-                          (a) => a.id === selectedId
-                        );
+                    <Select
+                      onValueChange={(value) => {
+                        const selectedId = Number(value);
+                        const selected = trsHandlingAgents.find((a) => a.id === selectedId);
                         setForm({
                           ...form,
                           transhipmentAgentId: selectedId,
                           transhipmentAgentName: selected?.companyName || "",
                         });
                       }}
-                      className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                      value={form.transhipmentAgentId || ""}
                     >
-                      <option value="">Select</option>
-                      {trsHandlingAgents.map((agent) => (
-                        <option key={agent.id} value={agent.id}>
-                          {agent.companyName}
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {trsHandlingAgents.map((agent) => (
+                          <SelectItem key={agent.id} value={agent.id}>
+                            {agent.companyName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </>
@@ -1562,114 +1578,122 @@ const AddQuotationModal = ({
 
             {/* Financial Details */}
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="slotRate" className="block text-sm text-white mb-1">
                 Slot Rate
-              </label>
+              </Label>
               <Input
                 type="text"
                 value={form.slotRate ?? ""}
                 onChange={(e) => setForm({ ...form, slotRate: e.target.value })}
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="slotRate"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="depotAvgCost" className="block text-sm text-white mb-1">
                 Depot Avg Cost
-              </label>
+              </Label>
               <Input
                 type="text"
                 value={form.depotAvgCost ?? ""}
                 readOnly
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="depotAvgCost"
+                className="w-full p-2 bg-white dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 placeholder={form.isEditing ? "" : "Auto-calculated"}
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="leasingCost" className="block text-sm text-white mb-1">
                 Leasing Cost
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.leasingCost ?? ""}
                 readOnly
+                id="leasingCost"
                 className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800 bg-opacity-70 cursor-not-allowed"
                 placeholder={form.isEditing ? "" : "Auto-calculated"}
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="depotCleaningCost" className="block text-sm text-white mb-1">
                 Depot Cleaning Cost
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.depotCleaningCost ?? ""}
                 onChange={(e) =>
                   setForm({ ...form, depotCleaningCost: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="depotCleaningCost"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 placeholder={form.isEditing ? "" : "Auto-calculated"}
                 readOnly
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="terminalHandlingFee" className="block text-sm text-white mb-1">
                 Terminal Handling Fee
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.terminalHandlingFee ?? ""}
                 onChange={(e) =>
                   setForm({ ...form, terminalHandlingFee: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="terminalHandlingFee"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="containerPreparationCost" className="block text-sm text-white mb-1">
                 Container Preparation
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.containerPreparationCost ?? ""}
                 onChange={(e) =>
                   setForm({ ...form, containerPreparationCost: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="containerPreparationCost"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
               />
             </div>
 
             <hr className="border-t border-gray-600 my-4 col-span-2" />
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="expAgencyCommission" className="block text-sm text-white mb-1">
                 Exp. Agency Commission
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.expAgencyCommission ?? ""}
                 onChange={(e) =>
                   setForm({ ...form, expAgencyCommission: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
+                id="expAgencyCommission"
+                className="w-full p-2 bg-white text-gray-900 dark:bg-neutral-900 dark:text-white rounded border border-neutral-800"
                 readOnly
                 placeholder={form.isEditing ? "" : "Auto-calculated"}
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="impAgencyCommission" className="block text-sm text-white mb-1">
                 Imp. Agency Commission
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.impAgencyCommission ?? ""}
                 onChange={(e) =>
                   setForm({ ...form, impAgencyCommission: e.target.value })
                 }
+                id="impAgencyCommission"
                 className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
                 readOnly
                 placeholder={form.isEditing ? "" : "Auto-calculated"}
@@ -1677,29 +1701,31 @@ const AddQuotationModal = ({
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="expCollection" className="block text-sm text-white mb-1">
                 Exp. Collection
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.expCollection ?? ""}
                 onChange={(e) =>
                   setForm({ ...form, expCollection: e.target.value })
                 }
+                id="expCollection"
                 className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">
+              <Label htmlFor="impCollection" className="block text-sm text-white mb-1">
                 Imp. Collection
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 value={form.impCollection ?? ""}
                 onChange={(e) =>
                   setForm({ ...form, impCollection: e.target.value })
                 }
+                id="impCollection"
                 className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
               />
             </div>
@@ -1710,62 +1736,67 @@ const AddQuotationModal = ({
               {" "}
               {/* Ensures vertical stacking with spacing */}
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="totalCost" className="block text-sm text-white mb-1">
                   Total Cost
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={form.totalCost ?? ""}
                   readOnly
+                  id="totalCost"
                   className="w-full p-2 bg-gray-800 text-white rounded border border-gray-700"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="sellingAmount" className="block text-sm text-white mb-1">
                   Selling Amount (Ocean Freight)
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={form.sellingAmount ?? ""}
                   onChange={(e) =>
                     setForm({ ...form, sellingAmount: e.target.value })
                   }
+                  id="sellingAmount"
                   className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="totalRevenueAmount" className="block text-sm text-white mb-1">
                   Total Revenue Amount
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={form.totalRevenueAmount ?? ""}
                   readOnly
+                  id="totalRevenueAmount"
                   className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="totalPLAmount" className="block text-sm text-white mb-1">
                   Total P & L
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={form.totalPLAmount ?? ""}
                   readOnly
+                  id="totalPLAmount"
                   className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <Label htmlFor="plMargin" className="block text-sm text-white mb-1">
                   P/L Margin %
-                </label>
+                </Label>
                 <div className="relative">
-                  <input
+                  <Input
                     type="text"
                     value={form.plMargin ?? ""}
                     onChange={(e) =>
                       setForm({ ...form, plMargin: e.target.value })
                     }
+                    id="plMargin"
                     className="w-full p-2 bg-neutral-900 text-white rounded border border-neutral-800 pr-6"
                   />
                   <span className="absolute right-2 top-2 text-white">%</span>
@@ -1779,19 +1810,19 @@ const AddQuotationModal = ({
           </div>
 
           <div className="flex justify-center gap-3 mt-8">
-            <button
+            <Button
               type="button"
               onClick={onClose}
               className="px-4 py-2 bg-neutral-800 cursor-pointer text-white rounded hover:bg-neutral-700"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               className="px-4 py-2 bg-blue-600 cursor-pointer text-white rounded hover:bg-blue-500"
             >
               Submit
-            </button>
+            </Button>
           </div>
         </form>
       </div>

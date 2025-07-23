@@ -130,24 +130,24 @@ const PortTable = () => {
         </Button>
       </div>
 
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto">
+      <div className="rounded-lg shadow border border-border bg-background overflow-x-auto">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-background">
             <TableRow>
-              <TableHead className="text-center text-white">Port Type</TableHead>
-              <TableHead className="text-center text-white">Port Code</TableHead>
-              <TableHead className="text-center text-white">Port Name</TableHead>
-              <TableHead className="text-center text-white">Port Long Name</TableHead>
-              <TableHead className="text-center text-white">Country</TableHead>
-              <TableHead className="text-center text-white">Currency</TableHead>
-              <TableHead className="text-center text-white">Status</TableHead>
-              <TableHead className="text-center text-white">Actions</TableHead>
+              <TableHead className="text-center text-foreground">Port Type</TableHead>
+              <TableHead className="text-center text-foreground">Port Code</TableHead>
+              <TableHead className="text-center text-foreground">Port Name</TableHead>
+              <TableHead className="text-center text-foreground">Port Long Name</TableHead>
+              <TableHead className="text-center text-foreground">Country</TableHead>
+              <TableHead className="text-center text-foreground">Currency</TableHead>
+              <TableHead className="text-center text-foreground">Status</TableHead>
+              <TableHead className="text-center text-foreground">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredPorts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-neutral-400 bg-neutral-900">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground bg-background">
                   No ports found.
                 </TableCell>
               </TableRow>
@@ -155,7 +155,7 @@ const PortTable = () => {
               filteredPorts.map((port) => (
                 <TableRow
                   key={port.id}
-                  className="text-white bg-neutral-900 hover:bg-neutral-800 transition border-b border-neutral-800"
+                  className="bg-background hover:bg-muted transition border-b border-border text-foreground"
                 >
                   <TableCell className="text-center">{port.portType}</TableCell>
                   <TableCell className="text-center">{port.portCode}</TableCell>

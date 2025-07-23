@@ -44,7 +44,7 @@ model Ports {
   portType                      String
   portCode                      String
   portLongName                  String
-  portName                      String
+  portName                      String                    @unique
   parentPortId                  Int?
   currencyId                    Int
   countryId                     Int
@@ -86,7 +86,7 @@ model AddressBook {
   id                                  Int                       @id @default(autoincrement())
   status                              String?
   refId                               String
-  companyName                         String
+  companyName                         String                    @unique
   address                             String
   phone                               String
   email                               String
@@ -173,7 +173,7 @@ model Contacts {
 model Inventory {
   id                       Int                        @id @default(autoincrement())
   status                   String
-  containerNumber          String
+  containerNumber          String                     @unique
   containerCategory        String
   containerType            String
   containerSize            String

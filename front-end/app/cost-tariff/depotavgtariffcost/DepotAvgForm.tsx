@@ -159,23 +159,16 @@ const AddTariffModal = ({
   };
 
   return (
-    <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto border border-neutral-800 p-0">
+    <Dialog open onOpenChange={onClose} modal={true}>
+    <DialogContent className="bg-white dark:bg-neutral-900 rounded-lg shadow-lg w-[700px] max-h-[90vh] overflow-y-auto border border-neutral-200 dark:border-neutral-800 p-0" onInteractOutside={e => e.preventDefault()}>
         <DialogTitle className="sr-only">{formTitle}</DialogTitle>
         <form className="px-6 pb-6 pt-2" onSubmit={handleSubmit}>
           <div className="flex justify-between items-center pt-6 pb-2 border-b border-neutral-800">
-            <h2 className="text-lg font-semibold text-white">{formTitle}</h2>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onClose}
-              className="text-neutral-400 hover:text-white text-2xl px-2"
-            >
-              &times;
-            </Button>
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">{formTitle}</h2>
+            {/* Removed duplicate X close button here */}
           </div>
           <div className="flex items-center gap-2 mb-4 mt-4">
-            <Label className="text-white text-sm">Status</Label>
+            <Label className="text-neutral-900 dark:text-white text-sm">Status</Label>
             <Input
               type="checkbox"
               checked={form.status === "Active" || form.status === true || form.status === "true"}
@@ -188,30 +181,30 @@ const AddTariffModal = ({
               className="accent-blue-500 w-4 h-4 ml-2"
               id="status"
             />
-            <Label htmlFor="status" className="text-white text-sm">
+            <Label htmlFor="status" className="text-neutral-900 dark:text-white text-sm">
               Active
             </Label>
-            <p className="text-xs text-neutral-300 mt-1">
+            <p className="text-xs text-neutral-500 dark:text-neutral-300 mt-1">
               Current status: <span className="font-medium">{form.status}</span>
             </p>
           </div>
 
           <div className="mb-4">
-            <Label className="block text-xs text-white mb-1">Tariff Code</Label>
+            <Label className="block text-xs text-neutral-900 dark:text-white mb-1">Tariff Code</Label>
             <Input
               type="text"
               value={form.tariffCode || ""}
               readOnly
-              className="w-full bg-neutral-800 text-white rounded border border-neutral-700"
+              className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700"
             />
-            <p className="text-white text-xs mt-1">
+            <p className="text-neutral-500 dark:text-white text-xs mt-1">
               <b>Note:</b> A tariff code in format RST-DAT-00001 will be auto-generated.
             </p>
           </div>
 
          <div className="grid grid-cols-1 gap-y-4">
   <div>
-    <Label className="block text-xs text-white mb-1">Depot Terminal Name</Label>
+    <Label className="block text-xs text-neutral-900 dark:text-white mb-1">Depot Terminal Name</Label>
     <select
       value={form.depotTerminalId || ""}
       onChange={(e) =>
@@ -221,7 +214,7 @@ const AddTariffModal = ({
           servicePort: "",
         })
       }
-      className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+      className="w-full p-2 bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700 text-sm"
     >
       <option value="">Select</option>
       {addressBookList.map((d: any) => (
@@ -234,13 +227,13 @@ const AddTariffModal = ({
 
 
             <div>
-              <Label className="block text-xs text-white mb-1">Service Port</Label>
+              <Label className="block text-xs text-neutral-900 dark:text-white mb-1">Service Port</Label>
               <select
                 value={form.servicePort || ""}
                 onChange={(e) =>
                   setForm({ ...form, servicePort: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700 text-sm"
               >
                 <option value="">Select a Depot Terminal first</option>
                 {portOptions.map((port: any) => (
@@ -252,13 +245,13 @@ const AddTariffModal = ({
             </div>
 
             <div>
-              <Label className="block text-xs text-white mb-1">Currency</Label>
+              <Label className="block text-xs text-neutral-900 dark:text-white mb-1">Currency</Label>
               <select
                 value={form.currency || ""}
                 onChange={(e) =>
                   setForm({ ...form, currency: e.target.value })
                 }
-                className="w-full p-2 bg-neutral-800 text-white rounded border border-neutral-700 text-sm"
+                className="w-full p-2 bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700 text-sm"
               >
                 <option value="">Select</option>
                 {currencyList.map((cur: any) => (
@@ -271,34 +264,34 @@ const AddTariffModal = ({
           </div>
 
           <div className="mt-6">
-            <Label className="block text-xs text-white mb-2">Tariff Rates</Label>
-            <div className="grid grid-cols-2 bg-neutral-800 text-white font-semibold text-sm px-4 py-2 rounded-t">
+            <Label className="block text-xs text-neutral-900 dark:text-white mb-2">Tariff Rates</Label>
+            <div className="grid grid-cols-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold text-sm px-4 py-2 rounded-t">
               <div>Tariff Type</div>
               <div>Charge Amount</div>
             </div>
-            <div className="space-y-2 bg-neutral-900 p-4 rounded-b">
+            <div className="space-y-2 bg-neutral-100 dark:bg-neutral-900 p-4 rounded-b">
               {tariffFields.map(({ key, label }) => (
                 <div key={key} className="grid grid-cols-2 items-center gap-4">
-                  <Label className="text-white text-xs">{label}</Label>
+                  <Label className="text-neutral-900 dark:text-white text-xs">{label}</Label>
                   <Input
                     type="text"
                     value={form[key] || ""}
                     onChange={(e) =>
                       setForm({ ...form, [key]: Number(e.target.value) })
                     }
-                    className="w-full bg-neutral-800 text-white rounded border border-neutral-700"
+                    className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700"
                   />
                 </div>
               ))}
             </div>
 
             <div className="flex items-center gap-4 mt-4">
-              <Label className="text-white w-[200px] ml-5 text-xs">Total</Label>
+              <Label className="text-neutral-900 dark:text-white w-[200px] ml-5 text-xs">Total</Label>
               <Input
                 type="text"
                 value={form.total || 0}
                 readOnly
-                className="w-full bg-neutral-800 text-white rounded border border-neutral-700"
+                className="w-full bg-white text-neutral-900 dark:bg-neutral-800 dark:text-white rounded border border-neutral-700"
               />
             </div>
           </div>

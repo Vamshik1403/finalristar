@@ -18,7 +18,7 @@ type ImportStatus = "idle" | "processing" | "success" | "error";
 const companyCSVHeaders = [
   "Company Name",
   "Business Type",
-  "Address",
+  "Address",  
   "Phone",
   "Email",
   "Website",
@@ -459,7 +459,18 @@ const DataImportTable = () => {
             if (row[header] && row[header].trim() !== "") {
               const field = mapHeaderToField(header);
               if (field !== header) { // if we have a mapping
-                payload[field] = row[header].trim();
+                // Special handling for businessType
+                if (field === "businessType") {
+                  // Split on comma, trim each, and join with ', '
+                  const normalized = row[header]
+                    .split(/\s*,\s*/)
+                    .map((s: string) => s.trim())
+                    .filter(Boolean)
+                    .join(", ");
+                  payload[field] = normalized;
+                } else {
+                  payload[field] = row[header].trim();
+                }
               }
             }
           });
@@ -1101,25 +1112,25 @@ const DataImportTable = () => {
   };
 
   return (
-    <div className="min-h-[80vh] bg-neutral-900 pt-6 pb-10 flex justify-center items-start">
+    <div className="min-h-[80vh] bg-white dark:bg-neutral-900 pt-6 pb-10 flex justify-center items-start">
       <div className="w-full max-w-3xl">
         {/* Tabs at the top */}
         <div className="mb-4">
-          <div className="inline-flex bg-neutral-800 rounded-lg shadow border border-neutral-700 overflow-hidden">
+          <div className="inline-flex bg-white dark:bg-neutral-800 rounded-lg shadow border border-neutral-200 dark:border-neutral-700 overflow-hidden">
             <button
-              className={`px-6 py-2 text-base font-medium focus:outline-none transition-colors ${selectedCategory === "companies" ? "bg-neutral-700 text-white" : "bg-neutral-800 text-gray-300 hover:bg-neutral-700"}`}
+              className={`px-6 py-2 text-base font-medium focus:outline-none transition-colors ${selectedCategory === "companies" ? "bg-neutral-200 dark:bg-neutral-700 text-black dark:text-white" : "bg-white dark:bg-neutral-800 text-black dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
               onClick={() => setSelectedCategory("companies")}
             >
               Companies
             </button>
             <button
-              className={`px-6 py-2 text-base font-medium focus:outline-none transition-colors ${selectedCategory === "ports" ? "bg-neutral-700 text-white" : "bg-neutral-800 text-gray-300 hover:bg-neutral-700"}`}
+              className={`px-6 py-2 text-base font-medium focus:outline-none transition-colors ${selectedCategory === "ports" ? "bg-neutral-200 dark:bg-neutral-700 text-black dark:text-white" : "bg-white dark:bg-neutral-800 text-black dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
               onClick={() => setSelectedCategory("ports")}
             >
               Ports
             </button>
             <button
-              className={`px-6 py-2 text-base font-medium focus:outline-none transition-colors ${selectedCategory === "containers" ? "bg-neutral-700 text-white" : "bg-neutral-800 text-gray-300 hover:bg-neutral-700"}`}
+              className={`px-6 py-2 text-base font-medium focus:outline-none transition-colors ${selectedCategory === "containers" ? "bg-neutral-200 dark:bg-neutral-700 text-black dark:text-white" : "bg-white dark:bg-neutral-800 text-black dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
               onClick={() => setSelectedCategory("containers")}
             >
               Containers
@@ -1127,30 +1138,30 @@ const DataImportTable = () => {
           </div>
         </div>
         {/* Main card - moved up by reducing margin */}
-        <div className="bg-neutral-950 rounded-2xl shadow-2xl border border-neutral-800 p-8 relative transition-all duration-300 mt-0">
+        <div className="bg-white dark:bg-neutral-950 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-800 p-8 relative transition-all duration-300 mt-0">
           {/* Download button top right */}
           <button
             onClick={handleDownloadEmptyTemplate}
             disabled={isDownloading}
-            className="absolute top-6 right-8 flex items-center gap-2 px-4 py-2 border border-neutral-700 bg-neutral-900 text-gray-200 rounded-md shadow-sm hover:bg-neutral-800 focus:outline-none text-sm font-medium transition-all duration-200"
+            className="absolute top-6 right-8 flex items-center gap-2 px-4 py-2 border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-black dark:text-gray-200 rounded-md shadow-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none text-sm font-medium transition-all duration-200"
           >
             <FileSpreadsheet className="w-5 h-5 mr-1" />
             Download CSV Template
           </button>
           {/* Section title */}
-          <h2 className="text-xl font-bold text-white mb-6">
+          <h2 className="text-xl font-bold text-black dark:text-white mb-6">
             {selectedCategory === "companies" && "Import Companies"}
             {selectedCategory === "ports" && "Import Ports"}
             {selectedCategory === "containers" && "Import Containers"}
           </h2>
           {/* Info box */}
-          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-6 mb-8">
-            <div className="font-semibold text-gray-100 mb-2">
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 mb-8">
+            <div className="font-semibold text-black dark:text-gray-100 mb-2">
               {selectedCategory === "companies" && "How to import companies:"}
               {selectedCategory === "ports" && "How to import ports:"}
               {selectedCategory === "containers" && "How to import containers:"}
             </div>
-            <ol className="list-decimal list-inside text-gray-400 text-base space-y-1">
+            <ol className="list-decimal list-inside text-gray-600 dark:text-gray-400 text-base space-y-1">
               {selectedCategory === "companies" && (
                 <>
                   <li>Download the CSV template</li>
@@ -1179,11 +1190,13 @@ const DataImportTable = () => {
           </div>
           {/* File upload area */}
           <div className="mb-4">
-            <FileUploadArea
-              onFileChange={setSelectedFile}
-              selectedFile={selectedFile}
-              isUploading={importStatus === "processing"}
-            />
+            <div className="border border-dashed rounded-md p-4 text-center border-neutral-300 dark:border-gray-300 bg-white dark:bg-neutral-900">
+              <FileUploadArea
+                onFileChange={setSelectedFile}
+                selectedFile={selectedFile}
+                isUploading={importStatus === "processing"}
+              />
+            </div>
           </div>
           {/* Import button (centered) */}
           <div className="flex justify-center mt-6">

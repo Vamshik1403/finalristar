@@ -282,7 +282,7 @@ const ProductsInventoryPage = () => {
   };
 
   return (
-    <div className="px-4 pt-0 pb-4">
+    <div className="px-4 pt-4 pb-4 dark:bg-black">
       <div className="flex items-center justify-between mt-0 mb-4">
         <div className="relative w-full mr-4">
           <Search
@@ -292,7 +292,7 @@ const ProductsInventoryPage = () => {
           <input
             type="text"
             placeholder="Search products..."
-            className="p-2 pl-10 rounded-lg bg-neutral-900 text-white placeholder-neutral-400 border border-neutral-800 focus:outline-none focus:border-blue-500"
+            className="p-2 pl-10 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white placeholder-neutral-400 border border-neutral-800 focus:outline-none focus:border-blue-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -319,36 +319,36 @@ const ProductsInventoryPage = () => {
       )}
 
       {/* Table Container */}
-      <div className="rounded-lg shadow border border-neutral-800 bg-neutral-900 overflow-x-auto mt-4">
+      <div className="rounded-lg shadow border border-neutral-800 bg-white dark:bg-neutral-900 overflow-x-auto mt-4">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-white dark:bg-neutral-900">
             <TableRow>
-              <TableHead className="text-white">Product ID</TableHead>
-              <TableHead className="text-white">Product Name</TableHead>
-              <TableHead className="text-white">Trade Name</TableHead>
-              <TableHead className="text-white">Type</TableHead>
-              <TableHead className="text-white">Grade</TableHead>
-              <TableHead className="text-white">Shipper Name</TableHead>
-              <TableHead className="text-white">Cont. Category</TableHead>
-              <TableHead className="text-white">Cont. Type</TableHead>
-              <TableHead className="text-white">Cont. Class</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="text-white">Actions</TableHead>
-              <TableHead className="text-white">MSDS</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Product ID</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Product Name</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Trade Name</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Type</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Grade</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Shipper Name</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Cont. Category</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Cont. Type</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Cont. Class</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Status</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">Actions</TableHead>
+              <TableHead className="text-gray-900 dark:text-white">MSDS</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredProducts.map((product) => (
-              <TableRow key={product.id} className="hover:bg-neutral-800 border-b border-neutral-800">
-                <TableCell className="text-white">{product.productId}</TableCell>
-                <TableCell className="text-white">{product.productName}</TableCell>
-                <TableCell className="text-white">{product.tradeName}</TableCell>
-                <TableCell className="text-white">{product.productType}</TableCell>
-                <TableCell className="text-white">{product.grade}</TableCell>
-                <TableCell className="text-white">{product.shippingName}</TableCell>
-                <TableCell className="text-white">{product.containerCategory}</TableCell>
-                <TableCell className="text-white">{product.containerType}</TableCell>
-                <TableCell className="text-white">{product.classType}</TableCell>
+              <TableRow key={product.id} className="border-b border-gray-200 dark:border-neutral-800 even:bg-gray-50 dark:even:bg-neutral-800 text-gray-900 dark:text-white">
+                <TableCell>{product.productId}</TableCell>
+                <TableCell>{product.productName}</TableCell>
+                <TableCell>{product.tradeName}</TableCell>
+                <TableCell>{product.productType}</TableCell>
+                <TableCell>{product.grade}</TableCell>
+                <TableCell>{product.shippingName}</TableCell>
+                <TableCell>{product.containerCategory}</TableCell>
+                <TableCell>{product.containerType}</TableCell>
+                <TableCell>{product.classType}</TableCell>
                 <TableCell>
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${
@@ -367,7 +367,7 @@ const ProductsInventoryPage = () => {
                       size="icon"
                       title="Edit"
                       onClick={() => handleEditClick(product.id)}
-                      className="hover:bg-blue-900 hover:text-blue-400 text-neutral-300 transition-all duration-200"
+                      className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-900/40 cursor-pointer"
                     >
                       <Pencil size={16} />
                     </Button>
@@ -376,7 +376,7 @@ const ProductsInventoryPage = () => {
                       size="icon"
                       title="Delete"
                       onClick={() => handleDelete(product.id)}
-                      className="hover:bg-red-900 hover:text-red-400 text-neutral-300 transition-all duration-200"
+                      className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40 cursor-pointer"
                     >
                       <Trash2 size={16} />
                     </Button>

@@ -234,7 +234,7 @@ const loadData = async () => {
   return (
     <SidebarWithHeader>
       <div className="p-6 space-y-6">
-        <h2 className="text-3xl font-bold text-white">Dashboard Overview</h2>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard Overview</h2>
 
         {/* Inventory + Movement Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -294,10 +294,10 @@ type CardProps = {
 };
 
 const Card: React.FC<CardProps> = ({ color, icon, label, count }) => (
-  <div className="bg-gray-900 text-white rounded-2xl p-5 shadow-md flex items-center space-x-4">
+  <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-2xl p-5 shadow-md flex items-center space-x-4">
     <div className={`${color} p-3 rounded-full`}>{icon}</div>
     <div>
-      <p className="text-sm text-gray-400">{label}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-400">{label}</p>
       <h3 className="text-2xl font-semibold my-2">{count}</h3>
     </div>
   </div>

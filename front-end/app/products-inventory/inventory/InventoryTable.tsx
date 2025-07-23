@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
+
   TableCell,
   TableHead,
   TableHeader,
@@ -22,8 +23,8 @@ const StatusBadge = ({ status }: { status: string }) => (
     className={
       "inline-block px-4 py-1 rounded-full text-sm font-semibold shadow transition-all duration-300 hover:scale-105 " +
       (status === "Active"
-        ? "bg-green-900/80 text-green-300"
-        : "bg-red-900/80 text-red-300")
+        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300")
     }
     style={{
       minWidth: 70,
@@ -167,14 +168,14 @@ const ProductsInventoryPage = () => {
   const hasActiveFilters = filters.ownership || filters.status || filters.initialSurveyDate;
 
   return (
-    <div className="px-4 py-6 bg-black min-h-screen">
+    <div className="px-4 py-6 bg-white dark:bg-black min-h-screen">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <div className="relative flex items-center w-full max-w-sm">
             <Search size={18} className="absolute left-3 text-gray-400" />
             <Input
               placeholder="Search containers..."
-              className="pl-10 bg-neutral-900 border-neutral-800 text-white"
+              className="pl-10 bg-white dark:bg-neutral-900 border-neutral-800 text-black dark:text-white"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -186,7 +187,7 @@ const ProductsInventoryPage = () => {
             className={`flex items-center gap-2 px-4 py-2 cursor-pointer rounded-lg transition-colors ${
               hasActiveFilters 
                 ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                : 'bg-neutral-700 hover:bg-neutral-600 text-white'
+                : 'bg-white dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 text-black dark:text-white'
             }`}
           >
             <Filter className="h-4 w-4" />
@@ -249,20 +250,19 @@ const ProductsInventoryPage = () => {
 
       <div className="rounded-lg border border-neutral-800 overflow-hidden">
         <Table>
-          <TableHeader className="bg-neutral-900">
+          <TableHeader className="bg-white dark:bg-neutral-900">
             <TableRow>
-              <TableHead className="text-neutral-200">Ownership</TableHead>
-              <TableHead className="text-neutral-200">Owner/Leaser</TableHead>
-
-              <TableHead className="text-neutral-200">Container No</TableHead>
-              <TableHead className="text-neutral-200">Category</TableHead>
-              <TableHead className="text-neutral-200">Type</TableHead>
-              <TableHead className="text-neutral-200">Class</TableHead>
-              <TableHead className="text-neutral-200">Capacity</TableHead>
-              <TableHead className="text-neutral-200">Next Inspection Due Date</TableHead>
-              <TableHead className="text-neutral-200">Off Hire Date</TableHead>
-              <TableHead className="text-neutral-200">Status</TableHead>
-              <TableHead className="text-neutral-200 text-right">Actions</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Ownership</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Owner/Leaser</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Container No</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Category</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Type</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Class</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Capacity</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Next Inspection Due Date</TableHead>
+              <TableHead className="text-black dark:text-neutral-200">Off Hire Date</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 text-center">Status</TableHead>
+              <TableHead className="text-black dark:text-neutral-200 text-right text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -280,8 +280,8 @@ const ProductsInventoryPage = () => {
               </TableRow>
             ) : (
               filteredData.map((item) => (
-                <TableRow key={item.id} className="border-b border-neutral-800 bg-neutral-900 hover:bg-neutral-800">
-                  <TableCell className="text-neutral-200">
+                <TableRow key={item.id} className="border-b border-border bg-background text-foreground">
+                  <TableCell className="bg-background text-foreground">
                     {/* First check if there are leasing records with ownershipType */}
                     {item.leasingInfo?.length > 0 && item.leasingInfo[0].ownershipType
                       ? item.leasingInfo[0].ownershipType
@@ -290,7 +290,7 @@ const ProductsInventoryPage = () => {
                         /* If there are leasing records but no ownershipType, default to "Lease" */
                         (item.leasingInfo?.length > 0 ? "Lease" : "Own"))}
                   </TableCell>
-                  <TableCell className="text-neutral-200">
+                  <TableCell className="bg-background text-foreground">
                     {item.leasingInfo?.[0]?.ownershipType === "Own"
                       ? "RISTAR"
                       : item.leasingInfo?.[0]
@@ -299,25 +299,25 @@ const ProductsInventoryPage = () => {
                   </TableCell>
 
 
-                  <TableCell className="text-neutral-200">{item.containerNumber}</TableCell>
-                  <TableCell className="text-neutral-200">{item.containerCategory}</TableCell>
-                  <TableCell className="text-neutral-200">{item.containerType}</TableCell>
-                  <TableCell className="text-neutral-200">{item.containerClass}</TableCell>
-                  <TableCell className="text-neutral-200">{item.containerCapacity}</TableCell>
-                  <TableCell className="text-neutral-200">
+                  <TableCell className="bg-background text-foreground">{item.containerNumber}</TableCell>
+                  <TableCell className="bg-background text-foreground">{item.containerCategory}</TableCell>
+                  <TableCell className="bg-background text-foreground">{item.containerType}</TableCell>
+                  <TableCell className="bg-background text-foreground">{item.containerClass}</TableCell>
+                  <TableCell className="bg-background text-foreground">{item.containerCapacity}</TableCell>
+                  <TableCell className="bg-background text-foreground">
                     {item.periodicTankCertificates?.[0]?.nextDueDate
                       ? new Date(item.periodicTankCertificates[0].nextDueDate).toLocaleDateString()
                       : 'N/A'}
                   </TableCell>
-                  <TableCell className="text-neutral-200">
+                  <TableCell className="bg-background text-foreground">
                     {item.leasingInfo?.[0]?.offHireDate
                       ? new Date(item.leasingInfo[0].offHireDate).toLocaleDateString()
                       : 'N/A'}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="bg-background text-foreground">
                     <StatusBadge status={item.status} />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="bg-background text-foreground text-right">
                     <div className="flex gap-2 justify-end">
                       <Button
                         variant="ghost"
@@ -337,10 +337,10 @@ const ProductsInventoryPage = () => {
                       </Button>
                       <Button
                         title="View History"
-                        className="text-green-400 hover:text-green-500"
+                        className="bg-white dark:bg-neutral-900 text-black dark:text-white rounded-full h-8 w-8 flex items-center justify-center p-0 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:scale-105 transition-transform border border-neutral-200 dark:border-neutral-800 cursor-pointer"
                         onClick={() => handleViewHistory(item.containerNumber)}
                       >
-                        <HistoryIcon size={16} />
+                        <HistoryIcon size={20} />
                       </Button>
                     </div>
                   </TableCell>
@@ -392,9 +392,9 @@ const ProductsInventoryPage = () => {
       {/* Filter Modal */}
       {showFilterModal && (
         <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-lg">
-          <div className="bg-neutral-800 rounded-lg p-6 w-96 max-w-md mx-4">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg p-6 w-96 max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-white">Filter Inventory</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Filter Inventory</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -414,7 +414,7 @@ const ProductsInventoryPage = () => {
                 <select
                   value={tempFilters.ownership}
                   onChange={(e) => setTempFilters(prev => ({ ...prev, ownership: e.target.value }))}
-                  className="w-full px-3 py-2 bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white dark:bg-neutral-700 text-black dark:text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
                 >
                   <option value="">All Ownership Types</option>
                   <option value="Own">Own</option>
@@ -430,7 +430,7 @@ const ProductsInventoryPage = () => {
                 <select
                   value={tempFilters.status}
                   onChange={(e) => setTempFilters(prev => ({ ...prev, status: e.target.value }))}
-                  className="w-full px-3 py-2 bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white dark:bg-neutral-700 text-black dark:text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
                 >
                   <option value="">All Status</option>
                   <option value="Active">Active</option>
@@ -448,7 +448,7 @@ const ProductsInventoryPage = () => {
                   placeholder="Select date"
                   value={tempFilters.initialSurveyDate}
                   onChange={(e) => setTempFilters(prev => ({ ...prev, initialSurveyDate: e.target.value }))}
-                  className="w-full px-3 py-2 bg-neutral-700 text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white dark:bg-neutral-700 text-black dark:text-white rounded border border-neutral-600 focus:border-blue-500 focus:outline-none"
                 />
                 <p className="text-xs text-neutral-400 mt-1">
                   Filter by year (e.g., 2024) or specific date (YYYY-MM-DD)
